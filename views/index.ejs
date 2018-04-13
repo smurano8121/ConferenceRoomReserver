@@ -1,11 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/registForm.css' />
+
+  <!--スクリプト読み込み-->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/javascripts/signUp.js"></script>
+</head>
+
+<body>
+  <div class="login">
+    <div class="login-triangle"></div>
+
+    <h2 class="login-header">Sign up</h2>
+
+    <form class="login-container">
+      <p>
+        <input id="email" type="email" placeholder="Email">
+      </p>
+      <p>
+        <input id="password" type="password" placeholder="Password">
+      </p>
+      <p>
+        <input id="name" type="text" placeholder="Your Name">
+      </p>
+      <p>
+        <input id="studentNumber" type="text" placeholder="Student Number">
+      </p>
+      <p>
+        <input id="signUp" type="button" value="Sign up">
+      </p>
+      <p>
+        <input id="messageLog" type="button" value="Message Log">
+      </p>
+    </form>
+  </div>
+</body>
+
 </html>

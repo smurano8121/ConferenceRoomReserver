@@ -17,10 +17,10 @@ const app = express();
 mongoose.Promise = global.Promise;
 const mongodbUri = 'mongodb://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com/meetingRoomReserver';
 const mongOptions = {
-    useMongoClient: true,
-    socketTimeoutMS: 0,
-    keepAlive: true,
-    reconnectTries: 30
+  useMongoClient: true,
+  socketTimeoutMS: 0,
+  keepAlive: true,
+  reconnectTries: 30
 };
 
 // view engine setup
@@ -44,14 +44,14 @@ app.use('/messageLog', messageLog);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -61,9 +61,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const server = http.createServer(app).listen(app.get('httpport'), function(){
+const server = http.createServer(app).listen(app.get('httpport'), function () {
   console.log('Express HTTP server listening on port ' + app.get('httpport'));
-  mongoose.connect(mongodbUri, mongOptions);
+  // mongoose.connect(mongodbUri, mongOptions);
 });
 
 module.exports = app;
