@@ -8,6 +8,8 @@ const http = require('http');
 const mongoose = require('mongoose');
 
 const index = require('./routes/index');
+const registration = require('./routes/registration');
+const messageLog = require('./routes/messageLog');
 const users = require('./routes/users');
 
 const app = express();
@@ -36,7 +38,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+app.use('/', index)
+app.use('/registration', registration);
+app.use('/messageLog', messageLog);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
