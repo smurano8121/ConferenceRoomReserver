@@ -15,7 +15,7 @@ const users = require('./routes/users');
 const app = express();
 
 mongoose.Promise = global.Promise;
-const mongodbUri = 'mongodb://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com/meetingRoomReserver';
+const mongodbUri = 'mongodb://localhost/meetingRoomReserver';
 const mongOptions = {
   useMongoClient: true,
   socketTimeoutMS: 0,
@@ -63,7 +63,7 @@ app.use(function (err, req, res, next) {
 
 const server = http.createServer(app).listen(app.get('httpport'), function () {
   console.log('Express HTTP server listening on port ' + app.get('httpport'));
-  // mongoose.connect(mongodbUri, mongOptions);
+  mongoose.connect(mongodbUri, mongOptions);
 });
 
 module.exports = app;
