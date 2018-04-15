@@ -19,7 +19,7 @@ $(function () {
             }).done(function (data) {
                 // alert(data)
                 // alert("ok");
-                window.location.href = './registration'; // 通常の遷移
+                window.location.href = './oauth'; // 通常の遷移
             }).fail(function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("textStatus： " + textStatus);
                 alert("errorThrown： " + errorThrown);

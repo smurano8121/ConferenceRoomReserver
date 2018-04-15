@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const index = require('./routes/index');
 const registration = require('./routes/registration');
 const messageLog = require('./routes/messageLog');
+const oauth = require('./routes/oauth');
 const users = require('./routes/users');
 
 const app = express();
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index)
 app.use('/registration', registration);
 app.use('/messageLog', messageLog);
+app.use('/oauth', oauth);
 app.use('/users', users);
 
 // catch 404 and forward to error handler

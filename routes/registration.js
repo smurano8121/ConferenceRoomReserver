@@ -26,8 +26,8 @@ router.post('/', function (req, res, next) {
                 if (err) console.log(err);
             });
         }
+        res.json({ "status": "ok" })
     });
-    res.json({ "status": "ok" })
 });
 
 module.exports = router;
