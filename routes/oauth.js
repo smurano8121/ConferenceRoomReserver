@@ -9,7 +9,7 @@ const OAuth2Client = google.auth.OAuth2;
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 const TOKEN_PATH = 'credentials.json';
 
-// const User = require('../models/user');
+const User = require('../models/user');
 
 router.get('/token', function (req, res, next) {
     console.log(req.query.code);
@@ -17,6 +17,7 @@ router.get('/token', function (req, res, next) {
 });
 
 router.get('/', function (req, res, next) {
+    console.log(req.query)
     // Load client secrets from a local file.
     fs.readFile('client_secret.json', (err, content) => {
         if (err) return console.log('Error loading client secret file:', err);
@@ -74,8 +75,16 @@ router.get('/', function (req, res, next) {
                     if (err) console.error(err);
                     console.log('Token stored to', TOKEN_PATH);
                 });
-                console.log(oAuth2Client);
-                callback(oAuth2Client);
+                // console.log(oAuth2Client);
+                User.update(
+                    { "email": req.query.email },
+                    { "oauth": oAuth2Client },
+                    { upsert: true },
+                    function (err) {
+                        if (err) console.log(err);
+                        callback(oAuth2Client);
+                    }
+                );
             });
         });
     }
