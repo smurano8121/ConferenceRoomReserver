@@ -11,17 +11,41 @@ const TOKEN_PATH = 'credentials.json';
 
 const User = require('../models/user');
 
+let email
+let client_secret
+let client_id
+const redirect_uris = 'http://localhost:3000/oauth/token';
+let oAuth2Client
 router.get('/token', function (req, res, next) {
-    console.log(req.query.code);
+    console.log(req.query);
+    oAuth2Client.getToken(req.query.code, (err, token) => {
+        if (err) return callback(err);
+        oAuth2Client.setCredentials(token);
+        // Store the token to disk for later program executions
+        fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+            if (err) console.error(err);
+            console.log('Token stored to', TOKEN_PATH);
+        });
+        // console.log(oAuth2Client);
+        User.update(
+            { "email": email },
+            { "oauth": oAuth2Client },
+            { upsert: true },
+            function (err) {
+                if (err) console.log(err);
+            }
+        );
+    });
     res.redirect('http://localhost:3000');
 });
 
 router.get('/', function (req, res, next) {
-    console.log(req.query)
     // Load client secrets from a local file.
+    email = req.query.email
     fs.readFile('client_secret.json', (err, content) => {
         if (err) return console.log('Error loading client secret file:', err);
         // Authorize a client with credentials, then call the Google Drive API.
+        console.log(JSON.parse(content));
         authorize(JSON.parse(content), listEvents);
     });
 
@@ -33,11 +57,10 @@ router.get('/', function (req, res, next) {
      */
     function authorize(credentials, callback) {
 
-        var client_secret = credentials.installed.client_secret;
-        var client_id = credentials.installed.client_id;
-        var redirect_uris = 'http://localhost:3000/oauth/token';
-        // const { client_secret, client_id, redirect_uris } = credentials.installed;
-        const oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris);
+        client_secret = credentials.installed.client_secret;
+        client_id = credentials.installed.client_id;
+        // redirect_uris = 'http://localhost:3000/oauth/token';
+        oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris);
 
         // Check if we have previously stored a token.
         fs.readFile(TOKEN_PATH, (err, token) => {
@@ -59,34 +82,7 @@ router.get('/', function (req, res, next) {
             access_type: 'offline',
             scope: SCOPES,
         });
-        console.log('Authorize this app by visiting this url:', authUrl);
         res.redirect(authUrl)
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-        rl.question('Enter the code from that page here: ', (code) => {
-            rl.close();
-            oAuth2Client.getToken(code, (err, token) => {
-                if (err) return callback(err);
-                oAuth2Client.setCredentials(token);
-                // Store the token to disk for later program executions
-                fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-                    if (err) console.error(err);
-                    console.log('Token stored to', TOKEN_PATH);
-                });
-                // console.log(oAuth2Client);
-                User.update(
-                    { "email": req.query.email },
-                    { "oauth": oAuth2Client },
-                    { upsert: true },
-                    function (err) {
-                        if (err) console.log(err);
-                        callback(oAuth2Client);
-                    }
-                );
-            });
-        });
     }
 
     /**
