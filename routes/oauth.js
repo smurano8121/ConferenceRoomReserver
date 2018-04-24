@@ -14,7 +14,7 @@ const User = require('../models/user');
 let email
 let client_secret
 let client_id
-const redirect_uris = 'http://localhost:3000/oauth/token';
+const redirect_uris = 'http://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com:3000/oauth/token';
 let oAuth2Client
 router.get('/token', function (req, res, next) {
     console.log(req.query);
@@ -36,7 +36,7 @@ router.get('/token', function (req, res, next) {
             }
         );
     });
-    res.redirect('http://localhost:3000');
+    res.redirect('http://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com:3000');
 });
 
 router.get('/', function (req, res, next) {
