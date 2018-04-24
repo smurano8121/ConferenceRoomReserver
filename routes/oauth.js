@@ -57,8 +57,8 @@ router.get('/', function (req, res, next) {
      */
     function authorize(credentials, callback) {
 
-        client_secret = credentials.installed.client_secret;
-        client_id = credentials.installed.client_id;
+        client_secret = credentials.web.client_secret;
+        client_id = credentials.web.client_id;
         // redirect_uris = 'http://localhost:3000/oauth/token';
         oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris);
 
