@@ -37,39 +37,40 @@ router.get('/', function (req, res, next) {
 
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
-    if (req.body.result.metadata.intentName == "名前") {
-        User.find({ "name": req.body.result.parameters.name }, function (err, user) {
-            userName = user[0].name;
-            userOauth = user[0].oauth;
-
-            console.log("webhookきたよ");
-            console.log(req.body);
-            ret = { "speech": "きたよ" };
-            res.json(ret);
-        });
-    }
-    else if (req.body.result.metadata.intentName == "予定追加") {
-
-    }
-    else if (req.body.result.metadata.intentName == "予定概要入力") {
-
-    }
-    else if (req.body.result.metadata.intentName == "予定開始日入力") {
-
-    }
-    else if (req.body.result.metadata.intentName == "予定時間入力") {
-
-    }
-    else if (req.body.result.metadata.intentName == "予定確認") {
-
-    }
+    console.log("webhookきたよ");
+    console.log(req.body);
+    ret = { "speech": "きたよ" };
+    res.json(ret);
+    // if (req.body.result.metadata.intentName == "名前") {
+    //     User.find({ "name": req.body.result.parameters.name }, function (err, user) {
+    //         userName = user[0].name;
+    //         userOauth = user[0].oauth;
 
 
-    function checkSlotFulfilled(slot) {
-        if (!slot.name || !slot.date || !slot.startDateTime || !slot.finishDateTime || !slot.eventSummary || !slot.room) {
-            return false;
-        }
-    }
+    //     });
+    // }
+    // else if (req.body.result.metadata.intentName == "予定追加") {
+
+    // }
+    // else if (req.body.result.metadata.intentName == "予定概要入力") {
+
+    // }
+    // else if (req.body.result.metadata.intentName == "予定開始日入力") {
+
+    // }
+    // else if (req.body.result.metadata.intentName == "予定時間入力") {
+
+    // }
+    // else if (req.body.result.metadata.intentName == "予定確認") {
+
+    // }
+
+
+    // function checkSlotFulfilled(slot) {
+    //     if (!slot.name || !slot.date || !slot.startDateTime || !slot.finishDateTime || !slot.eventSummary || !slot.room) {
+    //         return false;
+    //     }
+    // }
 });
 
 
