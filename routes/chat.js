@@ -20,9 +20,6 @@ let eventDate = null;
 let eventStartTime = null;
 let eventFinishTime = null;
 
-const apiKey = "624f4a595336427033477236324a6a476e754170304868636b584d61596335315150517a6d724e4e466837";
-let talkContext = null;
-
 let slot = {
     name: null,
     date: null,
