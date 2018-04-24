@@ -36,39 +36,84 @@ router.get('/', function (req, res, next) {
         res.redirect("https://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com:3000/chat/room");
     });
 
-    function listEvents(auth) {
+    function listEvents(auth, startDate, callback) {
         var calendar = google.calendar('v3');
-        // console.log("authの中身だよ〜\n");
-        // console.log(auth);
         calendar.events.list({
             auth: auth,
             calendarId: 'primary',
-            timeMin: (new Date()).toISOString(),
-            maxResults: 10,
+            timeMin: startDate + "T00:00:00+09:00",//timeMinとtimeMaxを設定することでその区間の予定のみを検索
+            timeMax: startDate + "T23:59:59+09:00",
+            maxResults: 10,//最大検索件数
             singleEvents: true,
-            orderBy: 'startTime'
+            orderBy: 'startTime'//開始時間順に並べ替え
         }, function (err, response) {
             if (err) {
                 console.log('The API returned an error: ' + err);
                 return;
             }
             var events = response.items;
-            //   console.log(response.items);
+            var eventList = [];
             if (events.length == 0) {
-                console.log('No upcoming events found.');
+                callback(eventList);
             } else {
-                console.log('Upcoming 10 events:');
                 for (var i = 0; i < events.length; i++) {
                     var event = events[i];
-                    var start = event.start.dateTime || event.start.date;
-                    console.log('%s - %s', start, event.summary);
+                    eventList.push(events[i]);
                 }
+                callback(eventList);
             }
-            //   res.send(events[1]);
         });
     }
 
+    function insertEvents(auth, eventSummary, eventDate, startDateTime, finishDateTime) {
+        var calendar = google.calendar('v3');
 
+        if (startDateTime == null && finishDateTime == null) {//開始・終了時間がない場合
+            var event = {
+                'summary': eventSummary,
+                'description': 'テスト用',
+                'start': {
+                    'date': eventDate,
+                    'timeZone': 'Asia/Tokyo',
+                },
+                'end': {
+                    'date': eventDate,
+                    'timeZone': 'Asia/Tokyo',
+                },
+                'attendees': [
+                    { 'email': 'tshimakawa@mikilab.doshisha.ac.jp' }
+                ]
+            };
+        } else {//開始終了時間がある場合
+            var event = {
+                'summary': eventSummary,
+                'description': 'テスト用',
+                'start': {
+                    'dateTime': startDateTime,
+                    'timeZone': 'Asia/Tokyo',
+                },
+                'end': {
+                    'dateTime': finishDateTime,
+                    'timeZone': 'Asia/Tokyo',
+                },
+                // 'attendees': [
+                //     {'email': 'tshimakawa@mikilab.doshisha.ac.jp'}
+                //   ]
+            };
+        }
+
+        calendar.events.insert({
+            auth: auth,
+            calendarId: 'primary',
+            resource: event,
+        }, function (err, event) {
+            if (err) {
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+            }
+            console.log('Event created: %s', event.htmlLink);
+        });
+    }
 
     function insertEvents(auth) {
         var calendar = google.calendar('v3');
