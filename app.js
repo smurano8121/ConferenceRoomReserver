@@ -16,9 +16,8 @@ const users = require('./routes/users');
 const app = express();
 
 mongoose.Promise = global.Promise;
-const mongodbUri = 'mongodb://localhost/meetingRoomReserver';
+const mongodbUri = 'mongodb://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com/meetingRoomReserver';
 const mongOptions = {
-  useMongoClient: true,
   socketTimeoutMS: 0,
   keepAlive: true,
   reconnectTries: 30
