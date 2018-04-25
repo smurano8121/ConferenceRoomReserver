@@ -11,6 +11,7 @@ const index = require('./routes/index');
 const registration = require('./routes/registration');
 const messageLog = require('./routes/messageLog');
 const oauth = require('./routes/oauth');
+const chat = require('./routes/chat');
 const users = require('./routes/users');
 
 const app = express();
@@ -43,6 +44,7 @@ app.use('/registration', registration);
 app.use('/messageLog', messageLog);
 app.use('/oauth', oauth);
 app.use('/users', users);
+app.use('/chat', chat)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
