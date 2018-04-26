@@ -40,8 +40,12 @@ router.get('/', function (req, res, next) {
 router.post('/webhook', function (req, res, next) {
     console.log("webhookきたよ");
     console.log(req.body);
-    ret = { "speech": "きたよ" };
-    res.json(ret);
+    res.send(
+        JSON.stringify({
+            'speech': '予約を承りました。',
+            'displayText': '予約を承りました。'
+        })
+    );
     // if (req.body.result.metadata.intentName == "名前") {
     //     User.find({ "name": req.body.result.parameters.name }, function (err, user) {
     //         userName = user[0].name;
