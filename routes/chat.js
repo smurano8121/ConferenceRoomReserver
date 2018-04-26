@@ -43,7 +43,7 @@ router.post('/webhook', function (req, res, next) {
     console.log(req.body);
     res.send(
         JSON.stringify({
-            "fulfillmentText": '予約を承りました。'
+            "fulfillmentText": "予約を承りました。"
         })
     );
     // if (req.body.result.metadata.intentName == "名前") {
