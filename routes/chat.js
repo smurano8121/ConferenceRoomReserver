@@ -32,7 +32,8 @@ let slot = {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('index', { title: 'Express' });
+    ret = { "speech": "きたよ" };
+    res.json(ret);
 });
 
 /* POST home page. */
