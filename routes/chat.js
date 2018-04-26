@@ -38,12 +38,12 @@ router.get('/', function (req, res, next) {
 
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
+    res.setHeader('Content-Type', 'application/json');
     console.log("webhookきたよ");
     console.log(req.body);
     res.send(
         JSON.stringify({
-            'speech': '予約を承りました。',
-            'displayText': '予約を承りました。'
+            "fulfillmentText": '予約を承りました。'
         })
     );
     // if (req.body.result.metadata.intentName == "名前") {
