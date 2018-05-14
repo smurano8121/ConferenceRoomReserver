@@ -54,21 +54,39 @@ router.post('/webhook', function (req, res, next) {
             console.log(userOauth);
         });
     }
-    // else if (req.body.result.metadata.intentName == "予定追加") {
+    else if (req.body.queryResult.intent.displayName == "予定確認") {
+        var options = {
+            url: '../api/check',
+            headers: {
+                "Content-type": "application/json",
+            },
+            json: {
+                "name": userName
+            }
+        };
+
+        request.post(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body.fulfillmentText);
+                response.json({ "fulfillmentText": body.fulfillmentText })
+            } else {
+                console.log('error: ' + response.statusCode);
+            }
+        });
+    }
+    // else if (req.body.queryResult.intent.displayName == "予定追加") {
 
     // }
-    // else if (req.body.result.metadata.intentName == "予定概要入力") {
+    // else if (req.body.queryResult.intent.displayName == "予定概要入力") {
 
     // }
-    // else if (req.body.result.metadata.intentName == "予定開始日入力") {
+    // else if (req.body.queryResult.intent.displayName == "予定開始日入力") {
 
     // }
-    // else if (req.body.result.metadata.intentName == "予定時間入力") {
+    // else if (req.body.queryResult.intent.displayName == "予定時間入力") {
 
     // }
-    // else if (req.body.result.metadata.intentName == "予定確認") {
 
-    // }
 
 
     // function checkSlotFulfilled(slot) {
