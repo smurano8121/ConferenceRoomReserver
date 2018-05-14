@@ -45,15 +45,11 @@ router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     console.log("webhookきたよ");
     console.log(req.body);
-    // console.log(req.body.queryResult.intent.displayName);
 
     if (req.body.queryResult.intent.displayName == "名前") {
         User.find({ "name": req.body.queryResult.parameters.userName }, function (err, user) {
             userName = user[0].name;
             oauth = user[0].oauth;
-
-            console.log(userName);
-            console.log(oauth);
             oAuth2Client = oauth;
 
 
@@ -64,12 +60,13 @@ router.post('/webhook', function (req, res, next) {
             // // oauth2Client.transporter = DefaultTransporter {}; 本来はtransporterも格納しないといけないが，なしでもいけた
             // oAuth2Client.opts = oauth.opts;
 
-            console.log(oauth);
+
 
             res.json({ "fulfillmentText": userName });
         });
     }
     else if (req.body.queryResult.intent.displayName == "予定確認") {
+        console.log(oAuth2Client);
         listEvents(oAuth2Client);
         res.json({ "fulfillmentText": "予約を承りました。" });
     }
