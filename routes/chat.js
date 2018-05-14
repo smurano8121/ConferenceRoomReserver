@@ -8,8 +8,6 @@ var router = express.Router();
 
 var fs = require('fs');
 var readline = require('readline');
-const { google } = require('googleapis');
-const googleAuth = require('google-auth-library');
 const request = require('request');
 
 let userName;
