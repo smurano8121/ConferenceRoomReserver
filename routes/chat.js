@@ -41,6 +41,7 @@ router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     console.log("webhookきたよ");
     console.log(req.body);
+    console.log(req.body.queryResult.intent.displayName);
     res.json({ "fulfillmentText": "予約を承りました。" });
     // if (req.body.result.metadata.intentName == "名前") {
     //     User.find({ "name": req.body.result.parameters.name }, function (err, user) {
