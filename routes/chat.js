@@ -63,21 +63,10 @@ router.post('/webhook', function (req, res, next) {
             // oauth2Client.transporter = DefaultTransporter {}; 本来はtransporterも格納しないといけないが，なしでもいけた
             oAuth2Client.opts = oauth.opts;
 
-            console.log(oAuth2Client);
+            console.log(oauth);
 
             res.json({ "fulfillmentText": userName });
         });
-
-
-        User.find({ "name": req.body.name }, function (err, user) {
-
-
-
-
-        });
-
-
-
     }
     else if (req.body.queryResult.intent.displayName == "予定確認") {
         listEvents(oAuth2Client);
