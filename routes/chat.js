@@ -29,6 +29,8 @@ let slot = {
     room: null,
 }
 
+const User = require('../models/user');
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -41,16 +43,17 @@ router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     console.log("webhookきたよ");
     console.log(req.body);
-    console.log(req.body.queryResult.intent.displayName);
+    // console.log(req.body.queryResult.intent.displayName);
     res.json({ "fulfillmentText": "予約を承りました。" });
-    // if (req.body.result.metadata.intentName == "名前") {
-    //     User.find({ "name": req.body.result.parameters.name }, function (err, user) {
-    //         userName = user[0].name;
-    //         userOauth = user[0].oauth;
+    if (req.body.queryResult.intent.displayName == "名前") {
+        User.find({ "name": req.body.queryResult.parameters.userName }, function (err, user) {
+            userName = user[0].name;
+            userOauth = user[0].oauth;
 
-
-    //     });
-    // }
+            console.log(userName);
+            console.log(userOauth);
+        });
+    }
     // else if (req.body.result.metadata.intentName == "予定追加") {
 
     // }
