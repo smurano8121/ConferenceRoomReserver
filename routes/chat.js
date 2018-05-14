@@ -70,7 +70,7 @@ router.post('/webhook', function (req, res, next) {
         });
     }
     else if (req.body.queryResult.intent.displayName == "予定確認") {
-        listEvents(oauth);
+        listEvents(oAuth2Client);
         res.json({ "fulfillmentText": "予約を承りました。" });
     }
     // else if (req.body.queryResult.intent.displayName == "予定追加") {
