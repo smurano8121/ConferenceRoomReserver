@@ -44,7 +44,7 @@ router.post('/webhook', function (req, res, next) {
     console.log("webhookきたよ");
     console.log(req.body);
     // console.log(req.body.queryResult.intent.displayName);
-    res.json({ "fulfillmentText": "予約を承りました。" });
+
     if (req.body.queryResult.intent.displayName == "名前") {
         User.find({ "name": req.body.queryResult.parameters.userName }, function (err, user) {
             userName = user[0].name;
@@ -52,6 +52,7 @@ router.post('/webhook', function (req, res, next) {
 
             console.log(userName);
             console.log(userOauth);
+            res.json({ "fulfillmentText": userName });
         });
     }
     else if (req.body.queryResult.intent.displayName == "予定確認") {
