@@ -50,7 +50,7 @@ router.post('/webhook', function (req, res, next) {
         User.find({ "name": req.body.queryResult.parameters.userName }, function (err, user) {
             userName = user[0].name;
             oauth = user[0].oauth;
-            oAuth2Client = new OAuth2Client(oauth._clientId, oauth._clientSecret, oauth.redirectUri);
+            oAuth2Client = oauth;
 
 
             // oAuth2Client._clientId = oauth._clientId;
