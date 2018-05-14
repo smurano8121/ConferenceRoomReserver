@@ -54,14 +54,15 @@ router.post('/webhook', function (req, res, next) {
 
             console.log(userName);
             console.log(oauth);
+            oAuth2Client = oauth;
 
 
-            oAuth2Client.clientId_ = oauth.clientId_;
-            oAuth2Client.clientSecret_ = oauth.clientSecret_;
-            oAuth2Client.redirectUri_ = oauth.redirectUri_;
-            oAuth2Client.credentials = oauth.credentials;
-            // oauth2Client.transporter = DefaultTransporter {}; 本来はtransporterも格納しないといけないが，なしでもいけた
-            oAuth2Client.opts = oauth.opts;
+            // oAuth2Client.clientId_ = oauth.clientId_;
+            // oAuth2Client.clientSecret_ = oauth.clientSecret_;
+            // oAuth2Client.redirectUri_ = oauth.redirectUri_;
+            // oAuth2Client.credentials = oauth.credentials;
+            // // oauth2Client.transporter = DefaultTransporter {}; 本来はtransporterも格納しないといけないが，なしでもいけた
+            // oAuth2Client.opts = oauth.opts;
 
             console.log(oauth);
 
