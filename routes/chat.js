@@ -66,7 +66,9 @@ router.post('/webhook', function (req, res, next) {
         res.json({ "fulfillmentText": "予約を承りました。" });
     }
     else if (req.body.queryResult.intent.displayName == "予定追加") {
-
+        console.log(oAuth2Client);
+        insertEvents(oAuth2Client);
+        res.json({ "fulfillmentText": "予定を追加しました" });
     }
     else if (req.body.queryResult.intent.displayName == "予定概要入力") {
 
@@ -109,6 +111,38 @@ router.post('/webhook', function (req, res, next) {
             } else {
                 console.log('No upcoming events found.');
             }
+        });
+    }
+
+    function insertEvents(auth) {
+        var calendar = google.calendar('v3');
+
+        var event = {
+            'summary': 'APIからの予定登録テスト',
+            'description': 'テスト用',
+            'start': {
+                'dateTime': '2017-12-31T09:00:00',
+                'timeZone': 'Asia/Tokyo',
+            },
+            'end': {
+                'dateTime': '2017-12-31T17:00:00',
+                'timeZone': 'Asia/Tokyo',
+            },
+            'attendees': [
+                { 'email': 'mail_forward@mikilab.doshisha.ac.jp' }
+            ]
+        };
+
+        calendar.events.insert({
+            auth: auth,
+            calendarId: 'primary',
+            resource: event,
+        }, function (err, event) {
+            if (err) {
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+            }
+            console.log('Event created: %s', event.htmlLink);
         });
     }
 });
