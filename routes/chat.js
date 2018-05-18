@@ -50,8 +50,6 @@ router.post('/webhook', function (req, res, next) {
         User.find({ "name": req.body.queryResult.parameters.userName }, function (err, user) {
             userName = user[0].name;
             oauth = user[0].oauth;
-            // oAuth2Client = oauth;
-
 
             oAuth2Client._clientId = oauth._clientId;
             oAuth2Client._clientSecret = oauth._clientSecret;
@@ -59,9 +57,6 @@ router.post('/webhook', function (req, res, next) {
             oAuth2Client.credentials = oauth.credentials;
             // oauth2Client.transporter = DefaultTransporter {}; 本来はtransporterも格納しないといけないが，なしでもいけた
             // oAuth2Client.opts = oauth.opts;
-
-
-
             res.json({ "fulfillmentText": userName });
         });
     }
