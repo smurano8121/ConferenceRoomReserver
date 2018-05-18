@@ -12,9 +12,9 @@ const TOKEN_PATH = 'credentials.json';
 const User = require('../models/user');
 
 let email
-let client_secret
-let client_id
-const redirect_uris = 'http://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com:3000/oauth/token';
+// let client_secret
+// let client_id
+// const redirect_uris = 'http://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com:3000/oauth/token';
 let oAuth2Client
 router.get('/token', function (req, res, next) {
     console.log(req.query);
@@ -56,19 +56,32 @@ router.get('/', function (req, res, next) {
      * @param {function} callback The callback to call with the authorized client.
      */
     function authorize(credentials, callback) {
-
-        client_secret = credentials.web.client_secret;
-        client_id = credentials.web.client_id;
-        // redirect_uris = 'http://localhost:3000/oauth/token';
-        oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris);
+        const { client_secret, client_id, redirect_uris } = credentials.installed;
+        let token = {};
+        const oAuth2Client = new google.auth.OAuth2(
+            client_id, client_secret, redirect_uris[0]);
 
         // Check if we have previously stored a token.
-        fs.readFile(TOKEN_PATH, (err, token) => {
-            if (err) return getAccessToken(oAuth2Client, callback);
-            // oAuth2Client.setCredentials(JSON.parse(token));
-            // callback(oAuth2Client);
-            getAccessToken(oAuth2Client, callback);
-        });
+        try {
+            token = fs.readFileSync(TOKEN_PATH);
+        } catch (err) {
+            return getAccessToken(oAuth2Client, callback);
+        }
+        oAuth2Client.setCredentials(JSON.parse(token));
+        callback(oAuth2Client);
+
+        // client_secret = credentials.web.client_secret;
+        // client_id = credentials.web.client_id;
+        // // redirect_uris = 'http://localhost:3000/oauth/token';
+        // oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris);
+
+        // // Check if we have previously stored a token.
+        // fs.readFile(TOKEN_PATH, (err, token) => {
+        //     if (err) return getAccessToken(oAuth2Client, callback);
+        //     // oAuth2Client.setCredentials(JSON.parse(token));
+        //     // callback(oAuth2Client);
+        //     getAccessToken(oAuth2Client, callback);
+        // });
     }
 
     /**
