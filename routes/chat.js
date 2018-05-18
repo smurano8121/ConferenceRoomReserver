@@ -70,18 +70,18 @@ router.post('/webhook', function (req, res, next) {
         listEvents(oAuth2Client);
         res.json({ "fulfillmentText": "予約を承りました。" });
     }
-    // else if (req.body.queryResult.intent.displayName == "予定追加") {
+    else if (req.body.queryResult.intent.displayName == "予定追加") {
 
-    // }
-    // else if (req.body.queryResult.intent.displayName == "予定概要入力") {
+    }
+    else if (req.body.queryResult.intent.displayName == "予定概要入力") {
 
-    // }
-    // else if (req.body.queryResult.intent.displayName == "予定開始日入力") {
+    }
+    else if (req.body.queryResult.intent.displayName == "予定開始日入力") {
 
-    // }
-    // else if (req.body.queryResult.intent.displayName == "予定時間入力") {
+    }
+    else if (req.body.queryResult.intent.displayName == "予定時間入力") {
 
-    // }
+    }
 
 
 
@@ -95,30 +95,24 @@ router.post('/webhook', function (req, res, next) {
 
 
     function listEvents(auth, startDate, callback) {
-        var calendar = google.calendar('v3');
+        const calendar = google.calendar({ version: 'v3', auth });
         calendar.events.list({
-            auth: auth,
             calendarId: 'primary',
-            timeMin: startDate + "T00:00:00+09:00",//timeMinとtimeMaxを設定することでその区間の予定のみを検索
-            timeMax: startDate + "T23:59:59+09:00",
-            maxResults: 10,//最大検索件数
+            timeMin: (new Date()).toISOString(),
+            maxResults: 10,
             singleEvents: true,
-            orderBy: 'startTime'//開始時間順に並べ替え
-        }, function (err, response) {
-            if (err) {
-                console.log('The API returned an error: ' + err);
-                return;
-            }
-            var events = response.items;
-            var eventList = [];
-            if (events.length == 0) {
-                callback(eventList);
+            orderBy: 'startTime',
+        }, (err, { data }) => {
+            if (err) return console.log('The API returned an error: ' + err);
+            const events = data.items;
+            if (events.length) {
+                console.log('Upcoming 10 events:');
+                events.map((event, i) => {
+                    const start = event.start.dateTime || event.start.date;
+                    console.log(`${start} - ${event.summary}`);
+                });
             } else {
-                for (var i = 0; i < events.length; i++) {
-                    var event = events[i];
-                    eventList.push(events[i]);
-                }
-                callback(eventList);
+                console.log('No upcoming events found.');
             }
         });
     }
