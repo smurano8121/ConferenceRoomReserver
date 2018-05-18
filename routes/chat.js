@@ -65,7 +65,7 @@ router.post('/webhook', function (req, res, next) {
         listEvents(oAuth2Client);
         res.json({ "fulfillmentText": "予約を承りました。" });
     }
-    else if (req.body.queryResult.intent.displayName == "予定追加") {
+    else if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(oAuth2Client);
         insertEvents(oAuth2Client);
         res.json({ "fulfillmentText": "予定を追加しました" });
