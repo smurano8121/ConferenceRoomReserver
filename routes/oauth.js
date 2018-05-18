@@ -56,7 +56,7 @@ router.get('/', function (req, res, next) {
      * @param {function} callback The callback to call with the authorized client.
      */
     function authorize(credentials, callback) {
-        const { client_secret, client_id, redirect_uris } = credentials.installed;
+        const { client_secret, client_id, redirect_uris } = credentials.web;
         let token = {};
         const oAuth2Client = new google.auth.OAuth2(
             client_id, client_secret, redirect_uris[0]);
