@@ -12,9 +12,6 @@ const TOKEN_PATH = 'credentials.json';
 const User = require('../models/user');
 
 let email
-// let client_secret
-// let client_id
-// const redirect_uris = 'http://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com:3000/oauth/token';
 let oAuth2Client
 router.get('/token', function (req, res, next) {
     console.log(req.query);
@@ -26,7 +23,7 @@ router.get('/token', function (req, res, next) {
             if (err) console.error(err);
             console.log('Token stored to', TOKEN_PATH);
         });
-        // console.log(oAuth2Client);
+
         User.update(
             { "email": email },
             { "oauth": oAuth2Client },

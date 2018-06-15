@@ -51,6 +51,13 @@ router.post('/webhook', function (req, res, next) {
             userName = user[0].name;
             oauth = user[0].oauth;
 
+            fs.readFile('client_secret.json', (err, content) => {
+                if (err) return console.log('Error loading client secret file:', err);
+                // Authorize a client with credentials, then call the Google Drive API.
+                console.log(JSON.parse(content));
+                authorize(JSON.parse(content), listEvents);
+            });
+
             oAuth2Client._clientId = oauth._clientId;
             oAuth2Client._clientSecret = oauth._clientSecret;
             oAuth2Client.redirectUri = oauth.redirectUri;
@@ -87,6 +94,35 @@ router.post('/webhook', function (req, res, next) {
     //         return false;
     //     }
     // }
+
+    function authorize(credentials, callback) {
+        const { client_secret, client_id, redirect_uris } = credentials.web;
+        let token = {};
+        oAuth2Client = new google.auth.OAuth2(
+            client_id, client_secret, redirect_uris[0]);
+
+        // Check if we have previously stored a token.
+        try {
+            token = fs.readFileSync(TOKEN_PATH);
+        } catch (err) {
+            return getAccessToken(oAuth2Client, callback);
+        }
+        oAuth2Client.setCredentials(JSON.parse(token));
+        callback(oAuth2Client);
+
+        // client_secret = credentials.web.client_secret;
+        // client_id = credentials.web.client_id;
+        // // redirect_uris = 'http://localhost:3000/oauth/token';
+        // oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris);
+
+        // // Check if we have previously stored a token.
+        // fs.readFile(TOKEN_PATH, (err, token) => {
+        //     if (err) return getAccessToken(oAuth2Client, callback);
+        //     // oAuth2Client.setCredentials(JSON.parse(token));
+        //     // callback(oAuth2Client);
+        //     getAccessToken(oAuth2Client, callback);
+        // });
+    }
 
 
 
