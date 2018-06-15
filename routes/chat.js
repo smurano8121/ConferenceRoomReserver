@@ -124,6 +124,14 @@ router.post('/webhook', function (req, res, next) {
         // });
     }
 
+    function getAccessToken(oAuth2Client, callback) {
+        const authUrl = oAuth2Client.generateAuthUrl({
+            access_type: 'offline',
+            scope: SCOPES,
+        });
+        res.redirect(authUrl)
+    }
+
 
 
 
