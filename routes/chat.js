@@ -6,8 +6,14 @@
 var express = require('express');
 var router = express.Router();
 
-var fs = require('fs');
-var readline = require('readline');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const readline = require('readline');
+const { google } = require('googleapis');
+const OAuth2Client = google.auth.OAuth2;
+const SCOPES = ['https://www.googleapis.com/auth/calendar'];
+const TOKEN_PATH = 'credentials.json';
+
 const request = require('request');
 
 let userName;
@@ -29,10 +35,6 @@ let slot = {
 
 const User = require('../models/user');
 
-const { google } = require('googleapis');
-const OAuth2Client = google.auth.OAuth2;
-var oAuth2Client = new google.auth.OAuth2(null, null, null);
-
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -49,7 +51,7 @@ router.post('/webhook', function (req, res, next) {
     if (req.body.queryResult.intent.displayName == "名前") {
         User.find({ "name": req.body.queryResult.parameters.userName }, function (err, user) {
             userName = user[0].name;
-            oauth = user[0].oauth;
+            // oauth = user[0].oauth;
 
             fs.readFile('client_secret.json', (err, content) => {
                 if (err) return console.log('Error loading client secret file:', err);
@@ -58,10 +60,10 @@ router.post('/webhook', function (req, res, next) {
                 authorize(JSON.parse(content), listEvents);
             });
 
-            oAuth2Client._clientId = oauth._clientId;
-            oAuth2Client._clientSecret = oauth._clientSecret;
-            oAuth2Client.redirectUri = oauth.redirectUri;
-            oAuth2Client.credentials = oauth.credentials;
+            // oAuth2Client._clientId = oauth._clientId;
+            // oAuth2Client._clientSecret = oauth._clientSecret;
+            // oAuth2Client.redirectUri = oauth.redirectUri;
+            // oAuth2Client.credentials = oauth.credentials;
             // oauth2Client.transporter = DefaultTransporter {}; 本来はtransporterも格納しないといけないが，なしでもいけた
             // oAuth2Client.opts = oauth.opts;
             res.json({ "fulfillmentText": userName });
