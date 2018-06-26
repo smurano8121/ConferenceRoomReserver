@@ -18,6 +18,7 @@ router.get('/token', function (req, res, next) {
     oAuth2Client.getToken(req.query.code, (err, token) => {
         if (err) return callback(err);
         oAuth2Client.setCredentials(token);
+        console.log(token);
         // Store the token to disk for later program executions
         fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
             if (err) console.error(err);
