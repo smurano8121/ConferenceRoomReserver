@@ -60,6 +60,7 @@ router.get('/', function (req, res, next) {
 
         // Check if we have previously stored a token.
         try {
+            console.log("トークンもう有るよ");
             token = fs.readFileSync(TOKEN_PATH);
         } catch (err) {
             return getAccessToken(oAuth2Client, callback);
