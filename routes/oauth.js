@@ -47,12 +47,6 @@ router.get('/', function (req, res, next) {
         authorize(JSON.parse(content), listEvents);
     });
 
-    /**
-     * Create an OAuth2 client with the given credentials, and then execute the
-     * given callback function.
-     * @param {Object} credentials The authorization client credentials.
-     * @param {function} callback The callback to call with the authorized client.
-     */
     function authorize(credentials, callback) {
         const { client_secret, client_id, redirect_uris } = credentials.web;
         let token = {};
@@ -68,27 +62,7 @@ router.get('/', function (req, res, next) {
         }
         oAuth2Client.setCredentials(JSON.parse(token));
         callback(oAuth2Client);
-
-        // client_secret = credentials.web.client_secret;
-        // client_id = credentials.web.client_id;
-        // // redirect_uris = 'http://localhost:3000/oauth/token';
-        // oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris);
-
-        // // Check if we have previously stored a token.
-        // fs.readFile(TOKEN_PATH, (err, token) => {
-        //     if (err) return getAccessToken(oAuth2Client, callback);
-        //     // oAuth2Client.setCredentials(JSON.parse(token));
-        //     // callback(oAuth2Client);
-        //     getAccessToken(oAuth2Client, callback);
-        // });
     }
-
-    /**
-     * Get and store new token after prompting for user authorization, and then
-     * execute the given callback with the authorized OAuth2 client.
-     * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
-     * @param {getEventsCallback} callback The callback for the authorized client.
-     */
     function getAccessToken(oAuth2Client, callback) {
         const authUrl = oAuth2Client.generateAuthUrl({
             access_type: 'offline',
@@ -97,10 +71,6 @@ router.get('/', function (req, res, next) {
         res.redirect(authUrl)
     }
 
-    /**
-     * Lists the next 10 events on the user's primary calendar.
-     * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
-     */
     function listEvents(auth) {
         const calendar = google.calendar({ version: 'v3', auth });
         calendar.events.list({
@@ -121,6 +91,56 @@ router.get('/', function (req, res, next) {
             } else {
                 console.log('No upcoming events found.');
             }
+        });
+    }
+
+    function insertEvents(auth, eventSummary, eventDate, startDateTime, finishDateTime) {
+        var calendar = google.calendar('v3');
+
+        if (startDateTime == null && finishDateTime == null) {//開始・終了時間がない場合
+            var event = {
+                'summary': eventSummary,
+                'description': 'テスト用',
+                'start': {
+                    'date': eventDate,
+                    'timeZone': 'Asia/Tokyo',
+                },
+                'end': {
+                    'date': eventDate,
+                    'timeZone': 'Asia/Tokyo',
+                },
+                'attendees': [
+                    { 'email': 'mikilab.doshisha.ac.jp_33353234353936362d333132@resource.calendar.google.com' }
+                ]
+            };
+        } else {//開始終了時間がある場合
+            var event = {
+                'summary': eventSummary,
+                'description': 'テスト用',
+                'start': {
+                    'dateTime': startDateTime,
+                    'timeZone': 'Asia/Tokyo',
+                },
+                'end': {
+                    'dateTime': finishDateTime,
+                    'timeZone': 'Asia/Tokyo',
+                },
+                // 'attendees': [
+                //     {'email': 'tshimakawa@mikilab.doshisha.ac.jp'}
+                //   ]
+            };
+        }
+
+        calendar.events.insert({
+            auth: auth,
+            calendarId: 'primary',
+            resource: event,
+        }, function (err, event) {
+            if (err) {
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+            }
+            console.log('Event created: %s', event.htmlLink);
         });
     }
 });
