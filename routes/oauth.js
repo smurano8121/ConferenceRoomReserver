@@ -94,42 +94,24 @@ router.get('/', function (req, res, next) {
         });
     }
 
-    function insertEvents(auth, eventSummary, eventDate, startDateTime, finishDateTime) {
+    function insertEvents(auth) {
         var calendar = google.calendar('v3');
 
-        if (startDateTime == null && finishDateTime == null) {//開始・終了時間がない場合
-            var event = {
-                'summary': eventSummary,
-                'description': 'テスト用',
-                'start': {
-                    'date': eventDate,
-                    'timeZone': 'Asia/Tokyo',
-                },
-                'end': {
-                    'date': eventDate,
-                    'timeZone': 'Asia/Tokyo',
-                },
-                'attendees': [
-                    { 'email': 'mikilab.doshisha.ac.jp_33353234353936362d333132@resource.calendar.google.com' }
-                ]
-            };
-        } else {//開始終了時間がある場合
-            var event = {
-                'summary': eventSummary,
-                'description': 'テスト用',
-                'start': {
-                    'dateTime': startDateTime,
-                    'timeZone': 'Asia/Tokyo',
-                },
-                'end': {
-                    'dateTime': finishDateTime,
-                    'timeZone': 'Asia/Tokyo',
-                },
-                // 'attendees': [
-                //     {'email': 'tshimakawa@mikilab.doshisha.ac.jp'}
-                //   ]
-            };
-        }
+        var event = {
+            'summary': 'APIからの予定登録テスト',
+            'description': 'テスト用',
+            'start': {
+                'dateTime': '2017-12-31T09:00:00',
+                'timeZone': 'Asia/Tokyo',
+            },
+            'end': {
+                'dateTime': '2017-12-31T17:00:00',
+                'timeZone': 'Asia/Tokyo',
+            },
+            'attendees': [
+                { 'email': 'mikilab.doshisha.ac.jp_33353234353936362d333132@resource.calendar.google.com' }
+            ]
+        };
 
         calendar.events.insert({
             auth: auth,
