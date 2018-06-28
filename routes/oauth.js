@@ -44,7 +44,8 @@ router.get('/', function (req, res, next) {
         if (err) return console.log('Error loading client secret file:', err);
         // Authorize a client with credentials, then call the Google Drive API.
         console.log(JSON.parse(content));
-        authorize(JSON.parse(content), listEvents);
+        // authorize(JSON.parse(content), listEvents);
+        authorize(JSON.parse(content), insertEvents);
     });
 
     function authorize(credentials, callback) {
