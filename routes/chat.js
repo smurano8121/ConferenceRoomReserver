@@ -59,13 +59,6 @@ router.post('/webhook', function (req, res, next) {
                 console.log(JSON.parse(content));
                 authorize(JSON.parse(content), listEvents);
             });
-
-            // oAuth2Client._clientId = oauth._clientId;
-            // oAuth2Client._clientSecret = oauth._clientSecret;
-            // oAuth2Client.redirectUri = oauth.redirectUri;
-            // oAuth2Client.credentials = oauth.credentials;
-            // oauth2Client.transporter = DefaultTransporter {}; 本来はtransporterも格納しないといけないが，なしでもいけた
-            // oAuth2Client.opts = oauth.opts;
             res.json({ "fulfillmentText": userName });
         });
     }
