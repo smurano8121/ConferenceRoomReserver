@@ -68,8 +68,8 @@ router.post('/webhook', function (req, res, next) {
         res.json({ "fulfillmentText": "予約を承りました。" });
     }
     else if (req.body.queryResult.intent.displayName == "会議室予約") {
-        console.log(oAuth2Client);
-        insertEvents(oAuth2Client);
+        console.log("会議室予約");
+        authorize(JSON.parse(content), insertEvents);
         res.json({ "fulfillmentText": "予定を追加しました" });
     }
     else if (req.body.queryResult.intent.displayName == "予定概要入力") {
@@ -104,19 +104,6 @@ router.post('/webhook', function (req, res, next) {
         }
         oAuth2Client.setCredentials(JSON.parse(token));
         callback(oAuth2Client);
-
-        // client_secret = credentials.web.client_secret;
-        // client_id = credentials.web.client_id;
-        // // redirect_uris = 'http://localhost:3000/oauth/token';
-        // oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris);
-
-        // // Check if we have previously stored a token.
-        // fs.readFile(TOKEN_PATH, (err, token) => {
-        //     if (err) return getAccessToken(oAuth2Client, callback);
-        //     // oAuth2Client.setCredentials(JSON.parse(token));
-        //     // callback(oAuth2Client);
-        //     getAccessToken(oAuth2Client, callback);
-        // });
     }
 
     function getAccessToken(oAuth2Client, callback) {
