@@ -155,7 +155,7 @@ router.post('/webhook', function (req, res, next) {
                 'timeZone': 'Asia/Tokyo',
             },
             'attendees': [
-                { 'email': 'mail_forward@mikilab.doshisha.ac.jp' }
+                { 'email': 'mikilab.doshisha.ac.jp_33353234353936362d333132@resource.calendar.google.com' }
             ]
         };
 
