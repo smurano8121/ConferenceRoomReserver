@@ -68,8 +68,13 @@ router.post('/webhook', function (req, res, next) {
         res.json({ "fulfillmentText": "予約を承りました。" });
     }
     else if (req.body.queryResult.intent.displayName == "会議室予約") {
-        console.log("会議室予約");
-        authorize(JSON.parse(content), insertEvents);
+        console.log(req.body.queryResult.intent.displayName);
+        fs.readFile('client_secret.json', (err, content) => {
+            if (err) return console.log('Error loading client secret file:', err);
+            // Authorize a client with credentials, then call the Google Drive API.
+            console.log(JSON.parse(content));
+            authorize(JSON.parse(content), listEvents);
+        });
         res.json({ "fulfillmentText": "予定を追加しました" });
     }
     else if (req.body.queryResult.intent.displayName == "予定概要入力") {
@@ -100,7 +105,7 @@ router.post('/webhook', function (req, res, next) {
         try {
             token = fs.readFileSync(TOKEN_PATH);
         } catch (err) {
-            return getAccessToken(oAuth2Client, callback);
+            res.json({ "fulfillmentText": "トークンを取得できませんでした" });
         }
         oAuth2Client.setCredentials(JSON.parse(token));
         callback(oAuth2Client);
