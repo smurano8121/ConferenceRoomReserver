@@ -156,10 +156,20 @@ router.post('/webhook', function (req, res, next) {
     }
 
     function insertEvents(auth) {
-        var startDate = new Date(slot.date);
-        var year = startDate.getFullYear();
-        var month = startDate.getMonth()+1;
-        var date = startDate.getDate()+1;
+        var eventDate = new Date(slot.date);
+        var year = eventDate.getFullYear();
+        var month = eventDate.getMonth()+1;
+        var date = eventDate.getDate()+1;
+
+        var startTime = new Date(slot.startDateTime);
+        var startHours = startTime.getHours;
+        var startMinutes = startTime.getMinutes;
+        var startSeconds = startTime.getSeconds;
+
+        var finishTime = new Date(slot.finishDateTime);
+        var finishHours = finishTime.getHours;
+        var finishMinutes = finishTime.getMinutes;
+        var finishSeconds = finishTime.getSeconds;
 
 
         console.log(year);
@@ -172,11 +182,11 @@ router.post('/webhook', function (req, res, next) {
             'summary': 'APIからの予定登録テスト',
             'description': 'テスト用',
             'start': {
-                'dateTime': slot.startDateTime,
+                'dateTime': year+"-"+month+"-"+date+"T"+startHours+":"+startMinutes+":"+startSeconds,
                 'timeZone': 'Asia/Tokyo',
             },
             'end': {
-                'dateTime': slot.finishDateTime,
+                'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds,
                 'timeZone': 'Asia/Tokyo',
             },
             'attendees': [
