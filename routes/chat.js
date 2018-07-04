@@ -157,12 +157,12 @@ router.post('/webhook', function (req, res, next) {
 
     function insertEvents(auth) {
         var startDate = new Date(slot.date);
-        var year = startDate.getFullYear;
-        var month = startDate.getMonth;
-        var date = startDate.getDate;
+        var year = startDate.getFullYear();
+        var month = startDate.getMonth();
+        var date = startDate.getDate();
 
 
-        console.log(year.toString);
+        console.log(year);
         console.log(month);
         console.log(date);
 
