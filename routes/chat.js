@@ -162,14 +162,14 @@ router.post('/webhook', function (req, res, next) {
         var date = eventDate.getDate()+1;
 
         var startTime = new Date(slot.startDateTime);
-        var startHours = startTime.getHours;
-        var startMinutes = startTime.getMinutes;
-        var startSeconds = startTime.getSeconds;
+        var startHours = startTime.getHours();
+        var startMinutes = startTime.getMinutes();
+        var startSeconds = startTime.getSeconds();
 
         var finishTime = new Date(slot.finishDateTime);
-        var finishHours = finishTime.getHours;
-        var finishMinutes = finishTime.getMinutes;
-        var finishSeconds = finishTime.getSeconds;
+        var finishHours = finishTime.getHours();
+        var finishMinutes = finishTime.getMinutes();
+        var finishSeconds = finishTime.getSeconds();
 
 
         console.log(year);
