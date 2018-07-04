@@ -161,7 +161,7 @@ router.post('/webhook', function (req, res, next) {
             return new Date( Number(parse[1]), Number(parse[2]), Number(parse[3]), Number(parse[4]), Number(parse[5]), Number(parse[6]) );
         };
 
-        var startDate = iso8601Date(slot.date);
+        var startDate = iso8601Date('2016-10-12T17:47:15+09:00');
         console.log(startDate[1]);
         console.log(startDate[2]);
         console.log(startDate[3]);
