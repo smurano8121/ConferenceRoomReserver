@@ -155,7 +155,7 @@ router.post('/webhook', function (req, res, next) {
         });
     }
 
-    function insertEvents(auth, date, startDateTime, finishDateTime) {
+    function insertEvents(auth) {
         var calendar = google.calendar('v3');
 
         var event = {
