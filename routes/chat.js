@@ -156,19 +156,10 @@ router.post('/webhook', function (req, res, next) {
     }
 
     function insertEvents(auth) {
-        var iso8601Date = function(iso) {
-            var parse = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\+\d{2}:\d{2}/);
-            return new Date( Number(parse[1]), Number(parse[2]), Number(parse[3]), Number(parse[4]), Number(parse[5]), Number(parse[6]) );
-        };
-
-        var startDate = iso8601Date('2016-10-12T17:47:15+09:00');
-        console.log(startDate[1]);
-        console.log(startDate[2]);
-        console.log(startDate[3]);
-        console.log(startDate[4]);
-        console.log(startDate[5]);
-        console.log(startDate[6]);
-        console.log(startDate[7]);
+        var startDate = new Date(slot.date);
+        console.log(startDate.getFullYear);
+        console.log(startDate.getMonth);
+        console.log(startDate.getDate);
 
         var calendar = google.calendar('v3');
 
