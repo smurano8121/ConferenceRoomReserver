@@ -162,12 +162,12 @@ router.post('/webhook', function (req, res, next) {
         var date = eventDate.getDate()+1;
 
         var startTime = new Date(slot.startDateTime);
-        var startHours = startTime.getHours()+9;
+        var startHours = startTime.getHours()+9; //修正必須
         var startMinutes = startTime.getMinutes();
         var startSeconds = startTime.getSeconds();
 
         var finishTime = new Date(slot.finishDateTime);
-        var finishHours = finishTime.getHours()+9;
+        var finishHours = finishTime.getHours()+9; //修正必須
         var finishMinutes = finishTime.getMinutes();
         var finishSeconds = finishTime.getSeconds();
 
