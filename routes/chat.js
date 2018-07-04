@@ -171,7 +171,7 @@ router.post('/webhook', function (req, res, next) {
         var finishMinutes = finishTime.getMinutes();
         var finishSeconds = finishTime.getSeconds();
 
-
+        console.log(slot.date);
         console.log(year);
         console.log(month);
         console.log(date);
