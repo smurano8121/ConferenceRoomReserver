@@ -176,10 +176,12 @@ router.post('/webhook', function (req, res, next) {
         console.log(month);
         console.log(date);
 
+        console.log(slot.startDateTime);
         console.log(startHours);
         console.log(startMinutes);
         console.log(startSeconds);
 
+        console.log(slot.finishDateTime);
         console.log(finishHours);
         console.log(finishMinutes);
         console.log(finishSeconds);
@@ -190,11 +192,11 @@ router.post('/webhook', function (req, res, next) {
             'summary': 'APIからの予定登録テスト',
             'description': 'テスト用',
             'start': {
-                'dateTime': year+"-"+month+"-"+date+"T"+startHours+":"+startMinutes+":"+startSeconds+"+09:00",
+                'dateTime': year+"-"+month+"-"+date+"T"+startHours+":"+startMinutes+":"+startSeconds,
                 'timeZone': 'Asia/Tokyo',
             },
             'end': {
-                'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds+"+09:00",
+                'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds,
                 'timeZone': 'Asia/Tokyo',
             },
             'attendees': [
