@@ -176,6 +176,14 @@ router.post('/webhook', function (req, res, next) {
         console.log(month);
         console.log(date);
 
+        console.log(startHours);
+        console.log(startMinutes);
+        console.log(startSeconds);
+
+        console.log(finishHours);
+        console.log(finishMinutes);
+        console.log(finishSeconds);
+
         var calendar = google.calendar('v3');
 
         var event = {
