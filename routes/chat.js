@@ -157,9 +157,14 @@ router.post('/webhook', function (req, res, next) {
 
     function insertEvents(auth) {
         var startDate = new Date(slot.date);
-        console.log(startDate.getFullYear);
-        console.log(startDate.getMonth);
-        console.log(startDate.getDate);
+        var year = startDate.getFullYear;
+        var month = startDate.getMonth;
+        var date = startDate.getDate;
+
+
+        console.log(year);
+        console.log(month);
+        console.log(date);
 
         var calendar = google.calendar('v3');
 
