@@ -162,7 +162,7 @@ router.post('/webhook', function (req, res, next) {
         var date = startDate.getDate;
 
 
-        console.log(year);
+        console.log(year.toString);
         console.log(month);
         console.log(date);
 
