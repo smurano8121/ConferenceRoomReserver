@@ -64,16 +64,26 @@ router.post('/webhook', function (req, res, next) {
     }
     else if (req.body.queryResult.intent.displayName == "予定確認") {
         console.log(oAuth2Client);
-        listEvents(oAuth2Client);
-        res.json({ "fulfillmentText": "予約を承りました。" });
-    }
-    else if (req.body.queryResult.intent.displayName == "会議室予約") {
-        console.log(req.body.queryResult.intent.displayName);
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
             // Authorize a client with credentials, then call the Google Drive API.
             console.log(JSON.parse(content));
-            authorize(JSON.parse(content), insertEvents);
+            authorize(JSON.parse(content), listEvents);
+        });
+        res.json({ "fulfillmentText": "予約を承りました。" });
+    }
+    else if (req.body.queryResult.intent.displayName == "会議室予約") {
+        console.log(req.body.queryResult.intent.displayName);
+        slot.startDateTime = req.body.queryResult.parameters.time[0];
+        slot.finishDateTime = req.body.queryResult.parameters.time[1];
+        slot.date = req.body.queryResult.parameters.date;
+        slot.room = req.body.queryResult.parameters.confernceRoom;
+
+        fs.readFile('client_secret.json', (err, content) => {
+            if (err) return console.log('Error loading client secret file:', err);
+            // Authorize a client with credentials, then call the Google Drive API.
+            console.log(JSON.parse(content));
+            authorize(JSON.parse(content), insertEvents(callback, date,startDateTime,finishDateTime));
         });
         res.json({ "fulfillmentText": "予定を追加しました" });
     }
@@ -145,18 +155,18 @@ router.post('/webhook', function (req, res, next) {
         });
     }
 
-    function insertEvents(auth) {
+    function insertEvents(auth, date, startDateTime, finishDateTime) {
         var calendar = google.calendar('v3');
 
         var event = {
             'summary': 'APIからの予定登録テスト',
             'description': 'テスト用',
             'start': {
-                'dateTime': '2017-12-31T09:00:00',
+                'dateTime': startDateTime,
                 'timeZone': 'Asia/Tokyo',
             },
             'end': {
-                'dateTime': '2017-12-31T17:00:00',
+                'dateTime': finishDateTime,
                 'timeZone': 'Asia/Tokyo',
             },
             'attendees': [
