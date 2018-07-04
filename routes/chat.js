@@ -159,7 +159,7 @@ router.post('/webhook', function (req, res, next) {
         var eventDate = new Date(slot.date);
         var year = eventDate.getFullYear();
         var month = eventDate.getMonth()+1;
-        var date = eventDate.getDate()+1;
+        var date = eventDate.getDate();
 
         var startTime = new Date(slot.startDateTime);
         var startHours = startTime.getHours()+9; //修正必須
