@@ -167,7 +167,7 @@ router.post('/webhook', function (req, res, next) {
         var startSeconds = startTime.getSeconds();
 
         var finishTime = new Date(slot.finishDateTime);
-        var finishHours = finishTime.getHours();
+        var finishHours = finishTime.prototype.getHours();
         var finishMinutes = finishTime.getMinutes();
         var finishSeconds = finishTime.getSeconds();
 
