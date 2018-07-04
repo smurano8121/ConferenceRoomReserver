@@ -156,7 +156,12 @@ router.post('/webhook', function (req, res, next) {
     }
 
     function insertEvents(auth) {
-        var startDate = iso8601ToDate(slot.date);
+        var iso8601Date = function(iso) {
+            var parse = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\+\d{2}:\d{2}/);
+            return new Date( Number(parse[1]), Number(parse[2]), Number(parse[3]), Number(parse[4]), Number(parse[5]), Number(parse[6]) );
+        };
+
+        var startDate = iso8601Date(slot.date);
         console.log(startDate[1]);
         console.log(startDate[2]);
         console.log(startDate[3]);
@@ -164,7 +169,7 @@ router.post('/webhook', function (req, res, next) {
         console.log(startDate[5]);
         console.log(startDate[6]);
         console.log(startDate[7]);
-        
+
         var calendar = google.calendar('v3');
 
         var event = {
@@ -195,11 +200,6 @@ router.post('/webhook', function (req, res, next) {
             console.log('Event created: %s', event.htmlLink);
         });
     }
-
-    function iso8601ToDate(iso) {
-        var parse = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\+\d{2}:\d{2}/);
-        return new Date( Number(parse[1]), Number(parse[2]), Number(parse[3]), Number(parse[4]), Number(parse[5]), Number(parse[6]) );
-    };
 });
 
 
