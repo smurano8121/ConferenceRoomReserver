@@ -162,12 +162,12 @@ router.post('/webhook', function (req, res, next) {
         var date = eventDate.getDate()+1;
 
         var startTime = new Date(slot.startDateTime);
-        var startHours = startTime.getHours();
+        var startHours = startTime.getHours()+9;
         var startMinutes = startTime.getMinutes();
         var startSeconds = startTime.getSeconds();
 
         var finishTime = new Date(slot.finishDateTime);
-        var finishHours = finishTime.getHours();
+        var finishHours = finishTime.getHours()+9;
         var finishMinutes = finishTime.getMinutes();
         var finishSeconds = finishTime.getSeconds();
 
@@ -176,13 +176,14 @@ router.post('/webhook', function (req, res, next) {
         console.log(month);
         console.log(date);
 
+
         console.log(slot.startDateTime);
-        console.log(startHours+9);
+        console.log(startHours);
         console.log(startMinutes);
         console.log(startSeconds);
 
         console.log(slot.finishDateTime);
-        console.log(finishHours+9);
+        console.log(finishHours);
         console.log(finishMinutes);
         console.log(finishSeconds);
 
