@@ -190,11 +190,11 @@ router.post('/webhook', function (req, res, next) {
             'summary': 'APIからの予定登録テスト',
             'description': 'テスト用',
             'start': {
-                'dateTime': year+"-"+month+"-"+date+"T"+startHours+":"+startMinutes+":"+startSeconds,
+                'dateTime': year+"-"+month+"-"+date+"T"+startHours+":"+startMinutes+":"+startSeconds+"+09:00",
                 'timeZone': 'Asia/Tokyo',
             },
             'end': {
-                'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds,
+                'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds+"+09:00",
                 'timeZone': 'Asia/Tokyo',
             },
             'attendees': [
