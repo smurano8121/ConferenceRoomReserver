@@ -167,7 +167,7 @@ router.post('/webhook', function (req, res, next) {
         var startSeconds = startTime.getSeconds();
 
         var finishTime = new Date(slot.finishDateTime);
-        var finishHours = finishTime.prototype.getHours();
+        var finishHours = finishTime.getHours();
         var finishMinutes = finishTime.getMinutes();
         var finishSeconds = finishTime.getSeconds();
 
@@ -177,12 +177,12 @@ router.post('/webhook', function (req, res, next) {
         console.log(date);
 
         console.log(slot.startDateTime);
-        console.log(startHours);
+        console.log(startHours+9);
         console.log(startMinutes);
         console.log(startSeconds);
 
         console.log(slot.finishDateTime);
-        console.log(finishHours);
+        console.log(finishHours+9);
         console.log(finishMinutes);
         console.log(finishSeconds);
 
