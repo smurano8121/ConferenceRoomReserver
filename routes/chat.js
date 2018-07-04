@@ -83,7 +83,7 @@ router.post('/webhook', function (req, res, next) {
             if (err) return console.log('Error loading client secret file:', err);
             // Authorize a client with credentials, then call the Google Drive API.
             console.log(JSON.parse(content));
-            authorize(JSON.parse(content), insertEvents(callback, date,startDateTime,finishDateTime));
+            authorize(JSON.parse(content), insertEvents);
         });
         res.json({ "fulfillmentText": "予定を追加しました" });
     }
