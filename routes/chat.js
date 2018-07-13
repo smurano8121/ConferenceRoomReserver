@@ -224,7 +224,7 @@ router.post('/webhook', function (req, res, next) {
     function insertEvents(auth) {
         var calendar = google.calendar('v3');
         // attendeesJson = JSON.parse('"attendees": ['+attendees+"]");
-        attendees = '['+attendees+']';
+        // attendees = '['+attendees+']';
 
         var event = {
             'summary': 'APIからの予定登録テスト',
@@ -237,7 +237,7 @@ router.post('/webhook', function (req, res, next) {
                 'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds,
                 'timeZone': 'Asia/Tokyo',
             },
-            'attendees': attendees
+            'attendees': [attendees]
         };
 
         console.log(event);
