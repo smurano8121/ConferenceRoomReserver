@@ -50,8 +50,7 @@ var finishHours;
 var finishMinutes;
 var finishSeconds;
 
-
-
+var attendees=' ';
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -95,6 +94,8 @@ router.post('/webhook', function (req, res, next) {
         slot.finishDateTime = req.body.queryResult.parameters.time[1];
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
+
+        attendees += '{email: '+  slot.room +'},'
         console.log(slot.startDateTime);
         console.log(slot.finishDateTime);
 
@@ -141,8 +142,6 @@ router.post('/webhook', function (req, res, next) {
             if (err) throw err;
             res.json({ "fulfillmentText": month+"月"+date+"日の"+startHours+"時"+startMinutes+"分から"+finishHours+"時"+finishMinutes+"分まで"+result[0].name+"を予約します" });
         });
-
-        
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
@@ -152,6 +151,7 @@ router.post('/webhook', function (req, res, next) {
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
             console.log(responseName);
+            attendees += '{email: '+  req.body.queryResult.parameters.userName[i]+'},'
         }
         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
     }
