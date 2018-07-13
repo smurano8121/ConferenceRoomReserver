@@ -95,7 +95,7 @@ router.post('/webhook', function (req, res, next) {
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
-        attendees += '{"email": '+  slot.room +'}'
+        attendees += '{"email": "'+  slot.room +'"}'
         console.log(slot.startDateTime);
         console.log(slot.finishDateTime);
 
@@ -152,7 +152,7 @@ router.post('/webhook', function (req, res, next) {
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
             console.log(responseName);
-            attendees += '{"email": '+  req.body.queryResult.parameters.userName[i]+'},'
+            attendees += '{"email": "'+  req.body.queryResult.parameters.userName[i]+'"},'
         }
         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
     }
