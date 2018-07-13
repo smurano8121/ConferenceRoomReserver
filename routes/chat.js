@@ -123,6 +123,7 @@ router.post('/webhook', function (req, res, next) {
         console.log("参加者");
         console.log(req.body);
         var responseName = '';
+        attendees = [];
         console.log(req.body.queryResult.parameters.userName)
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
