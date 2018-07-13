@@ -129,6 +129,7 @@ router.post('/webhook', function (req, res, next) {
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
             console.log(responseName);
             var addData = { email : req.body.queryResult.parameters.userName[i] };
+            console.log(addData);
             attendees.push(addData) ;
         }
         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
