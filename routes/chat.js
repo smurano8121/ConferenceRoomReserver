@@ -95,7 +95,7 @@ router.post('/webhook', function (req, res, next) {
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
-        attendees += '{email: '+  slot.room +'},'
+        attendees += '{email: '+  slot.room +'}'
         console.log(slot.startDateTime);
         console.log(slot.finishDateTime);
 
