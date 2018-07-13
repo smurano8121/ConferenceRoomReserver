@@ -150,8 +150,9 @@ router.post('/webhook', function (req, res, next) {
         var responseName;
         for(var i=0;i<req.body.queryResult.parameters.useName.length;i++){
             responseName += req.body.queryResult.parameters.useName[i] +"さん";
+            console.log(responseName);
         }
-        res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください．"});
+        res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
     }
     else if (req.body.queryResult.intent.displayName == "予定開始日入力") {
 
