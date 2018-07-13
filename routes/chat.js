@@ -148,6 +148,7 @@ router.post('/webhook', function (req, res, next) {
         console.log("参加者");
         console.log(req.body);
         var responseName;
+        console.log(req.body.queryResult.parameters.useName.length)
         for(var i=0;i<req.body.queryResult.parameters.useName.length;i++){
             responseName += req.body.queryResult.parameters.useName[i] +"さん";
             console.log(responseName);
