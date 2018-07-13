@@ -87,7 +87,7 @@ router.post('/webhook', function (req, res, next) {
             console.log(JSON.parse(content));
             authorize(JSON.parse(content), insertEvents);
         });
-        res.json({ "fulfillmentText": "予定を追加しました" });
+        res.json({ "fulfillmentText": slot.date+"の"+slot.startDateTime+"から"+slot.finishDateTime+"まで"+slot.room+"を予約します" });
     }
     else if (req.body.queryResult.intent.displayName == "予定概要入力") {
 
