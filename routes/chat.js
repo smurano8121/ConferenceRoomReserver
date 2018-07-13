@@ -187,6 +187,8 @@ router.post('/webhook', function (req, res, next) {
         console.log(finishMinutes);
         console.log(finishSeconds);
 
+        console.log(slot.room);
+
         var calendar = google.calendar('v3');
 
         var event = {
