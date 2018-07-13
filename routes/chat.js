@@ -50,7 +50,7 @@ var finishHours;
 var finishMinutes;
 var finishSeconds;
 
-var attendees=' ';
+var attendees;
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -147,6 +147,7 @@ router.post('/webhook', function (req, res, next) {
         console.log("参加者");
         console.log(req.body);
         var responseName = '';
+        attendees=' ';
         console.log(req.body.queryResult.parameters.userName)
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
@@ -222,6 +223,7 @@ router.post('/webhook', function (req, res, next) {
 
     function insertEvents(auth) {
         var calendar = google.calendar('v3');
+        attendeesJson = JSON.parse(attendees);
 
         var event = {
             'summary': 'APIからの予定登録テスト',
@@ -236,7 +238,7 @@ router.post('/webhook', function (req, res, next) {
             },
             'attendees': [
                 // { 'email': slot.room }
-                attendees
+                attendeesJson
             ]
         };
 
