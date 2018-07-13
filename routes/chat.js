@@ -147,7 +147,7 @@ router.post('/webhook', function (req, res, next) {
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
         console.log(req.body);
-        var responseName;
+        var responseName = null;
         console.log(req.body.queryResult.parameters.userName.length)
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
