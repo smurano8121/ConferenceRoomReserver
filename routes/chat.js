@@ -223,7 +223,7 @@ router.post('/webhook', function (req, res, next) {
 
     function insertEvents(auth) {
         var calendar = google.calendar('v3');
-        attendeesJson = JSON.parse('"attendees": ['+attendees+"]");
+        // attendeesJson = JSON.parse('"attendees": ['+attendees+"]");
 
         var event = {
             'summary': 'APIからの予定登録テスト',
