@@ -236,7 +236,7 @@ router.post('/webhook', function (req, res, next) {
                 'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds,
                 'timeZone': 'Asia/Tokyo',
             },
-            attendeesJson
+            attendees
         };
 
         console.log(event);
