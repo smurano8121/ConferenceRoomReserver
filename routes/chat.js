@@ -33,6 +33,20 @@ let slot = {
     room: null,
 }
 
+
+var year;
+var month;
+var date;
+
+var startTime;
+var startHours; 
+var startMinutes;
+var startSeconds;
+
+var finishHours;
+var finishMinutes;
+var finishSeconds;
+
 const User = require('../models/user');
 
 
@@ -81,13 +95,45 @@ router.post('/webhook', function (req, res, next) {
         console.log(slot.startDateTime);
         console.log(slot.finishDateTime);
 
+
+        var eventDate = new Date(slot.date);
+        year = eventDate.getFullYear();
+        month = eventDate.getMonth()+1;
+        date = eventDate.getDate();
+
+        startTime = new Date(slot.startDateTime);
+        startHours = startTime.getHours()+9; //修正必須
+        startMinutes = startTime.getMinutes();
+        startSeconds = startTime.getSeconds();
+
+        finishTime = new Date(slot.finishDateTime);
+        finishHours = finishTime.getHours()+9; //修正必須
+        finishMinutes = finishTime.getMinutes();
+        finishSeconds = finishTime.getSeconds();
+
+        console.log(slot.date);
+        console.log(year);
+        console.log(month);
+        console.log(date);
+
+
+        console.log(slot.startDateTime);
+        console.log(startHours);
+        console.log(startMinutes);
+        console.log(startSeconds);
+
+        console.log(slot.finishDateTime);
+        console.log(finishHours);
+        console.log(finishMinutes);
+        console.log(finishSeconds);
+
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
             // Authorize a client with credentials, then call the Google Drive API.
             console.log(JSON.parse(content));
             authorize(JSON.parse(content), insertEvents);
         });
-        res.json({ "fulfillmentText": slot.date+"の"+slot.startDateTime+"から"+slot.finishDateTime+"まで"+slot.room+"を予約します" });
+        res.json({ "fulfillmentText": month+"月"+date+"日の"+startHours+"時"+startMinutes+"分から"+finishHours+"時"+finishMinutes+"分まで予約します" });
     }
     else if (req.body.queryResult.intent.displayName == "予定概要入力") {
 
@@ -158,37 +204,6 @@ router.post('/webhook', function (req, res, next) {
     }
 
     function insertEvents(auth) {
-        var eventDate = new Date(slot.date);
-        var year = eventDate.getFullYear();
-        var month = eventDate.getMonth()+1;
-        var date = eventDate.getDate();
-
-        var startTime = new Date(slot.startDateTime);
-        var startHours = startTime.getHours()+9; //修正必須
-        var startMinutes = startTime.getMinutes();
-        var startSeconds = startTime.getSeconds();
-
-        var finishTime = new Date(slot.finishDateTime);
-        var finishHours = finishTime.getHours()+9; //修正必須
-        var finishMinutes = finishTime.getMinutes();
-        var finishSeconds = finishTime.getSeconds();
-
-        console.log(slot.date);
-        console.log(year);
-        console.log(month);
-        console.log(date);
-
-
-        console.log(slot.startDateTime);
-        console.log(startHours);
-        console.log(startMinutes);
-        console.log(startSeconds);
-
-        console.log(slot.finishDateTime);
-        console.log(finishHours);
-        console.log(finishMinutes);
-        console.log(finishSeconds);
-
         var calendar = google.calendar('v3');
 
         var event = {
