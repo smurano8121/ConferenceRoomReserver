@@ -128,7 +128,7 @@ router.post('/webhook', function (req, res, next) {
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
             console.log(responseName);
-            var addData = { email : req.body.queryResult.parameters.userName[i] };
+            var addData = { 'email' : req.body.queryResult.parameters.userName[i] };
             console.log(addData);
             attendees.push(addData) ;
         }
