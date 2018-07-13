@@ -71,7 +71,7 @@ router.post('/webhook', function (req, res, next) {
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
-        attendees.push({email: slot.room });
+        attendees.push({'email': slot.room });
         console.log(slot.startDateTime);
         console.log(slot.finishDateTime);
 
@@ -123,7 +123,6 @@ router.post('/webhook', function (req, res, next) {
         console.log("参加者");
         console.log(req.body);
         var responseName = '';
-        attendees=null;
         console.log(req.body.queryResult.parameters.userName)
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
