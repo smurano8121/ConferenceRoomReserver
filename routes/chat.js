@@ -78,6 +78,8 @@ router.post('/webhook', function (req, res, next) {
         slot.finishDateTime = req.body.queryResult.parameters.time[1];
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
+        console.log(slot.startDateTime);
+        console.log(slot.finishDateTime);
 
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
@@ -187,8 +189,6 @@ router.post('/webhook', function (req, res, next) {
         console.log(finishMinutes);
         console.log(finishSeconds);
 
-        console.log(slot.room);
-
         var calendar = google.calendar('v3');
 
         var event = {
@@ -203,7 +203,7 @@ router.post('/webhook', function (req, res, next) {
                 'timeZone': 'Asia/Tokyo',
             },
             'attendees': [
-                { 'email': slot.room }
+                { 'email': 'mikilab.doshisha.ac.jp_33353234353936362d333132@resource.calendar.google.com' }
             ]
         };
 
