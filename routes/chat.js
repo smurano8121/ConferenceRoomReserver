@@ -64,38 +64,14 @@ router.post('/webhook', function (req, res, next) {
     console.log("webhookきたよ");
     console.log(req.body);
 
-    if (req.body.queryResult.intent.displayName == "名前") {
-        User.find({ "name": req.body.queryResult.parameters.userName }, function (err, user) {
-            userName = user[0].name;
-            // oauth = user[0].oauth;
-
-            fs.readFile('client_secret.json', (err, content) => {
-                if (err) return console.log('Error loading client secret file:', err);
-                // Authorize a client with credentials, then call the Google Drive API.
-                console.log(JSON.parse(content));
-                authorize(JSON.parse(content), listEvents);
-            });
-            res.json({ "fulfillmentText": userName });
-        });
-    }
-    else if (req.body.queryResult.intent.displayName == "予定確認") {
-        console.log(oAuth2Client);
-        fs.readFile('client_secret.json', (err, content) => {
-            if (err) return console.log('Error loading client secret file:', err);
-            // Authorize a client with credentials, then call the Google Drive API.
-            console.log(JSON.parse(content));
-            authorize(JSON.parse(content), listEvents);
-        });
-        res.json({ "fulfillmentText": "予約を承りました。" });
-    }
-    else if (req.body.queryResult.intent.displayName == "会議室予約") {
+    if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
         slot.startDateTime = req.body.queryResult.parameters.time[0];
         slot.finishDateTime = req.body.queryResult.parameters.time[1];
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
-        attendees.push('{"email": "'+  slot.room +'"}'); 
+        attendees.push({email: slot.room });
         console.log(slot.startDateTime);
         console.log(slot.finishDateTime);
 
@@ -152,7 +128,8 @@ router.post('/webhook', function (req, res, next) {
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
             console.log(responseName);
-            attendees.push('{"email": "'+  req.body.queryResult.parameters.userName[i]+'"}') ;
+            var addData = { email : req.body.queryResult.parameters.userName[i] };
+            attendees.push(addData) ;
         }
         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
     }
@@ -223,8 +200,8 @@ router.post('/webhook', function (req, res, next) {
 
     function insertEvents(auth) {
         var calendar = google.calendar('v3');
-        attendeesJson = JSON.parse('"attendees": ['+attendees+"]");
-        attendees = '['+attendees+']';
+        // attendeesJson = JSON.parse('"attendees": ['+attendees+"]");
+        // attendees = '['+attendees+']';
 
         var event = {
             'summary': 'APIからの予定登録テスト',
