@@ -235,9 +235,12 @@ router.post('/webhook', function (req, res, next) {
                 'timeZone': 'Asia/Tokyo',
             },
             'attendees': [
-                { 'email': slot.room }
+                // { 'email': slot.room }
+                attendees
             ]
         };
+
+        console.log(event);
 
         calendar.events.insert({
             auth: auth,
