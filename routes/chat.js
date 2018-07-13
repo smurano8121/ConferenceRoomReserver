@@ -95,7 +95,7 @@ router.post('/webhook', function (req, res, next) {
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
-        attendees += '{"email": "'+  slot.room +'"}'
+        attendees.push('{"email": "'+  slot.room +'"}'); 
         console.log(slot.startDateTime);
         console.log(slot.finishDateTime);
 
@@ -147,12 +147,12 @@ router.post('/webhook', function (req, res, next) {
         console.log("参加者");
         console.log(req.body);
         var responseName = '';
-        attendees=' ';
+        attendees=null;
         console.log(req.body.queryResult.parameters.userName)
         for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
             responseName += req.body.queryResult.parameters.userName[i] +"さん";
             console.log(responseName);
-            attendees += '{"email": "'+  req.body.queryResult.parameters.userName[i]+'"},'
+            attendees.push('{"email": "'+  req.body.queryResult.parameters.userName[i]+'"}') ;
         }
         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
     }
@@ -223,8 +223,8 @@ router.post('/webhook', function (req, res, next) {
 
     function insertEvents(auth) {
         var calendar = google.calendar('v3');
-        // attendeesJson = JSON.parse('"attendees": ['+attendees+"]");
-        // attendees = '['+attendees+']';
+        attendeesJson = JSON.parse('"attendees": ['+attendees+"]");
+        attendees = '['+attendees+']';
 
         var event = {
             'summary': 'APIからの予定登録テスト',
@@ -237,7 +237,7 @@ router.post('/webhook', function (req, res, next) {
                 'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds,
                 'timeZone': 'Asia/Tokyo',
             },
-            'attendees': [attendees]
+            'attendees': attendees
         };
 
         console.log(event);
