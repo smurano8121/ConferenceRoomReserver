@@ -16,6 +16,9 @@ const TOKEN_PATH = 'credentials.json';
 
 const request = require('request');
 
+const User = require('../models/user');
+const Room = require('../models/room');
+
 let userName;
 let userOauth;
 
@@ -47,7 +50,7 @@ var finishHours;
 var finishMinutes;
 var finishSeconds;
 
-const User = require('../models/user');
+
 
 
 /* GET home page. */
@@ -133,7 +136,13 @@ router.post('/webhook', function (req, res, next) {
             console.log(JSON.parse(content));
             authorize(JSON.parse(content), insertEvents);
         });
-        res.json({ "fulfillmentText": month+"月"+date+"日の"+startHours+"時"+startMinutes+"分から"+finishHours+"時"+finishMinutes+"分まで予約します" });
+        
+        Room.find({ "address": slot.room }, function (err, result) {
+            if (err) throw err;
+            res.json({ "fulfillmentText": month+"月"+date+"日の"+startHours+"時"+startMinutes+"分から"+finishHours+"時"+finishMinutes+"分まで"+result[0].name+"を予約します" });
+        });
+
+        
     }
     else if (req.body.queryResult.intent.displayName == "予定概要入力") {
 
