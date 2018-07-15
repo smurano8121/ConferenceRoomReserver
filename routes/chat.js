@@ -17,6 +17,8 @@ const TOKEN_PATH = 'credentials.json';
 const User = require('../models/user');
 const Room = require('../models/room');
 
+const insertEvents = require('../public/javascripts/server/googleCalenderAccess');
+
 let slot = {
     name: null,
     date: null,
@@ -75,25 +77,12 @@ router.post('/webhook', function (req, res, next) {
         finishMinutes = finishTime.getMinutes();
         finishSeconds = finishTime.getSeconds();
 
-        console.log(slot.date);
-        console.log(year);
-        console.log(month);
-        console.log(date);
-
-        console.log(slot.startDateTime);
-        console.log(startHours);
-        console.log(startMinutes);
-        console.log(startSeconds);
-
-        console.log(slot.finishDateTime);
-        console.log(finishHours);
-        console.log(finishMinutes);
-        console.log(finishSeconds);
+        console.log("予約日: " + year + "年" + month + "月" + date + "日");
+        console.log("開始時刻: " + startHours + "時" + startMinutes + "分");
+        console.log("終了時刻: " + finishHours + "時" + finishMinutes + "分");
 
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
-            // Authorize a client with credentials, then call the Google Drive API.
-            console.log(JSON.parse(content));
             authorize(JSON.parse(content), insertEvents);
         });
         
@@ -158,34 +147,6 @@ router.post('/webhook', function (req, res, next) {
             } else {
                 console.log('No upcoming events found.');
             }
-        });
-    }
-
-    function insertEvents(auth) {
-        var calendar = google.calendar('v3');
-        var event = {
-            'summary': 'APIからの予定登録テスト',
-            'start': {
-                'dateTime': year+"-"+month+"-"+date+"T"+startHours+":"+startMinutes+":"+startSeconds,
-                'timeZone': 'Asia/Tokyo',
-            },
-            'end': {
-                'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds,
-                'timeZone': 'Asia/Tokyo',
-            },
-            'attendees': attendees
-        };
-
-        calendar.events.insert({
-            auth: auth,
-            calendarId: 'primary',
-            resource: event,
-        }, function (err, event) {
-            if (err) {
-                console.log('There was an error contacting the Calendar service: ' + err);
-                return;
-            }
-            console.log('Event created: %s', event.htmlLink);
         });
     }
 });
