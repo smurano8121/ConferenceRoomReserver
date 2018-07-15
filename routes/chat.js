@@ -19,14 +19,6 @@ const request = require('request');
 const User = require('../models/user');
 const Room = require('../models/room');
 
-let userName;
-let userOauth;
-
-let eventSummary = null;
-let eventDate = null;
-let eventStartTime = null;
-let eventFinishTime = null;
-
 let slot = {
     name: null,
     date: null,
@@ -35,7 +27,6 @@ let slot = {
     eventSummary: null,
     room: null,
 }
-
 
 var year;
 var month;
@@ -61,8 +52,6 @@ router.get('/', function (req, res, next) {
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
-    console.log("webhookきたよ");
-    console.log(req.body);
 
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
@@ -72,9 +61,6 @@ router.post('/webhook', function (req, res, next) {
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
         attendees.push({'email': slot.room });
-        console.log(slot.startDateTime);
-        console.log(slot.finishDateTime);
-
 
         var eventDate = new Date(slot.date);
         year = eventDate.getFullYear();
@@ -95,7 +81,6 @@ router.post('/webhook', function (req, res, next) {
         console.log(year);
         console.log(month);
         console.log(date);
-
 
         console.log(slot.startDateTime);
         console.log(startHours);
