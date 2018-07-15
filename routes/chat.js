@@ -97,6 +97,7 @@ router.post('/webhook', function (req, res, next) {
 
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
+            console.log(registData);
             authorize(JSON.parse(content), googleCalenderEventControler.insertEvents);
         });
         
