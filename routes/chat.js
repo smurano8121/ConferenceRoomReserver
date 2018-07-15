@@ -17,7 +17,7 @@ const TOKEN_PATH = 'credentials.json';
 const User = require('../models/user');
 const Room = require('../models/room');
 
-const insertEvents = require('../public/javascripts/server/googleCalenderAccess');
+const googleCalenderEventControler = require('../public/javascripts/server/googleCalenderAccess');
 
 let slot = {
     name: null,
@@ -83,7 +83,7 @@ router.post('/webhook', function (req, res, next) {
 
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
-            authorize(JSON.parse(content), insertEvents);
+            authorize(JSON.parse(content), googleCalenderEventControler.insertEvents);
         });
         
         Room.find({ "address": slot.room }, function (err, result) {
