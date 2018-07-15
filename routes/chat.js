@@ -28,6 +28,17 @@ let slot = {
     room: null,
 }
 
+let registData = {
+    year: null,
+    month: null,
+    date: null,
+    startHours: null,
+    startMinutes: null,
+    finishHours: null,
+    finishMinutes: null,
+    attendees: null
+}
+
 var year;
 var month;
 var date;
@@ -61,25 +72,28 @@ router.post('/webhook', function (req, res, next) {
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
         attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
+        
 
         var eventDate = new Date(slot.date);
-        year = eventDate.getFullYear();
-        month = eventDate.getMonth()+1;
-        date = eventDate.getDate();
+        registData.year = eventDate.getFullYear();
+        registData.month = eventDate.getMonth()+1;
+        registData.date = eventDate.getDate();
 
-        startTime = new Date(slot.startDateTime);
-        startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
-        startMinutes = startTime.getMinutes();
-        startSeconds = startTime.getSeconds();
+        registData.startTime = new Date(slot.startDateTime);
+        registData.startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
+        registData.startMinutes = startTime.getMinutes();
+        registData.startSeconds = startTime.getSeconds();
 
-        finishTime = new Date(slot.finishDateTime);
-        finishHours = finishTime.getHours()+9; //修正必須
-        finishMinutes = finishTime.getMinutes();
-        finishSeconds = finishTime.getSeconds();
+        registData.finishTime = new Date(slot.finishDateTime);
+        registData.finishHours = finishTime.getHours()+9; //修正必須
+        registData.finishMinutes = finishTime.getMinutes();
+        registData.finishSeconds = finishTime.getSeconds();
 
-        console.log("予約日: " + year + "年" + month + "月" + date + "日");
-        console.log("開始時刻: " + startHours + "時" + startMinutes + "分");
-        console.log("終了時刻: " + finishHours + "時" + finishMinutes + "分");
+        registData.attendees = attendees;
+
+        console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
+        console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
+        console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
 
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
@@ -124,7 +138,7 @@ router.post('/webhook', function (req, res, next) {
             res.json({ "fulfillmentText": "トークンを取得できませんでした" });
         }
         oAuth2Client.setCredentials(JSON.parse(token));
-        callback(oAuth2Client);
+        callback(oAuth2Client,registData);
     }
 
     function listEvents(auth, startDate, callback) {

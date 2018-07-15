@@ -1,18 +1,18 @@
 const { google } = require('googleapis');
 
-exports.insertEvents = function(auth) {
+exports.insertEvents = function(auth,registData) {
     var calendar = google.calendar('v3');
     var event = {
         'summary': 'APIからの予定登録テスト',
         'start': {
-            'dateTime': year+"-"+month+"-"+date+"T"+startHours+":"+startMinutes+":"+startSeconds,
+            'dateTime': registData.year+"-"+registData.month+"-"+registData.date+"T"+registData.startHours+":"+registData.startMinutes+":"+registData.startSeconds,
             'timeZone': 'Asia/Tokyo',
         },
         'end': {
-            'dateTime': year+"-"+month+"-"+date+"T"+finishHours+":"+finishMinutes+":"+finishSeconds,
+            'dateTime': registData.year+"-"+registData.month+"-"+registData.date+"T"+registData.finishHours+":"+registData.finishMinutes+":"+registData.finishSeconds,
             'timeZone': 'Asia/Tokyo',
         },
-        'attendees': attendees
+        'attendees': registData.attendees
     };
 
     calendar.events.insert({
