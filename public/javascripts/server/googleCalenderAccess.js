@@ -1,3 +1,5 @@
+const { google } = require('googleapis');
+
 exports.insertEvents = function(auth) {
     var calendar = google.calendar('v3');
     var event = {
