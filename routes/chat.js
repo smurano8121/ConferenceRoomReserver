@@ -34,23 +34,12 @@ let registData = {
     date: null,
     startHours: null,
     startMinutes: null,
+    startSeconds: null,
     finishHours: null,
     finishMinutes: null,
+    finishSeconds: null,
     attendees: null
 }
-
-var year;
-var month;
-var date;
-
-var startTime;
-var startHours; 
-var startMinutes;
-var startSeconds;
-
-var finishHours;
-var finishMinutes;
-var finishSeconds;
 
 var attendees; //会議参加者格納Object
 
@@ -79,13 +68,15 @@ router.post('/webhook', function (req, res, next) {
         registData.month = eventDate.getMonth()+1;
         registData.date = eventDate.getDate();
 
-        startTime = new Date(slot.startDateTime);
+        var startTime = new Date(slot.startDateTime);
         registData.startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
         registData.startMinutes = startTime.getMinutes();
+        registData.startSeconds = startTime.getSeconds();
 
-        finishTime = new Date(slot.finishDateTime);
+        var finishTime = new Date(slot.finishDateTime);
         registData.finishHours = finishTime.getHours()+9; //修正必須
         registData.finishMinutes = finishTime.getMinutes();
+        registData.finishSeconds = finishTime.getSeconds();
 
         registData.attendees = attendees;
 
@@ -101,7 +92,7 @@ router.post('/webhook', function (req, res, next) {
         
         Room.find({ "address": slot.room }, function (err, result) {
             if (err) throw err;
-            res.json({ "fulfillmentText": month+"月"+date+"日の"+startHours+"時"+startMinutes+"分から"+finishHours+"時"+finishMinutes+"分まで"+result[0].name+"を予約します" });
+            res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"を予約します" });
         });
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
