@@ -14,8 +14,6 @@ const OAuth2Client = google.auth.OAuth2;
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 const TOKEN_PATH = 'credentials.json';
 
-const request = require('request');
-
 const User = require('../models/user');
 const Room = require('../models/room');
 
@@ -41,7 +39,7 @@ var finishHours;
 var finishMinutes;
 var finishSeconds;
 
-var attendees;
+var attendees; //会議参加者格納Object
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -60,7 +58,7 @@ router.post('/webhook', function (req, res, next) {
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
-        attendees.push({'email': slot.room });
+        attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
 
         var eventDate = new Date(slot.date);
         year = eventDate.getFullYear();
@@ -68,7 +66,7 @@ router.post('/webhook', function (req, res, next) {
         date = eventDate.getDate();
 
         startTime = new Date(slot.startDateTime);
-        startHours = startTime.getHours()+9; //修正必須
+        startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
         startMinutes = startTime.getMinutes();
         startSeconds = startTime.getSeconds();
 
@@ -106,28 +104,18 @@ router.post('/webhook', function (req, res, next) {
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
-        console.log(req.body);
+        let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
         var responseName = '';
         attendees = [];
-        console.log(req.body.queryResult.parameters.userName)
-        for(var i=0;i<req.body.queryResult.parameters.userName.length;i++){
-            responseName += req.body.queryResult.parameters.userName[i] +"さん";
+        
+        attendeesListFromDialogFlow.forEach(attendeeMail => {
+            responseName += attendeeMail +"さん";
             console.log(responseName);
-            var addData = { 'email' : req.body.queryResult.parameters.userName[i] };
-            console.log(addData);
+            var addData = { 'email' : attendeeMail };
             attendees.push(addData) ;
-        }
+        });
         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
     }
-    else if (req.body.queryResult.intent.displayName == "予定開始日入力") {
-
-    }
-    else if (req.body.queryResult.intent.displayName == "予定時間入力") {
-
-    }
-
-
-
     // function checkSlotFulfilled(slot) {
     //     if (!slot.name || !slot.date || !slot.startDateTime || !slot.finishDateTime || !slot.eventSummary || !slot.room) {
     //         return false;
@@ -149,17 +137,6 @@ router.post('/webhook', function (req, res, next) {
         oAuth2Client.setCredentials(JSON.parse(token));
         callback(oAuth2Client);
     }
-
-    function getAccessToken(oAuth2Client, callback) {
-        const authUrl = oAuth2Client.generateAuthUrl({
-            access_type: 'offline',
-            scope: SCOPES,
-        });
-        res.redirect(authUrl)
-    }
-
-
-
 
     function listEvents(auth, startDate, callback) {
         const calendar = google.calendar({ version: 'v3', auth });
@@ -186,12 +163,8 @@ router.post('/webhook', function (req, res, next) {
 
     function insertEvents(auth) {
         var calendar = google.calendar('v3');
-        // attendeesJson = JSON.parse('"attendees": ['+attendees+"]");
-        // attendees = '['+attendees+']';
-
         var event = {
             'summary': 'APIからの予定登録テスト',
-            'description': 'テスト用',
             'start': {
                 'dateTime': year+"-"+month+"-"+date+"T"+startHours+":"+startMinutes+":"+startSeconds,
                 'timeZone': 'Asia/Tokyo',
@@ -202,8 +175,6 @@ router.post('/webhook', function (req, res, next) {
             },
             'attendees': attendees
         };
-
-        console.log(event);
 
         calendar.events.insert({
             auth: auth,
