@@ -55,7 +55,7 @@ exports.insertEvents = function(auth,registData) {
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
-        var events = freebusy.calendars;
+        var events = freebusy.calendars[registData.room].busy;
         console.log(events);
         if (events.length == 0) {
             calendar.events.insert({
