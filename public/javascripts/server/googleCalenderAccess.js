@@ -50,12 +50,12 @@ exports.insertEvents = function(auth,registData) {
         headers: { "content-type" : "application/json" },
         resource: freeBusy,
     },function(err,freebusy){
-        console.log('Response from the Calendar service: ' + JSON.stringify(response));
+        console.log('Response from the Calendar service: ' + JSON.stringify(freebusy));
         if (err) {
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
-        var events = response.calendars;
+        var events = freebusy.calendars;
         console.log(events);
         if (events.length == 0) {
             calendar.events.insert({
