@@ -18,6 +18,22 @@ exports.authorizeInsertEvents = function (credentials, callback) {
     callback(oAuth2Client,registData);
 }
 
+exports.authorizeCheckFreeBusy = function (credentials, callback) {
+    const { client_secret, client_id, redirect_uris } = credentials.web;
+    let token = {};
+    oAuth2Client = new google.auth.OAuth2(
+        client_id, client_secret, redirect_uris[0]);
+
+    // Check if we have previously stored a token.
+    try {
+        token = fs.readFileSync(TOKEN_PATH);
+    } catch (err) {
+        res.json({ "fulfillmentText": "トークンを取得できませんでした" });
+    }
+    oAuth2Client.setCredentials(JSON.parse(token));
+    callback(oAuth2Client,registData);
+}
+
 exports.insertEvents = function(auth,registData) {
     var calendar = google.calendar('v3');
     var event = {
@@ -33,17 +49,59 @@ exports.insertEvents = function(auth,registData) {
         'attendees': registData.attendees
     };
 
-    calendar.events.insert({
+    var freeBusy = {
+        "timeMin": registData.startDateTime,
+        "timeMax": registData.finishDateTime,
+        "timeZone": 'Asia/Tokyo',
+        "items": [
+            {
+            "id": registData.room
+            }
+        ]
+    }
+
+    calendar.freebusy.query({
         auth: auth,
-        calendarId: 'primary',
-        resource: event,
-    }, function (err, event) {
+        headers: { "content-type" : "application/json" },
+        resource: freeBusy,
+    },function(err,freebusy){
+        console.log('Response from the Calendar service: ' + JSON.stringify(response));
         if (err) {
-            console.log('There was an error contacting the Calendar service: ' + err);
-            return;
-        }
-        console.log('Event created: %s', event.htmlLink);
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+        }   
+        var events = response.calendars;
+        console.log(events);
+        if (events.length == 0) {
+            calendar.events.insert({
+                auth: auth,
+                calendarId: 'primary',
+                resource: event,
+            }, function (err, event) {
+                if (err) {
+                    console.log('There was an error contacting the Calendar service: ' + err);
+                    return;
+                }
+                console.log('Event created: %s', event.htmlLink);
+            });
+        } else {
+                console.log('busy in here...');
+        }   
     });
+}
+
+exports.checkFreeBusy = function(auth){
+    var calendar = google.calendar('v3');
+    var freeBusy = {
+        "timeMin": datetime,
+        "timeMax": datetime,
+        "timeZone": 'Asia/Tokyo',
+        "items": [
+            {
+            "id": string
+            }
+        ]
+    }
 }
 
 exports.listEvents = function(auth, startDate, callback) {
