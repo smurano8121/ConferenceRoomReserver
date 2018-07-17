@@ -3,20 +3,17 @@
  * googleカレンダ部分はgoogleApiAcessに移譲
  */
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 const fs = require('fs');
-const mkdirp = require('mkdirp');
 const readline = require('readline');
-const { google } = require('googleapis');
-const OAuth2Client = google.auth.OAuth2;
-const SCOPES = ['https://www.googleapis.com/auth/calendar'];
-const TOKEN_PATH = 'credentials.json';
 
+//データモデル
 const User = require('../models/user');
 const Room = require('../models/room');
 
+//外部ファイルからカレンダAPIアクセス用の関数を取得
 const googleCalenderEventControler = require('../public/javascripts/server/googleCalenderAccess');
 
 let slot = {
@@ -32,22 +29,19 @@ let registData = {
     year: null,
     month: null,
     date: null,
+    startDateTime: null,
     startHours: null,
     startMinutes: null,
     startSeconds: null,
+    finishDateTime: null,
     finishHours: null,
     finishMinutes: null,
     finishSeconds: null,
-    attendees: null
+    attendees: null,
+    room: null
 }
 
 var attendees; //会議参加者格納Object
-
-/* GET home page. */
-router.get('/', function (req, res, next) {
-    ret = { "speech": "きたよ" };
-    res.json(ret);
-});
 
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
@@ -63,21 +57,24 @@ router.post('/webhook', function (req, res, next) {
         attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
         
 
-        var eventDate = new Date(slot.date);
+        let eventDate = new Date(slot.date);
         registData.year = eventDate.getFullYear();
         registData.month = eventDate.getMonth()+1;
         registData.date = eventDate.getDate();
 
-        var startTime = new Date(slot.startDateTime);
+        let startTime = new Date(slot.startDateTime);
+        registData.startDateTime = req.body.queryResult.parameters.time[0];
         registData.startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
         registData.startMinutes = startTime.getMinutes();
         registData.startSeconds = startTime.getSeconds();
 
-        var finishTime = new Date(slot.finishDateTime);
+        let finishTime = new Date(slot.finishDateTime);
+        registData.finishDateTime = req.body.queryResult.parameters.time[1];
         registData.finishHours = finishTime.getHours()+9; //修正必須
         registData.finishMinutes = finishTime.getMinutes();
         registData.finishSeconds = finishTime.getSeconds();
 
+        registData.room = req.body.queryResult.parameters.confernceRoom;
         registData.attendees = attendees;
 
         console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
@@ -87,7 +84,7 @@ router.post('/webhook', function (req, res, next) {
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
             console.log(registData);
-            authorize(JSON.parse(content), googleCalenderEventControler.insertEvents);
+            googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), googleCalenderEventControler.insertEvents);
         });
         
         Room.find({ "address": slot.room }, function (err, result) {
@@ -102,56 +99,14 @@ router.post('/webhook', function (req, res, next) {
         attendees = [];
         
         attendeesListFromDialogFlow.forEach(attendeeMail => {
-            responseName += attendeeMail +"さん";
-            console.log(responseName);
-            var addData = { 'email' : attendeeMail };
-            attendees.push(addData) ;
+            User.find({"email": attendeeMail},function(err,result){
+                responseName = result[0].name+"さん";
+                console.log(responseName);
+                var addData = { 'email' : attendeeMail };
+                attendees.push(addData) ;
+            });
         });
         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
-    }
-    // function checkSlotFulfilled(slot) {
-    //     if (!slot.name || !slot.date || !slot.startDateTime || !slot.finishDateTime || !slot.eventSummary || !slot.room) {
-    //         return false;
-    //     }
-    // }
-
-    function authorize(credentials, callback) {
-        const { client_secret, client_id, redirect_uris } = credentials.web;
-        let token = {};
-        oAuth2Client = new google.auth.OAuth2(
-            client_id, client_secret, redirect_uris[0]);
-
-        // Check if we have previously stored a token.
-        try {
-            token = fs.readFileSync(TOKEN_PATH);
-        } catch (err) {
-            res.json({ "fulfillmentText": "トークンを取得できませんでした" });
-        }
-        oAuth2Client.setCredentials(JSON.parse(token));
-        callback(oAuth2Client,registData);
-    }
-
-    function listEvents(auth, startDate, callback) {
-        const calendar = google.calendar({ version: 'v3', auth });
-        calendar.events.list({
-            calendarId: 'primary',
-            timeMin: (new Date()).toISOString(),
-            maxResults: 10,
-            singleEvents: true,
-            orderBy: 'startTime',
-        }, (err, { data }) => {
-            if (err) return console.log('The API returned an error: ' + err);
-            const events = data.items;
-            if (events.length) {
-                console.log('Upcoming 10 events:');
-                events.map((event, i) => {
-                    const start = event.start.dateTime || event.start.date;
-                    console.log(`${start} - ${event.summary}`);
-                });
-            } else {
-                console.log('No upcoming events found.');
-            }
-        });
     }
 });
 
