@@ -12,7 +12,6 @@ const registration = require('./routes/registration');
 const messageLog = require('./routes/messageLog');
 const oauth = require('./routes/oauth');
 const chat = require('./routes/chat');
-const api = require('./routes/googleApiAccess');
 const users = require('./routes/users');
 
 const app = express();
@@ -46,7 +45,6 @@ app.use('/messageLog', messageLog);
 app.use('/oauth', oauth);
 app.use('/users', users);
 app.use('/chat', chat);
-app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
