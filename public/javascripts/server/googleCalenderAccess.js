@@ -12,23 +12,7 @@ exports.authorizeInsertEvents = function (credentials, callback) {
     try {
         token = fs.readFileSync(TOKEN_PATH);
     } catch (err) {
-        res.json({ "fulfillmentText": "トークンを取得できませんでした" });
-    }
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client,registData);
-}
-
-exports.authorizeCheckFreeBusy = function (credentials, callback) {
-    const { client_secret, client_id, redirect_uris } = credentials.web;
-    let token = {};
-    oAuth2Client = new google.auth.OAuth2(
-        client_id, client_secret, redirect_uris[0]);
-
-    // Check if we have previously stored a token.
-    try {
-        token = fs.readFileSync(TOKEN_PATH);
-    } catch (err) {
-        res.json({ "fulfillmentText": "トークンを取得できませんでした" });
+        console.log({ "fulfillmentText": "トークンを取得できませんでした" });
     }
     oAuth2Client.setCredentials(JSON.parse(token));
     callback(oAuth2Client,registData);
