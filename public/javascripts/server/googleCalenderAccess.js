@@ -59,11 +59,11 @@ exports.insertEvents = function(auth,registData) {
         } 
     },function(err,freebusy){
         console.log(JSON.parse(freebusy.data));
-        // if (err) {
-        //         console.log("エラー");
-        //         console.log('There was an error contacting the Calendar service: ' + err);
-        //         return;
-        // }   
+        if (err) {
+                console.log("エラー");
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+        }   
         var events = freebusy.data.calendars[registData.room].busy;
         console.log(freebusy.calendars[registData.room].busy);
         console.log(events);
