@@ -50,13 +50,15 @@ exports.insertEvents = function(auth,registData) {
         headers: { "content-type" : "application/json" },
         // resource: freeBusy,
         resource: {
-            items: [{id : registData.room}], 
+            items: [
+                {id : registData.room}
+            ], 
             timeMin: registData.startDateTime,
             timeMax: registData.finishDateTime,
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,freebusy){
-        console.log(JSON.parse(freebusy));
+        console.log(JSON.parse(freebusy.data));
         // if (err) {
         //         console.log("エラー");
         //         console.log('There was an error contacting the Calendar service: ' + err);
