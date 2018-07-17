@@ -50,7 +50,7 @@ exports.insertEvents = function(auth,registData) {
         headers: { "content-type" : "application/json" },
         resource: freeBusy,
     },function(err,freebusy){
-        console.log(freebusy);
+        // console.log(freebusy);
         if (err) {
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
