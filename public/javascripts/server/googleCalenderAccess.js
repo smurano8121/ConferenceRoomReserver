@@ -62,7 +62,7 @@ exports.insertEvents = function(auth,registData) {
         //         console.log('There was an error contacting the Calendar service: ' + err);
         //         return;
         // }   
-        var events = freebusy.calendars[registData.room].busy;
+        var events = freebusy.data.calendars[registData.room].busy;
         console.log(freebusy.calendars[registData.room].busy);
         console.log(events);
         if (events.length == 0) {
