@@ -56,6 +56,7 @@ exports.insertEvents = function(auth,registData) {
                 return;
         }   
         var events = freebusy.calendars[registData.room].busy;
+        console.log(freebusy.calendars[registData.room].busy);
         console.log(events);
         if (events.length == 0) {
             calendar.events.insert({
