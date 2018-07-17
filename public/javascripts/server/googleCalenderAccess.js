@@ -3,7 +3,7 @@ const OAuth2Client = google.auth.OAuth2;
 const TOKEN_PATH = 'credentials.json';
 const fs = require('fs');
 
-exports.authorizeInsertEvents = function (credentials, callback) {
+exports.authorizeInsertEvents = function (credentials, registData,callback) {
     const { client_secret, client_id, redirect_uris } = credentials.web;
     let token = {};
     oAuth2Client = new google.auth.OAuth2(
