@@ -58,7 +58,7 @@ exports.insertEvents = function(auth,registData) {
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,freebusy){
-        console.log(freebusy.data);
+        console.log(freebusy.data.calendars[registData.room].busy);
         if (err) {
                 console.log("エラー");
                 console.log('There was an error contacting the Calendar service: ' + err);
