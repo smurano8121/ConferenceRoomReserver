@@ -50,7 +50,7 @@ exports.insertEvents = function(auth,registData) {
         headers: { "content-type" : "application/json" },
         // resource: freeBusy,
         resource: {
-            items: [{"id" : registData.room}],   //needed to include resource instead of sending the params directly.
+            items: [{id : registData.room}],   //needed to include resource instead of sending the params directly.
             timeMin: registData.startDateTime,
             timeMax: registData.finishDateTime,
             "timeZone": 'Asia/Tokyo'
