@@ -48,7 +48,13 @@ exports.insertEvents = function(auth,registData) {
     calendar.freebusy.query({
         auth: auth,
         headers: { "content-type" : "application/json" },
-        resource: freeBusy,
+        // resource: freeBusy,
+        resource: {
+            items: [{"id" : registData.room}],   //needed to include resource instead of sending the params directly.
+            timeMin: registData.startDateTime,
+            timeMax: registData.finishDateTime,
+            "timeZone": 'Asia/Tokyo'
+        } 
     },function(err,freebusy){
         // console.log(freebusy);
         if (err) {
