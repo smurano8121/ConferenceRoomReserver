@@ -35,12 +35,12 @@ exports.insertEvents = function(auth,registData) {
     };
 
     var freeBusy = {
-        "timeMin": registData.startDateTime,
-        "timeMax": registData.finishDateTime,
-        "timeZone": 'Asia/Tokyo',
-        "items": [
+        timeMin: registData.startDateTime,
+        timeMax: registData.finishDateTime,
+        timeZone: 'Asia/Tokyo',
+        items: [
             {
-            "id": registData.room
+            id: registData.room
             }
         ]
     }
@@ -50,13 +50,13 @@ exports.insertEvents = function(auth,registData) {
         headers: { "content-type" : "application/json" },
         // resource: freeBusy,
         resource: {
-            items: [{id : registData.room}],   //needed to include resource instead of sending the params directly.
+            items: [{id : registData.room}], 
             timeMin: registData.startDateTime,
             timeMax: registData.finishDateTime,
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,freebusy){
-        // console.log(freebusy);
+        console.log(freebusy);
         if (err) {
                 console.log("エラー");
                 console.log('There was an error contacting the Calendar service: ' + err);
