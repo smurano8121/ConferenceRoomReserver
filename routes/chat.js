@@ -73,13 +73,13 @@ router.post('/webhook', function (req, res, next) {
         registData.date = eventDate.getDate();
 
         let startTime = new Date(slot.startDateTime);
-        registData.startDateTime = req.body.queryResult.parameters.time[0];
+        registData.startDateTime = slot.startDateTime;
         registData.startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
         registData.startMinutes = startTime.getMinutes();
         registData.startSeconds = startTime.getSeconds();
 
         let finishTime = new Date(slot.finishDateTime);
-        registData.finishDateTime = req.body.queryResult.parameters.time[1];
+        registData.finishDateTime = slot.finishDateTime;
         registData.finishHours = finishTime.getHours()+9; //修正必須
         registData.finishMinutes = finishTime.getMinutes();
         registData.finishSeconds = finishTime.getSeconds();
