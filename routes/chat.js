@@ -47,12 +47,22 @@ var attendees; //会議参加者格納Object
 router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
 
+    // " /\d{4}-\d{2}-\d{2}T/ " 「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
+    // " /\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/ " 「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
-        slot.startDateTime = req.body.queryResult.parameters.time[0];
-        slot.finishDateTime = req.body.queryResult.parameters.time[1];
+
+        let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);
+        let startTime = req.body.queryResult.parameters.time[0].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);
+        let finishTime = req.body.queryResult.parameters.time[1].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);
+
+        slot.startDateTime = date+startTime;
+        slot.finishDateTime = date+finishTime;
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
+
+        console.log(slot.startDateTime);
+        console.log(slot.finishDateTime);
 
         attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
         
