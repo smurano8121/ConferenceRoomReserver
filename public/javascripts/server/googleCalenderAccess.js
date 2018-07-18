@@ -3,7 +3,7 @@ const OAuth2Client = google.auth.OAuth2;
 const TOKEN_PATH = 'credentials.json';
 const fs = require('fs');
 
-exports.authorizeInsertEvents = function (credentials, registData,callback) {
+exports.authorizeInsertEvents = function (credentials, registData, callback) {
     const { client_secret, client_id, redirect_uris } = credentials.web;
     let token = {};
     oAuth2Client = new google.auth.OAuth2(
@@ -19,7 +19,7 @@ exports.authorizeInsertEvents = function (credentials, registData,callback) {
     callback(oAuth2Client,registData);
 }
 
-exports.insertEvents = function(auth,registData) {
+exports.insertEvents = function(auth, registData) {
     var calendar = google.calendar('v3');
     var event = {
         'summary': 'APIからの予定登録テスト',
