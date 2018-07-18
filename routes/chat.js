@@ -53,11 +53,11 @@ router.post('/webhook', function (req, res, next) {
         console.log(req.body.queryResult.intent.displayName);
 
         let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);
-        let startTime = req.body.queryResult.parameters.time[0].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);
-        let finishTime = req.body.queryResult.parameters.time[1].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);
+        let startTimeRegExr = req.body.queryResult.parameters.time[0].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);
+        let finishTimeRegExr = req.body.queryResult.parameters.time[1].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);
 
-        slot.startDateTime = date+startTime;
-        slot.finishDateTime = date+finishTime;
+        slot.startDateTime = date+startTimeRegExr;
+        slot.finishDateTime = date+finishTimeRegExr;
         slot.date = req.body.queryResult.parameters.date;
         slot.room = req.body.queryResult.parameters.confernceRoom;
 
