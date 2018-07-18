@@ -3,20 +3,18 @@
  * googleカレンダ部分はgoogleApiAcessに移譲
  */
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var fs = require('fs');
-var readline = require('readline');
-const request = require('request');
+const fs = require('fs');
+const readline = require('readline');
 
-let userName;
-let userOauth;
+//データモデル
+const User = require('../models/user');
+const Room = require('../models/room');
 
-let eventSummary = null;
-let eventDate = null;
-let eventStartTime = null;
-let eventFinishTime = null;
+//外部ファイルからカレンダAPIアクセス用の関数を取得
+const googleCalenderEventControler = require('../public/javascripts/server/googleCalenderAccess');
 
 let slot = {
     name: null,
@@ -27,123 +25,95 @@ let slot = {
     room: null,
 }
 
-const User = require('../models/user');
+let registData = {
+    year: null,
+    month: null,
+    date: null,
+    startDateTime: null,
+    startHours: null,
+    startMinutes: null,
+    startSeconds: null,
+    finishDateTime: null,
+    finishHours: null,
+    finishMinutes: null,
+    finishSeconds: null,
+    attendees: null,
+    room: null
+}
 
-const { google } = require('googleapis');
-const OAuth2Client = google.auth.OAuth2;
-var oAuth2Client = new google.auth.OAuth2(null, null, null);
-
-
-/* GET home page. */
-router.get('/', function (req, res, next) {
-    ret = { "speech": "きたよ" };
-    res.json(ret);
-});
+var attendees; //会議参加者格納Object
 
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
-    console.log("webhookきたよ");
-    console.log(req.body);
+    if (req.body.queryResult.intent.displayName == "会議室予約") {
+        console.log(req.body.queryResult.intent.displayName);
 
-    if (req.body.queryResult.intent.displayName == "名前") {
-        User.find({ "name": req.body.queryResult.parameters.userName }, function (err, user) {
-            userName = user[0].name;
-            oauth = user[0].oauth;
+        let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
+        let startTimeRegExr = req.body.queryResult.parameters.time[0].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
+        let finishTimeRegExr = req.body.queryResult.parameters.time[1].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
 
-            oAuth2Client._clientId = oauth._clientId;
-            oAuth2Client._clientSecret = oauth._clientSecret;
-            oAuth2Client.redirectUri = oauth.redirectUri;
-            oAuth2Client.credentials = oauth.credentials;
-            // oauth2Client.transporter = DefaultTransporter {}; 本来はtransporterも格納しないといけないが，なしでもいけた
-            // oAuth2Client.opts = oauth.opts;
-            res.json({ "fulfillmentText": userName });
+        slot.startDateTime = date+startTimeRegExr;
+        slot.finishDateTime = date+finishTimeRegExr;
+        slot.date = req.body.queryResult.parameters.date;
+        slot.room = req.body.queryResult.parameters.confernceRoom;
+
+        console.log(slot.startDateTime);
+        console.log(slot.finishDateTime);
+
+        attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
+        
+
+        let eventDate = new Date(slot.date);
+        registData.year = eventDate.getFullYear();
+        registData.month = eventDate.getMonth()+1;
+        registData.date = eventDate.getDate();
+
+        let startTime = new Date(slot.startDateTime);
+        registData.startDateTime = slot.startDateTime;
+        registData.startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
+        registData.startMinutes = startTime.getMinutes();
+        registData.startSeconds = startTime.getSeconds();
+
+        let finishTime = new Date(slot.finishDateTime);
+        registData.finishDateTime = slot.finishDateTime;
+        registData.finishHours = finishTime.getHours()+9; //修正必須
+        registData.finishMinutes = finishTime.getMinutes();
+        registData.finishSeconds = finishTime.getSeconds();
+
+        registData.room = req.body.queryResult.parameters.confernceRoom;
+        registData.attendees = attendees;
+
+        console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
+        console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
+        console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
+
+        fs.readFile('client_secret.json', (err, content) => {
+            if (err) return console.log('Error loading client secret file:', err);
+            console.log(registData);
+            googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData,googleCalenderEventControler.insertEvents);
+        });
+        
+        Room.find({ "address": slot.room }, function (err, result) {
+            if (err) throw err;
+            res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"を予約します" });
         });
     }
-    else if (req.body.queryResult.intent.displayName == "予定確認") {
-        console.log(oAuth2Client);
-        listEvents(oAuth2Client);
-        res.json({ "fulfillmentText": "予約を承りました。" });
-    }
-    else if (req.body.queryResult.intent.displayName == "会議室予約") {
-        console.log(oAuth2Client);
-        insertEvents(oAuth2Client);
-        res.json({ "fulfillmentText": "予定を追加しました" });
-    }
-    else if (req.body.queryResult.intent.displayName == "予定概要入力") {
-
-    }
-    else if (req.body.queryResult.intent.displayName == "予定開始日入力") {
-
-    }
-    else if (req.body.queryResult.intent.displayName == "予定時間入力") {
-
-    }
-
-
-
-    // function checkSlotFulfilled(slot) {
-    //     if (!slot.name || !slot.date || !slot.startDateTime || !slot.finishDateTime || !slot.eventSummary || !slot.room) {
-    //         return false;
-    //     }
-    // }
-
-
-
-
-    function listEvents(auth, startDate, callback) {
-        const calendar = google.calendar({ version: 'v3', auth });
-        calendar.events.list({
-            calendarId: 'primary',
-            timeMin: (new Date()).toISOString(),
-            maxResults: 10,
-            singleEvents: true,
-            orderBy: 'startTime',
-        }, (err, { data }) => {
-            if (err) return console.log('The API returned an error: ' + err);
-            const events = data.items;
-            if (events.length) {
-                console.log('Upcoming 10 events:');
-                events.map((event, i) => {
-                    const start = event.start.dateTime || event.start.date;
-                    console.log(`${start} - ${event.summary}`);
-                });
-            } else {
-                console.log('No upcoming events found.');
-            }
+    else if (req.body.queryResult.intent.displayName == "参加者") {
+        console.log("参加者");
+        let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
+        var responseName = '';
+        attendees = [];
+        
+        attendeesListFromDialogFlow.forEach(attendeeMail => {
+            User.find({"email": attendeeMail},function(err,result){
+                responseName = result[0].name+"さん";
+                console.log(responseName);
+                var addData = { 'email' : attendeeMail };
+                attendees.push(addData) ;
+            });
         });
-    }
-
-    function insertEvents(auth) {
-        var calendar = google.calendar('v3');
-
-        var event = {
-            'summary': 'APIからの予定登録テスト',
-            'description': 'テスト用',
-            'start': {
-                'dateTime': '2017-12-31T09:00:00',
-                'timeZone': 'Asia/Tokyo',
-            },
-            'end': {
-                'dateTime': '2017-12-31T17:00:00',
-                'timeZone': 'Asia/Tokyo',
-            },
-            'attendees': [
-                { 'email': 'mail_forward@mikilab.doshisha.ac.jp' }
-            ]
-        };
-
-        calendar.events.insert({
-            auth: auth,
-            calendarId: 'primary',
-            resource: event,
-        }, function (err, event) {
-            if (err) {
-                console.log('There was an error contacting the Calendar service: ' + err);
-                return;
-            }
-            console.log('Event created: %s', event.htmlLink);
-        });
+        res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
     }
 });
 
