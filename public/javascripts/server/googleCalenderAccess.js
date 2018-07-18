@@ -59,6 +59,8 @@ exports.insertEvents = function(auth,registData) {
         } 
     },function(err,response){
         console.log(response.data);
+        console.log(registData.startDateTime);
+        console.log(registData.finishDateTime);
         // console.log(freeBusyData.data.calendars[registData.room].busy);
         if (err) {
                 console.log("エラー");
