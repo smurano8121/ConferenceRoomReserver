@@ -57,15 +57,15 @@ exports.insertEvents = function(auth,registData) {
             timeMax: registData.finishDateTime,
             "timeZone": 'Asia/Tokyo'
         } 
-    },function(err,freebusy){
-        var freeBusyData = freebusy;
+    },function(err,response){
+        console.log(response.data);
         // console.log(freeBusyData.data.calendars[registData.room].busy);
         if (err) {
                 console.log("エラー");
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
-        var events = freebusy.data.calendars[registData.room].busy;
+        var events = response.data.calendars[registData.room].busy;
         console.log(events);
         if (events.length == 0) {
             calendar.events.insert({
