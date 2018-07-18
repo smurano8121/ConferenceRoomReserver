@@ -59,14 +59,13 @@ exports.insertEvents = function(auth,registData) {
         } 
     },function(err,freebusy){
         var freeBusyData = freebusy;
-        console.log(freeBusyData.body.data.calendars[registData.room].busy);
+        // console.log(freeBusyData.data.calendars[registData.room].busy);
         if (err) {
                 console.log("エラー");
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
         var events = freebusy.data.calendars[registData.room].busy;
-        console.log(freebusy.calendars[registData.room].busy);
         console.log(events);
         if (events.length == 0) {
             calendar.events.insert({
