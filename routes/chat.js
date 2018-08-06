@@ -51,6 +51,7 @@ router.post('/webhook', function (req, res, next) {
 
         let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
         console.log(date)
+        console.log(req.body.queryResult.parameters.time-period)
         let startTimeRegExr = req.body.queryResult.parameters.time-period.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
         let finishTimeRegExr = req.body.queryResult.parameters.time-period.endTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
 
