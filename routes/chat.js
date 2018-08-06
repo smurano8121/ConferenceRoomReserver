@@ -52,10 +52,10 @@ router.post('/webhook', function (req, res, next) {
         if(req.body.queryResult.parameters.date == null){
             //日付がない時
             res.json({ "fulfillmentText": "予約する日を教えてください"});
-        }else if(req.body.queryResult.parameters.time[0] == null){
+        }else if(req.body.queryResult.parameters.startTime == null){
             //開始時刻がない時
             res.json({ "fulfillmentText": "開始時刻を教えてください"});
-        }else if(req.body.queryResult.parameters.time[1] == null){
+        }else if(req.body.queryResult.parameters.finishTime == null){
             //終了時刻がない時
             res.json({ "fulfillmentText": "終了時刻を教えてください"});
         }else if(req.body.queryResult.parameters.confernceRoom == null){
@@ -63,8 +63,8 @@ router.post('/webhook', function (req, res, next) {
             res.json({ "fulfillmentText": "予約したい会議室を教えてください"});
         }else{
             let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
-            let startTimeRegExr = req.body.queryResult.parameters.time[0].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-            let finishTimeRegExr = req.body.queryResult.parameters.time[1].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
+            let startTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
+            let finishTimeRegExr = req.body.queryResult.parameters.finishTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
 
             slot.startDateTime = date+startTimeRegExr;
             slot.finishDateTime = date+finishTimeRegExr;
