@@ -47,7 +47,7 @@ var attendees; //会議参加者格納Object
 router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     if (req.body.queryResult.intent.displayName == "会議室予約") {
-        console.log(req.body.queryResult.intent.displayName);
+        console.log(req.body.queryResult.intent);
 
         let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
         let startTimeRegExr = req.body.queryResult.parameters.time[0].match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
