@@ -49,23 +49,16 @@ router.post('/webhook', function (req, res, next) {
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
         console.log(req.body.queryResult.parameters);
-        
-        if(!req.body.queryResult.parameters.date) slot.date = req.body.queryResult.parameters.date;
-        if(!req.body.queryResult.parameters.startTime)slot.startDateTime = req.body.queryResult.parameters.startTime;
-        if(!req.body.queryResult.parameters.finishTime)slot.finishDateTime = req.body.queryResult.parameters.finishTime;
-        if(!req.body.queryResult.parameters.confernceRoom)slot.confernceRoom = req.body.queryResult.parameters.confernceRoom;
-
-        console.log(slot);
-        if(!slot.date){
+        if(!req.body.queryResult.parameters.date){
             //日付がない時
             res.json({ "fulfillmentText": "予約する日を教えてください"});
-        }else if(!slot.startTime){
+        }else if(!req.body.queryResult.parameters.startTime){
             //開始時刻がない時
             res.json({ "fulfillmentText": "開始時刻を教えてください"});
-        }else if(!slot.finishTime){
+        }else if(!req.body.queryResult.parameters.finishTime){
             //終了時刻がない時
             res.json({ "fulfillmentText": "終了時刻を教えてください"});
-        }else if(!slot.confernceRoom){
+        }else if(!req.body.queryResult.parameters.confernceRoom){
             //会議室名がないとき
             res.json({ "fulfillmentText": "予約したい会議室を教えてください"});
         }else{
