@@ -48,6 +48,7 @@ router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
+        console.log(req.body.queryResult.parameters);
         if(req.body.queryResult.parameters.date == null){
             //日付がない時
             res.json({ "fulfillmentText": "予約する日を教えてください"});
