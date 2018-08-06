@@ -49,10 +49,11 @@ router.post('/webhook', function (req, res, next) {
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
         console.log(req.body.queryResult.parameters);
-        slot.date = req.body.queryResult.parameters.date;
-        slot.startDateTime = req.body.queryResult.parameters.startTime;
-        slot.finishDateTime = req.body.queryResult.parameters.finishTime;
-        slot.confernceRoom = req.body.queryResult.parameters.confernceRoom;
+        
+        if(!req.body.queryResult.parameters.date) slot.date = req.body.queryResult.parameters.date;
+        if(!req.body.queryResult.parameters.startTime)slot.startDateTime = req.body.queryResult.parameters.startTime;
+        if(!req.body.queryResult.parameters.finishTime)slot.finishDateTime = req.body.queryResult.parameters.finishTime;
+        if(!req.body.queryResult.parameters.confernceRoom)slot.confernceRoom = req.body.queryResult.parameters.confernceRoom;
         if(!slot.date){
             //日付がない時
             res.json({ "fulfillmentText": "予約する日を教えてください"});
