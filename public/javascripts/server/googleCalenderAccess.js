@@ -16,6 +16,8 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
         console.log({ "fulfillmentText": "トークンを取得できませんでした" });
     }
     oAuth2Client.setCredentials(JSON.parse(token));
+    var message = "test"
+    return message;
     callback(oAuth2Client,registData);
 }
 
