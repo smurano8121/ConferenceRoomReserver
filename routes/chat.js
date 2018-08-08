@@ -49,65 +49,62 @@ router.post('/webhook', function (req, res, next) {
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
         console.log(req.body.queryResult);
-        req.body.queryResult.outputContexts.forEach(it => {
-            console.log(it.parameters);
-        })
-        let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
-        let startTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-        let finishTimeRegExr = req.body.queryResult.parameters.finishTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
+        if(req.body.queryResult.fulfillmentText){
+            res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
+        }else{
+            let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
+            let startTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
+            let finishTimeRegExr = req.body.queryResult.parameters.finishTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
 
-        slot.startDateTime = date+startTimeRegExr;
-        slot.finishDateTime = date+finishTimeRegExr;
-        slot.date = req.body.queryResult.parameters.date;
-        slot.room = req.body.queryResult.parameters.confernceRoom;
+            slot.startDateTime = date+startTimeRegExr;
+            slot.finishDateTime = date+finishTimeRegExr;
+            slot.date = req.body.queryResult.parameters.date;
+            slot.room = req.body.queryResult.parameters.confernceRoom;
 
-        console.log(slot.startDateTime);
-        console.log(slot.finishDateTime);
+            console.log(slot.startDateTime);
+            console.log(slot.finishDateTime);
 
-        attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
-        
+            attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            
 
-        let eventDate = new Date(slot.date);
-        registData.year = eventDate.getFullYear();
-        registData.month = eventDate.getMonth()+1;
-        registData.date = eventDate.getDate();
+            let eventDate = new Date(slot.date);
+            registData.year = eventDate.getFullYear();
+            registData.month = eventDate.getMonth()+1;
+            registData.date = eventDate.getDate();
 
-        let startTime = new Date(slot.startDateTime);
-        registData.startDateTime = slot.startDateTime;
-        registData.startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
-        registData.startMinutes = startTime.getMinutes();
-        registData.startSeconds = startTime.getSeconds();
+            let startTime = new Date(slot.startDateTime);
+            registData.startDateTime = slot.startDateTime;
+            registData.startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
+            registData.startMinutes = startTime.getMinutes();
+            registData.startSeconds = startTime.getSeconds();
 
-        let finishTime = new Date(slot.finishDateTime);
-        registData.finishDateTime = slot.finishDateTime;
-        registData.finishHours = finishTime.getHours()+9; //修正必須
-        registData.finishMinutes = finishTime.getMinutes();
-        registData.finishSeconds = finishTime.getSeconds();
+            let finishTime = new Date(slot.finishDateTime);
+            registData.finishDateTime = slot.finishDateTime;
+            registData.finishHours = finishTime.getHours()+9; //修正必須
+            registData.finishMinutes = finishTime.getMinutes();
+            registData.finishSeconds = finishTime.getSeconds();
 
-        registData.room = req.body.queryResult.parameters.confernceRoom;
-        registData.attendees = attendees;
+            registData.room = req.body.queryResult.parameters.confernceRoom;
+            registData.attendees = attendees;
 
-        console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
-        console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
-        console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
+            console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
+            console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
+            console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
 
-        fs.readFile('client_secret.json', (err, content) => {
-            if (err) return console.log('Error loading client secret file:', err);
-            console.log(registData);
-            googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
-        });
-        
-        Room.find({ "address": slot.room }, function (err, result) {
-            if (err) throw err;
-            res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
-        });
+            fs.readFile('client_secret.json', (err, content) => {
+                if (err) return console.log('Error loading client secret file:', err);
+                console.log(registData);
+                googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
+            });
+            
+            Room.find({ "address": slot.room }, function (err, result) {
+                if (err) throw err;
+                res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
+            });
+        }
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
-
-        req.body.queryResult.outputContexts.forEach(it => {
-            console.log(it.parameters);
-        })
         let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
         var responseName = '';
         let counter = 0;
