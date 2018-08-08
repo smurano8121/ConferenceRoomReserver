@@ -115,7 +115,6 @@ router.post('/webhook', function (req, res, next) {
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
-        console.log(req.body.queryResult);
         let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
         var responseName = '';
         attendees = [];
@@ -124,13 +123,13 @@ router.post('/webhook', function (req, res, next) {
             User.find({"email": attendeeMail},function(err,result){
                 responseName = result[0].name+"さん";
                 console.log(responseName);
-                console.log(attendeesListFromDialogFlow.size)
+                console.log(attendeesListFromDialogFlow.size())
                 var addData = { 'email' : attendeeMail };
                 attendees.push(addData) ;
             });
         });
         console.log("参加者："+responseName);
-        res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
+        res.json({ "fulfillmentText": "参加者は"+req.body.queryResult.queryText+"ですね？合っていれば予約日時と場所を教えてください"});
     }
 });
 
