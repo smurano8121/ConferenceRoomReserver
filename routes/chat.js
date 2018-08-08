@@ -123,7 +123,7 @@ router.post('/webhook', function (req, res, next) {
         attendeesListFromDialogFlow.forEach(attendeeMail => {
             User.find({"email": attendeeMail},function(err,result){
                 counter += 1;
-                responseName = result[0].name+"さん";
+                responseName += result[0].name+"さん";
                 console.log(responseName);
                 console.log(attendeesListFromDialogFlow.length)
                 var addData = { 'email' : attendeeMail };
