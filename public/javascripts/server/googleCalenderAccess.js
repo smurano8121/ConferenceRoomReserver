@@ -16,7 +16,12 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
         console.log({ "fulfillmentText": "トークンを取得できませんでした" });
     }
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client,registData,function(message){return message});
+    callback(oAuth2Client,registData,
+        function(message){
+            console.log(message);
+            return message;
+        }
+    );
 }
 
 exports.insertEvents = function(auth, registData, callback) {
@@ -81,7 +86,7 @@ exports.insertEvents = function(auth, registData, callback) {
                 }
                 console.log('Event created: %s', event.htmlLink);
             });
-            console.log("予定はありません．");
+            callback("予定はありません．");
         } else {
             console.log('busy in here...');
             callback("すでに予約されています．別の時間帯もしくは別の会議室を予約してください")
