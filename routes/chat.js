@@ -122,6 +122,7 @@ router.post('/webhook', function (req, res, next) {
         });
     }else if (req.body.queryResult.intent.displayName == "最終確認") {
         console.log(req.query);
+        res.json({ "fulfillmentText": "承知致しました．上記の参加者および日程で予約します．"});
     }
 });
 
