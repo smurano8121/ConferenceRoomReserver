@@ -16,12 +16,12 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
         console.log({ "fulfillmentText": "トークンを取得できませんでした" });
     }
     oAuth2Client.setCredentials(JSON.parse(token));
-    var message = "test"
+    var message = "test in exports.authorizeInsertEvents"
     return message;
-    callback(oAuth2Client,registData);
+    callback(oAuth2Client,registData,function(message){console.log(message)});
 }
 
-exports.insertEvents = function(auth, registData) {
+exports.insertEvents = function(auth, registData,callback) {
     var calendar = google.calendar('v3');
     var event = {
         'summary': 'APIからの予定登録テスト',
@@ -85,6 +85,7 @@ exports.insertEvents = function(auth, registData) {
             });
         } else {
             console.log('busy in here...');
+            callback("test in exports.insertEvents callback")
         }   
     });
 }
