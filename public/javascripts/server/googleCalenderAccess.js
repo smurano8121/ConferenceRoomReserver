@@ -18,11 +18,13 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
     oAuth2Client.setCredentials(JSON.parse(token));
     var message = "test in exports.authorizeInsertEvents"
     // return message;
-    callback(oAuth2Client,registData,returnMessage);
+    message = callback(oAuth2Client,registData,returnMessage);
+    console.log(message)
 }
 
 function returnMessage(message){
-    console.log(message)
+    // console.log(message)
+    return message
 }
 
 exports.insertEvents = function(auth, registData,callback) {
