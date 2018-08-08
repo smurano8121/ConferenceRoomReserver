@@ -88,9 +88,6 @@ router.post('/webhook', function (req, res, next) {
             console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
             console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
 
-            //ここでfreebusyのチェック
-            //busy in hereなら別の時間帯のリコメンドや別会議室のリコメンド
-            //freeならそのまま予約
             fs.readFile('client_secret.json', (err, content) => {
                 if (err) return console.log('Error loading client secret file:', err);
                 googleCalenderEventControler.authorizeInsertEvents(
@@ -99,45 +96,40 @@ router.post('/webhook', function (req, res, next) {
                     checkFreeBusy
                 );
             });
-
-            // Room.find({ "address": slot.room }, function (err, result) {
-            //     if (err) throw err;
-            //     res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
-            // });
         }
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
-        let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
-        var responseName = '';
-        let counter = 0;
-        attendees = [];
-        
-        attendeesListFromDialogFlow.forEach(attendeeMail => {
-            User.find({"email": attendeeMail},function(err,result){
-                counter += 1;
-                responseName += result[0].name+"さん";
-                console.log(responseName);
-                var addData = { 'email' : attendeeMail };
-                attendees.push(addData) ;
-                if(counter == attendeesListFromDialogFlow.length){
-                    res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
-                }
+        if(!req.body.queryResult.allRequiredParamsPresent){
+            res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
+        }else{
+            let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
+            var responseName = '';
+            let counter = 0;
+            attendees = [];
+            
+            attendeesListFromDialogFlow.forEach(attendeeMail => {
+                User.find({"email": attendeeMail},function(err,result){
+                    counter += 1;
+                    responseName += result[0].name+"さん";
+                    console.log(responseName);
+                    var addData = { 'email' : attendeeMail };
+                    attendees.push(addData) ;
+                    if(counter == attendeesListFromDialogFlow.length){
+                        res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
+                    }
+                });
             });
-        });
-    }else if (req.body.queryResult.intent.displayName == "最終確認") {
+        }
+        
+    }
+    else if (req.body.queryResult.intent.displayName == "最終確認") {
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
             googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
         });
-        res.json({ "fulfillmentText": "承知致しました．上記の参加者および日程で予約します．"});
+        res.json({ "fulfillmentText": "承知致しました．指定いただいた参加者および日程で予約します．"});
     }
-
-
-
-
-
-
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
         calendar.freebusy.query({
