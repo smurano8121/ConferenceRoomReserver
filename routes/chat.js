@@ -123,13 +123,13 @@ router.post('/webhook', function (req, res, next) {
             User.find({"email": attendeeMail},function(err,result){
                 responseName = result[0].name+"さん";
                 console.log(responseName);
-                console.log(attendeesListFromDialogFlow.size())
+                console.log(attendeesListFromDialogFlow.length)
                 var addData = { 'email' : attendeeMail };
                 attendees.push(addData) ;
             });
         });
         console.log("参加者："+responseName);
-        res.json({ "fulfillmentText": "参加者は"+req.body.queryResult.queryText+"ですね？合っていれば予約日時と場所を教えてください"});
+        res.json({ "fulfillmentText": "参加者は"+req.body.queryResult.queryText+"さんですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
     }
 });
 
