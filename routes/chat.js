@@ -48,7 +48,9 @@ router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
-        console.log(req.body.queryResult.outputContexts[0].parameters);
+        req.body.queryResult.outputContexts.forEach(it => {
+            console.log(it.parameters);
+        })
         let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
         let startTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
         let finishTimeRegExr = req.body.queryResult.parameters.finishTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
@@ -101,7 +103,10 @@ router.post('/webhook', function (req, res, next) {
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
-        console.log(req.body.queryResult.outputContexts.parameters);
+
+        req.body.queryResult.outputContexts.forEach(it => {
+            console.log(it.parameters);
+        })
         let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
         var responseName = '';
         let counter = 0;
