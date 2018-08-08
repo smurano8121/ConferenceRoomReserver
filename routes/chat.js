@@ -127,6 +127,7 @@ router.post('/webhook', function (req, res, next) {
                 attendees.push(addData) ;
             });
         });
+        console.log("参加者："+responseName);
         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください"});
     }
 });
