@@ -52,8 +52,8 @@ router.post('/webhook', function (req, res, next) {
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
         }else{
             let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
-            let startTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-            let finishTimeRegExr = req.body.queryResult.parameters.finishTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
+            let startTimeRegExr = req.body.queryResult.parameters['time-period'].startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
+            let finishTimeRegExr = req.body.queryResult.parameters['time-period'].finishTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
 
             slot.startDateTime = date+startTimeRegExr;
             slot.finishDateTime = date+finishTimeRegExr;
@@ -120,5 +120,4 @@ router.post('/webhook', function (req, res, next) {
         res.json({ "fulfillmentText": "承知致しました．上記の参加者および日程で予約します．"});
     }
 });
-
 module.exports = router;
