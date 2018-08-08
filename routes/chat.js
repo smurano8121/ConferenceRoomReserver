@@ -9,6 +9,8 @@ const router = express.Router();
 const fs = require('fs');
 const readline = require('readline');
 
+const { google } = require('googleapis');
+
 //データモデル
 const User = require('../models/user');
 const Room = require('../models/room');
