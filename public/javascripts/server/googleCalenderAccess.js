@@ -18,16 +18,10 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
     oAuth2Client.setCredentials(JSON.parse(token));
     var message = "test in exports.authorizeInsertEvents"
     // return message;
-    message = callback(oAuth2Client,registData,returnMessage);
-    console.log(message)
+    message = callback(oAuth2Client,registData);
 }
 
-function returnMessage(message){
-    // console.log(message)
-    return message
-}
-
-exports.insertEvents = function(auth, registData,callback) {
+exports.insertEvents = function(auth, registData) {
     var calendar = google.calendar('v3');
     var event = {
         'summary': 'APIからの予定登録テスト',
@@ -42,16 +36,16 @@ exports.insertEvents = function(auth, registData,callback) {
         'attendees': registData.attendees
     };
 
-    var freeBusy = {
-        timeMin: registData.startDateTime,
-        timeMax: registData.finishDateTime,
-        timeZone: 'Asia/Tokyo',
-        items: [
-            {
-            id: registData.room
-            }
-        ]
-    }
+    // var freeBusy = {
+    //     timeMin: registData.startDateTime,
+    //     timeMax: registData.finishDateTime,
+    //     timeZone: 'Asia/Tokyo',
+    //     items: [
+    //         {
+    //         id: registData.room
+    //         }
+    //     ]
+    // }
 
     calendar.freebusy.query({
         auth: auth,
@@ -91,7 +85,6 @@ exports.insertEvents = function(auth, registData,callback) {
             });
         } else {
             console.log('busy in here...');
-            callback("test in exports.insertEvents callback")
         }   
     });
 }
