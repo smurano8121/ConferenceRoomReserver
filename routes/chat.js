@@ -117,19 +117,24 @@ router.post('/webhook', function (req, res, next) {
         console.log("参加者");
         let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
         var responseName = '';
+        let counter = 0;
         attendees = [];
         
         attendeesListFromDialogFlow.forEach(attendeeMail => {
+            counter += 1;
             User.find({"email": attendeeMail},function(err,result){
                 responseName = result[0].name+"さん";
                 console.log(responseName);
                 console.log(attendeesListFromDialogFlow.length)
                 var addData = { 'email' : attendeeMail };
                 attendees.push(addData) ;
+                if(counter == attendeesListFromDialogFlow.length){
+                    res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
+                }
             });
         });
-        console.log("参加者："+responseName);
-        res.json({ "fulfillmentText": "参加者は"+req.body.queryResult.queryText+"さんですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
+        // console.log("参加者："+responseName);
+        // res.json({ "fulfillmentText": "参加者は"+req.body.queryResult.queryText+"さんですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
     }
 });
 
