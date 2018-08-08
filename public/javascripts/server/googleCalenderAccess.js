@@ -6,9 +6,7 @@ const fs = require('fs');
 exports.authorizeInsertEvents = function (credentials, registData, callback) {
     const { client_secret, client_id, redirect_uris } = credentials.web;
     let token = {};
-    oAuth2Client = new google.auth.OAuth2(
-        client_id, client_secret, redirect_uris[0]);
-
+    oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
     // Check if we have previously stored a token.
     try {
         token = fs.readFileSync(TOKEN_PATH);
@@ -16,9 +14,7 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
         console.log({ "fulfillmentText": "トークンを取得できませんでした" });
     }
     oAuth2Client.setCredentials(JSON.parse(token));
-    var message = "test in exports.authorizeInsertEvents"
-    // return message;
-    message = callback(oAuth2Client,registData);
+    callback(oAuth2Client,registData);
 }
 
 exports.insertEvents = function(auth, registData) {
@@ -60,17 +56,17 @@ exports.insertEvents = function(auth, registData) {
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,response){
-        console.log(response.data);
-        console.log(registData.startDateTime);
-        console.log(registData.finishDateTime);
-        // console.log(freeBusyData.data.calendars[registData.room].busy);
+        // console.log(response.data);
+        // console.log(registData.startDateTime);
+        // console.log(registData.finishDateTime);
+        // // console.log(freeBusyData.data.calendars[registData.room].busy);
         if (err) {
                 console.log("エラー");
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
         var events = response.data.calendars[registData.room].busy;
-        console.log(events);
+        // console.log(events);
         if (events.length == 0) {
             calendar.events.insert({
                 auth: auth,
