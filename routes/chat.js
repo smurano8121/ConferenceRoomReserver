@@ -129,6 +129,7 @@ router.post('/webhook', function (req, res, next) {
                 var addData = { 'email' : attendeeMail };
                 attendees.push(addData) ;
                 if(counter == attendeesListFromDialogFlow.length){
+                    console.log(counter)
                     res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
                 }
             });
