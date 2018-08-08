@@ -81,12 +81,8 @@ exports.insertEvents = function(auth, registData) {
                 }
                 console.log('Event created: %s', event.htmlLink);
             });
-            // callback("予定はありません．");
         } else {
             console.log('busy in here...');
-            var message = "すでに予約されています．別の時間帯もしくは別の会議室を予約してください"
-            return message;
-            // callback("すでに予約されています．別の時間帯もしくは別の会議室を予約してください")
         }   
     });
 }
