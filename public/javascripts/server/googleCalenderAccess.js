@@ -68,6 +68,35 @@ exports.insertEvents = function(auth, registData) {
     });
 }
 
+exports.checkFreeBusy = function(auth, registData){
+    var calendar = google.calendar('v3');
+    calendar.freebusy.query({
+        auth: auth,
+        headers: { "content-type" : "application/json" },
+        resource: {
+            items: [
+                {id : registData.room}
+            ], 
+            timeMin: registData.startDateTime,
+            timeMax: registData.finishDateTime,
+            "timeZone": 'Asia/Tokyo'
+        } 
+    },function(err,response){
+        if (err) {
+                console.log("エラー");
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+        }   
+        var events = response.data.calendars[registData.room].busy;
+        if (events.length == 0) {
+            console.log('free in here...');
+        } else {
+            console.log('busy in here...');
+        }   
+    });
+
+}
+
 exports.listEvents = function(auth, startDate, callback) {
     const calendar = google.calendar({ version: 'v3', auth });
     calendar.events.list({

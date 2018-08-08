@@ -87,10 +87,14 @@ router.post('/webhook', function (req, res, next) {
             console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
             console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
 
-            // fs.readFile('client_secret.json', (err, content) => {
-            //     if (err) return console.log('Error loading client secret file:', err);
-            //     googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
-            // });
+            //ここでfreebusyのチェック
+            //busy in hereなら別の時間帯のリコメンドや別会議室のリコメンド
+            //freeならそのまま予約
+            fs.readFile('client_secret.json', (err, content) => {
+                if (err) return console.log('Error loading client secret file:', err);
+                googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.checkFreeBusy);
+            });
+
             
             Room.find({ "address": slot.room }, function (err, result) {
                 if (err) throw err;
