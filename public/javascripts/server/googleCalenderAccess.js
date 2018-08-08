@@ -19,7 +19,7 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
     callback(oAuth2Client,registData,
         function(message){
             console.log(message);
-            return message;
+            // return message;
         }
     );
 }
