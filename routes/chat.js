@@ -101,6 +101,7 @@ router.post('/webhook', function (req, res, next) {
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
+        console.log(req.body.queryResult.outputContexts.parameters);
         let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
         var responseName = '';
         let counter = 0;
