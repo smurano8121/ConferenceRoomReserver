@@ -87,10 +87,10 @@ router.post('/webhook', function (req, res, next) {
             console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
             console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
 
-            fs.readFile('client_secret.json', (err, content) => {
-                if (err) return console.log('Error loading client secret file:', err);
-                googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
-            });
+            // fs.readFile('client_secret.json', (err, content) => {
+            //     if (err) return console.log('Error loading client secret file:', err);
+            //     googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
+            // });
             
             Room.find({ "address": slot.room }, function (err, result) {
                 if (err) throw err;
@@ -118,6 +118,10 @@ router.post('/webhook', function (req, res, next) {
             });
         });
     }else if (req.body.queryResult.intent.displayName == "最終確認") {
+        fs.readFile('client_secret.json', (err, content) => {
+            if (err) return console.log('Error loading client secret file:', err);
+            googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
+        });
         res.json({ "fulfillmentText": "承知致しました．上記の参加者および日程で予約します．"});
     }
 });
