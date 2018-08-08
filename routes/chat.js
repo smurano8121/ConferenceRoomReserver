@@ -123,6 +123,7 @@ router.post('/webhook', function (req, res, next) {
             User.find({"email": attendeeMail},function(err,result){
                 responseName = result[0].name+"さん";
                 console.log(responseName);
+                console.log(attendeeMail.size)
                 var addData = { 'email' : attendeeMail };
                 attendees.push(addData) ;
             });
