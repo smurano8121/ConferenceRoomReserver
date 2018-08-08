@@ -16,10 +16,10 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
         console.log({ "fulfillmentText": "トークンを取得できませんでした" });
     }
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client,registData);
+    callback(oAuth2Client,registData,function(message){return message});
 }
 
-exports.insertEvents = function(auth, registData) {
+exports.insertEvents = function(auth, registData, callback) {
     var calendar = google.calendar('v3');
     var event = {
         'summary': 'APIからの予定登録テスト',
@@ -81,8 +81,10 @@ exports.insertEvents = function(auth, registData) {
                 }
                 console.log('Event created: %s', event.htmlLink);
             });
+            console.log("予定はありません．");
         } else {
-                console.log('busy in here...');
+            console.log('busy in here...');
+            callback("すでに予約されています．別の時間帯もしくは別の会議室を予約してください")
         }   
     });
 }
