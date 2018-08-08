@@ -115,6 +115,7 @@ router.post('/webhook', function (req, res, next) {
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
         console.log("参加者");
+        console.log(req.body.queryResult);
         let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
         var responseName = '';
         attendees = [];
@@ -123,7 +124,7 @@ router.post('/webhook', function (req, res, next) {
             User.find({"email": attendeeMail},function(err,result){
                 responseName = result[0].name+"さん";
                 console.log(responseName);
-                console.log(attendeeMail.size)
+                console.log(attendeesListFromDialogFlow.size)
                 var addData = { 'email' : attendeeMail };
                 attendees.push(addData) ;
             });
