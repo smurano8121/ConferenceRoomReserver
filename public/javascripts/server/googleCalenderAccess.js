@@ -32,21 +32,9 @@ exports.insertEvents = function(auth, registData) {
         'attendees': registData.attendees
     };
 
-    // var freeBusy = {
-    //     timeMin: registData.startDateTime,
-    //     timeMax: registData.finishDateTime,
-    //     timeZone: 'Asia/Tokyo',
-    //     items: [
-    //         {
-    //         id: registData.room
-    //         }
-    //     ]
-    // }
-
     calendar.freebusy.query({
         auth: auth,
         headers: { "content-type" : "application/json" },
-        // resource: freeBusy,
         resource: {
             items: [
                 {id : registData.room}
@@ -56,17 +44,12 @@ exports.insertEvents = function(auth, registData) {
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,response){
-        // console.log(response.data);
-        // console.log(registData.startDateTime);
-        // console.log(registData.finishDateTime);
-        // // console.log(freeBusyData.data.calendars[registData.room].busy);
         if (err) {
                 console.log("エラー");
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
         var events = response.data.calendars[registData.room].busy;
-        // console.log(events);
         if (events.length == 0) {
             calendar.events.insert({
                 auth: auth,
@@ -83,20 +66,6 @@ exports.insertEvents = function(auth, registData) {
             console.log('busy in here...');
         }   
     });
-}
-
-exports.checkFreeBusy = function(auth){
-    var calendar = google.calendar('v3');
-    var freeBusy = {
-        "timeMin": datetime,
-        "timeMax": datetime,
-        "timeZone": 'Asia/Tokyo',
-        "items": [
-            {
-            "id": string
-            }
-        ]
-    }
 }
 
 exports.listEvents = function(auth, startDate, callback) {

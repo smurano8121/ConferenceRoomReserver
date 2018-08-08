@@ -48,7 +48,6 @@ router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
-        // console.log(req.body.queryResult);
         if(!req.body.queryResult.allRequiredParamsPresent){
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
         }else{
@@ -61,12 +60,8 @@ router.post('/webhook', function (req, res, next) {
             slot.date = req.body.queryResult.parameters.date;
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
-            // console.log(slot.startDateTime);
-            // console.log(slot.finishDateTime);
-
             attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
             
-
             let eventDate = new Date(slot.date);
             registData.year = eventDate.getFullYear();
             registData.month = eventDate.getMonth()+1;
@@ -93,9 +88,7 @@ router.post('/webhook', function (req, res, next) {
 
             fs.readFile('client_secret.json', (err, content) => {
                 if (err) return console.log('Error loading client secret file:', err);
-                // console.log(registData);
                 googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
-                // console.log(message)
             });
             
             Room.find({ "address": slot.room }, function (err, result) {
@@ -127,7 +120,5 @@ router.post('/webhook', function (req, res, next) {
         res.json({ "fulfillmentText": "承知致しました．上記の参加者および日程で予約します．"});
     }
 });
-
-
 
 module.exports = router;
