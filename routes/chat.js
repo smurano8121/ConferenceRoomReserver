@@ -48,6 +48,7 @@ router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
+        console.log(req.body.queryResult);
         req.body.queryResult.outputContexts.forEach(it => {
             console.log(it.parameters);
         })
