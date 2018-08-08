@@ -6,9 +6,7 @@ const fs = require('fs');
 exports.authorizeInsertEvents = function (credentials, registData, callback) {
     const { client_secret, client_id, redirect_uris } = credentials.web;
     let token = {};
-    oAuth2Client = new google.auth.OAuth2(
-        client_id, client_secret, redirect_uris[0]);
-
+    oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
     // Check if we have previously stored a token.
     try {
         token = fs.readFileSync(TOKEN_PATH);
@@ -34,21 +32,9 @@ exports.insertEvents = function(auth, registData) {
         'attendees': registData.attendees
     };
 
-    var freeBusy = {
-        timeMin: registData.startDateTime,
-        timeMax: registData.finishDateTime,
-        timeZone: 'Asia/Tokyo',
-        items: [
-            {
-            id: registData.room
-            }
-        ]
-    }
-
     calendar.freebusy.query({
         auth: auth,
         headers: { "content-type" : "application/json" },
-        // resource: freeBusy,
         resource: {
             items: [
                 {id : registData.room}
@@ -58,17 +44,12 @@ exports.insertEvents = function(auth, registData) {
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,response){
-        console.log(response.data);
-        console.log(registData.startDateTime);
-        console.log(registData.finishDateTime);
-        // console.log(freeBusyData.data.calendars[registData.room].busy);
         if (err) {
                 console.log("エラー");
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
         var events = response.data.calendars[registData.room].busy;
-        console.log(events);
         if (events.length == 0) {
             calendar.events.insert({
                 auth: auth,
@@ -82,23 +63,38 @@ exports.insertEvents = function(auth, registData) {
                 console.log('Event created: %s', event.htmlLink);
             });
         } else {
-                console.log('busy in here...');
+            console.log('busy in here...');
         }   
     });
 }
 
-exports.checkFreeBusy = function(auth){
+exports.checkFreeBusy = function(auth, registData){
     var calendar = google.calendar('v3');
-    var freeBusy = {
-        "timeMin": datetime,
-        "timeMax": datetime,
-        "timeZone": 'Asia/Tokyo',
-        "items": [
-            {
-            "id": string
-            }
-        ]
-    }
+    calendar.freebusy.query({
+        auth: auth,
+        headers: { "content-type" : "application/json" },
+        resource: {
+            items: [
+                {id : registData.room}
+            ], 
+            timeMin: registData.startDateTime,
+            timeMax: registData.finishDateTime,
+            "timeZone": 'Asia/Tokyo'
+        } 
+    },function(err,response){
+        if (err) {
+                console.log("エラー");
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+        }   
+        var events = response.data.calendars[registData.room].busy;
+        if (events.length == 0) {
+            console.log('free in here...');
+        } else {
+            console.log('busy in here...');
+        }   
+    });
+
 }
 
 exports.listEvents = function(auth, startDate, callback) {
