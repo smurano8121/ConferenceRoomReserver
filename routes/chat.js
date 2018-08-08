@@ -96,7 +96,7 @@ router.post('/webhook', function (req, res, next) {
         
         Room.find({ "address": slot.room }, function (err, result) {
             if (err) throw err;
-            res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"を予約します" });
+            res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
         });
     }
     else if (req.body.queryResult.intent.displayName == "参加者") {
@@ -120,6 +120,8 @@ router.post('/webhook', function (req, res, next) {
                 }
             });
         });
+    }else if (req.body.queryResult.intent.displayName == "最終確認") {
+        console.log(req.query);
     }
 });
 
