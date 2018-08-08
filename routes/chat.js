@@ -49,7 +49,7 @@ router.post('/webhook', function (req, res, next) {
     if (req.body.queryResult.intent.displayName == "会議室予約") {
         console.log(req.body.queryResult.intent.displayName);
         console.log(req.body.queryResult);
-        if(req.body.queryResult.fulfillmentText){
+        if(!req.body.queryResult.allRequiredParamsPresent){
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
         }else{
             let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
