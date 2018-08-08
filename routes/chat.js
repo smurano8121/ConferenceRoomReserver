@@ -96,38 +96,7 @@ router.post('/webhook', function (req, res, next) {
                 googleCalenderEventControler.authorizeInsertEvents(
                     JSON.parse(content), 
                     registData, 
-                    function(auth, registData){
-                        var calendar = google.calendar('v3');
-                        calendar.freebusy.query({
-                            auth: auth,
-                            headers: { "content-type" : "application/json" },
-                            resource: {
-                                items: [
-                                    {id : registData.room}
-                                ], 
-                                timeMin: registData.startDateTime,
-                                timeMax: registData.finishDateTime,
-                                "timeZone": 'Asia/Tokyo'
-                            } 
-                        },function(err,response){
-                            if (err) {
-                                    console.log("エラー");
-                                    console.log('There was an error contacting the Calendar service: ' + err);
-                                    return;
-                            }   
-                            var events = response.data.calendars[registData.room].busy;
-                            if (events.length == 0) {
-                                console.log('free in here...');
-                                Room.find({ "address": slot.room }, function (err, result) {
-                                    if (err) throw err;
-                                    res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
-                                });
-                            } else {
-                                console.log('busy in here...');
-                                res.json({ "fulfillmentText": "その時間はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
-                            }   
-                        });
-                    }
+                    checkFreeBusy
                 );
             });
 
@@ -162,6 +131,44 @@ router.post('/webhook', function (req, res, next) {
             googleCalenderEventControler.authorizeInsertEvents(JSON.parse(content), registData, googleCalenderEventControler.insertEvents);
         });
         res.json({ "fulfillmentText": "承知致しました．上記の参加者および日程で予約します．"});
+    }
+
+
+
+
+
+
+    function checkFreeBusy(auth,registData){
+        var calendar = google.calendar('v3');
+        calendar.freebusy.query({
+            auth: auth,
+            headers: { "content-type" : "application/json" },
+            resource: {
+                items: [
+                    {id : registData.room}
+                ], 
+                timeMin: registData.startDateTime,
+                timeMax: registData.finishDateTime,
+                "timeZone": 'Asia/Tokyo'
+            } 
+        },function(err,response){
+            if (err) {
+                    console.log("エラー");
+                    console.log('There was an error contacting the Calendar service: ' + err);
+                    return;
+            }   
+            var events = response.data.calendars[registData.room].busy;
+            if (events.length == 0) {
+                console.log('free in here...');
+                Room.find({ "address": slot.room }, function (err, result) {
+                    if (err) throw err;
+                    res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
+                });
+            } else {
+                console.log('busy in here...');
+                res.json({ "fulfillmentText": "その時間はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
+            }   
+        });
     }
 });
 module.exports = router;
