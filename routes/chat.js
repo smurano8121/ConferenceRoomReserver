@@ -134,8 +134,6 @@ router.post('/webhook', function (req, res, next) {
                 }
             });
         });
-        // console.log("参加者："+responseName);
-        // res.json({ "fulfillmentText": "参加者は"+req.body.queryResult.queryText+"さんですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
     }
 });
 
