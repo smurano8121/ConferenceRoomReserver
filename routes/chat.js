@@ -124,12 +124,10 @@ router.post('/webhook', function (req, res, next) {
             slot.date = req.body.queryResult.parameters.date;
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
-            attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
-            
+            console.log(slot.room)
 
-            console.log(new Date(startDateMilsec))
-            console.log(new Date(finishDateMilsec + 1000 * 60))
-            
+            attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
+
             let eventDate = new Date(slot.date);
             registData.year = eventDate.getFullYear();
             registData.month = eventDate.getMonth()+1;
