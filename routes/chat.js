@@ -124,7 +124,7 @@ router.post('/webhook', function (req, res, next) {
             slot.date = req.body.queryResult.parameters.date;
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
-            // attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
 
             // console.log(attendees)
 
