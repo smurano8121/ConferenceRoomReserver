@@ -133,14 +133,14 @@ router.post('/webhook', function (req, res, next) {
             registData.month = eventDate.getMonth()+1;
             registData.date = eventDate.getDate();
 
-            let startTime = new Date(startDateMilsec + dateMilsec);
+            let startTime = new Date(startDateMilsec);
             console.log(startTime);
             registData.startDateTime = slot.startDateTime;
             registData.startHours = startTime.getHours() + 9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
             registData.startMinutes = startTime.getMinutes();
             registData.startSeconds = startTime.getSeconds();
 
-            let finishTime = new Date(finishDateMilsec + dateMilsec);
+            let finishTime = new Date(finishDateMilsec);
             console.log(finishTime);
             registData.finishDateTime = slot.finishDateTime;
             registData.finishHours = finishTime.getHours() + 9; //修正必須
