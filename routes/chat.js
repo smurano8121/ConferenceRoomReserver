@@ -113,6 +113,7 @@ router.post('/webhook', function (req, res, next) {
             let startDateMilsec = new Date(req.body.queryResult.parameters.startTime).getTime();
             let timePeriod = new Date(req.body.queryResult.parameters.time_hour);
             let timeDiff = timePeriod - nowDate;
+            let dateDiff = dateMilsec - nowDate.getTime();
             let finishDateMilsec = startDateMilsec + timeDiff;
 
             console.log(new Date(startDateMilsec))
@@ -131,14 +132,14 @@ router.post('/webhook', function (req, res, next) {
 
             let startTime = new Date(startDateMilsec);
             console.log(startTime);
-            registData.startDateTime = slot.startDateTime;
+            registData.startDateTime = new Date(dateDiff + startDateMilsec);
             registData.startHours = startTime.getHours() + 9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
             registData.startMinutes = startTime.getMinutes();
             registData.startSeconds = startTime.getSeconds();
 
             let finishTime = new Date(finishDateMilsec + 1000 * 60);
             console.log(finishTime);
-            registData.finishDateTime = slot.finishDateTime;
+            registData.finishDateTime = new Date(dateDiff + finishDateMilsec + 1000 * 60);
             registData.finishHours = finishTime.getHours() + 9; //修正必須
             registData.finishMinutes = finishTime.getMinutes();
             registData.finishSeconds = finishTime.getSeconds();
