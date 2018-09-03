@@ -105,7 +105,6 @@ router.post('/webhook', function (req, res, next) {
         }else{
             let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
             let startTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-            let finishTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
             
 
             let nowDate = new Date();
@@ -116,7 +115,7 @@ router.post('/webhook', function (req, res, next) {
 
             console.log(new Date(startDateMilsec))
             console.log(new Date(finishDateMilsec))
-            // let finishTimeRegExr = new Date(finishDateMilsec).match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
+            let finishTimeRegExr = new Date(finishDateMilsec).toString().match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
             slot.startDateTime = date + startTimeRegExr;
             slot.finishDateTime = date + finishTimeRegExr;
             slot.date = req.body.queryResult.parameters.date;
@@ -129,13 +128,13 @@ router.post('/webhook', function (req, res, next) {
             registData.month = eventDate.getMonth()+1;
             registData.date = eventDate.getDate();
 
-            let startTime = new Date(startDateMilsec);
+            let startTime = new Date(slot.startDateTime);
             registData.startDateTime = slot.startDateTime;
             registData.startHours = startTime.getHours() + 9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
             registData.startMinutes = startTime.getMinutes();
             registData.startSeconds = startTime.getSeconds();
 
-            let finishTime = new Date(finishDateMilsec);
+            let finishTime = new Date(slot.finishDateTime);
             registData.finishDateTime = slot.finishDateTime;
             registData.finishHours = finishTime.getHours() + 9; //修正必須
             registData.finishMinutes = finishTime.getMinutes();
