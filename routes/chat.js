@@ -113,6 +113,7 @@ router.post('/webhook', function (req, res, next) {
             let timeDiff = timePeriod - nowDate;
             let finishDateMilsec = startDateMilsec + timeDiff;
 
+            console.log(new Date(finishDateMilsec))
             let finishTimeRegExr = new Date(finishDateMilsec).match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
             slot.startDateTime = date + startTimeRegExr;
             slot.finishDateTime = date + finishTimeRegExr;
