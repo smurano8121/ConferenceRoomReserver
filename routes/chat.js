@@ -48,7 +48,7 @@ var attendees; //会議参加者格納Object
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
-    if (req.body.queryResult.intent.displayName == "Reserve") {
+    if (req.body.queryResult.intent.displayName == "ReserveFromStartEnd") {
         console.log(req.body.queryResult.intent.displayName);
         if(!req.body.queryResult.allRequiredParamsPresent){
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
