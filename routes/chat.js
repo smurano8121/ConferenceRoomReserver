@@ -57,8 +57,8 @@ router.post('/webhook', function (req, res, next) {
             let startTimeRegExr = req.body.queryResult.parameters['time-period'].startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
             let finishTimeRegExr = req.body.queryResult.parameters['time-period'].endTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
 
-            slot.startDateTime = date+startTimeRegExr;
-            slot.finishDateTime = date+finishTimeRegExr;
+            slot.startDateTime = date + startTimeRegExr;
+            slot.finishDateTime = date + finishTimeRegExr;
             slot.date = req.body.queryResult.parameters.date;
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
@@ -71,13 +71,13 @@ router.post('/webhook', function (req, res, next) {
 
             let startTime = new Date(slot.startDateTime);
             registData.startDateTime = slot.startDateTime;
-            registData.startHours = startTime.getHours()+9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
+            registData.startHours = startTime.getHours() + 9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
             registData.startMinutes = startTime.getMinutes();
             registData.startSeconds = startTime.getSeconds();
 
             let finishTime = new Date(slot.finishDateTime);
             registData.finishDateTime = slot.finishDateTime;
-            registData.finishHours = finishTime.getHours()+9; //修正必須
+            registData.finishHours = finishTime.getHours() + 9; //修正必須
             registData.finishMinutes = finishTime.getMinutes();
             registData.finishSeconds = finishTime.getSeconds();
 
@@ -120,8 +120,7 @@ router.post('/webhook', function (req, res, next) {
                     }
                 });
             });
-        }
-        
+        }   
     }
     else if (req.body.queryResult.intent.displayName == "Final_Confirm") {
         fs.readFile('client_secret.json', (err, content) => {
@@ -130,6 +129,7 @@ router.post('/webhook', function (req, res, next) {
         });
         res.json({ "fulfillmentText": "承知致しました．指定いただいた参加者および日程で予約します．"});
     }
+    
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
         calendar.freebusy.query({
