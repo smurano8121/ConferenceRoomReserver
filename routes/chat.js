@@ -107,7 +107,6 @@ router.post('/webhook', function (req, res, next) {
             let startTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
             let finishTimeRegExr = req.body.queryResult.parameters.time_hour.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
 
-
             let nowDate = new Date();
             let startDateMilsec = new Date(req.body.queryResult.parameters.startTime).getTime();
             let timePeriod = new Date(req.body.queryResult.parameters.time_hour);
@@ -115,7 +114,7 @@ router.post('/webhook', function (req, res, next) {
             let finishDateMilsec = startDateMilsec + timeDiff;
 
             console.log(new Date(startDateMilsec))
-            console.log(new Date(finishDateMilsec))
+            console.log(new Date(finishDateMilsec + 1000 * 60))
             // let finishTimeRegExr = new Date(finishDateMilsec).match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
             console.log(finishTimeRiegExr);
             slot.startDateTime = date + startTimeRegExr;
