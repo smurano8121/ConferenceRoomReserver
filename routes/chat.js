@@ -117,10 +117,6 @@ router.post('/webhook', function (req, res, next) {
 
             console.log(new Date(startDateMilsec))
             console.log(new Date(finishDateMilsec + 1000 * 60))
-            // let finishTimeRegExr = new Date(finishDateMilsec).match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-            // console.log(finishTimeRiegExr);
-            // slot.startDateTime = date + startTimeRegExr;
-            // slot.finishDateTime = date + finishTimeRegExr;
             slot.date = req.body.queryResult.parameters.date;
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
@@ -140,7 +136,7 @@ router.post('/webhook', function (req, res, next) {
             registData.startMinutes = startTime.getMinutes();
             registData.startSeconds = startTime.getSeconds();
 
-            let finishTime = new Date(finishDateMilsec);
+            let finishTime = new Date(finishDateMilsec + 1000 * 60);
             console.log(finishTime);
             registData.finishDateTime = slot.finishDateTime;
             registData.finishHours = finishTime.getHours() + 9; //修正必須
