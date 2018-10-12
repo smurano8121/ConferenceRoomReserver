@@ -41,12 +41,10 @@ let registData = {
     finishMinutes: null,
     finishSeconds: null,
     attendees: null,
-    attendeesCalendarId: null,
     room: null
 }
 
 var attendees; //会議参加者格納Object
-var attendeesCalendarId;
 
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
@@ -66,8 +64,7 @@ router.post('/webhook', function (req, res, next) {
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
             attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
-            attendeesCalendarId.push({'id': slot.room });
-
+            
             let eventDate = new Date(slot.date);
             registData.year = eventDate.getFullYear();
             registData.month = eventDate.getMonth()+1;
@@ -87,7 +84,6 @@ router.post('/webhook', function (req, res, next) {
 
             registData.room = req.body.queryResult.parameters.confernceRoom;
             registData.attendees = attendees;
-            registData.attendeesCalendarId = attendeesCalendarId;
 
             console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
             console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
@@ -120,7 +116,6 @@ router.post('/webhook', function (req, res, next) {
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
             attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
-            attendeesCalendarId.push({'id': slot.room });
 
             let eventDate = new Date(slot.date);
             registData.year = eventDate.getFullYear();
@@ -141,7 +136,6 @@ router.post('/webhook', function (req, res, next) {
 
             registData.room = req.body.queryResult.parameters.confernceRoom;
             registData.attendees = attendees;
-            registData.attendeesCalendarId = attendeesCalendarId;
 
             console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
             console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
@@ -166,7 +160,6 @@ router.post('/webhook', function (req, res, next) {
             var responseName = '';
             let counter = 0;
             attendees = [];
-            attendeesCalendarId = [];
             
             attendeesListFromDialogFlow.forEach(attendeeMail => {
                 User.find({"email": attendeeMail},function(err,result){
@@ -174,9 +167,7 @@ router.post('/webhook', function (req, res, next) {
                     responseName += result[0].name+"さん";
                     console.log(responseName);
                     var addData = { 'email' : attendeeMail };
-                    var addCalendarId = { 'id' : attendeeMail };
                     attendees.push(addData) ;
-                    attendeesCalendarId.push(addCalendarId);
                     if(counter == attendeesListFromDialogFlow.length){
                         registData.summary = "ミーティング" + "【" + result[0].name+ "】";
                         res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
@@ -195,15 +186,13 @@ router.post('/webhook', function (req, res, next) {
     
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
-        console.log(registData.room);
-        console.log(registData.attendeesCalendarId[0].id);
-        console.log(registData.startDateTime);
-        console.log(registData.finishDateTime);
         calendar.freebusy.query({
             auth: auth,
             headers: { "content-type" : "application/json" },
             resource: {
-                items: attendeesCalendarId, 
+                items: [
+                    {id : registData.room}
+                ], 
                 timeMin: registData.startDateTime,
                 timeMax: registData.finishDateTime,
                 "timeZone": 'Asia/Tokyo'
@@ -214,21 +203,17 @@ router.post('/webhook', function (req, res, next) {
                     console.log('There was an error contacting the Calendar service: ' + err);
                     return;
             }   
-            for(var attendeeId = 0; attendeeId < registData.attendeesCalendarId.length; attendeeId++){
-                var events = response.data.calendars[registData.attendeesCalendarId[attendeeId].id].busy;
-                if (events.length == 0) {
-                    console.log('free in here...');
-                    if(registData.attendeesCalendarId[attendeeId].id != slot.room) continue;
-                    Room.find({ "address": slot.room }, function (err, result) {
-                        // if (err) ;
-                        res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
-                    });
-                } else {
-                    console.log('busy in here...');
-                    res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
-                    break;
-                } 
-            }  
+            var events = response.data.calendars[registData.room].busy;
+            if (events.length == 0) {
+                console.log('free in here...');
+                Room.find({ "address": slot.room }, function (err, result) {
+                    if (err) throw err;
+                    res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
+                });
+            } else {
+                console.log('busy in here...');
+                res.json({ "fulfillmentText": "その時間はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
+            }   
         });
     }
 });
