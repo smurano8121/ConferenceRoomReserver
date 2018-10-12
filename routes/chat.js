@@ -188,7 +188,8 @@ router.post('/webhook', function (req, res, next) {
         var calendar = google.calendar('v3');
         var test = {test:[
             {id : registData.room},
-            {id : registData.attendees[0].email}
+            {id : registData.attendees[0].email},
+            {id : registData.attendees[1].email}
         ]}
         console.log(registData.room);
         console.log(registData.attendees[0].email);
