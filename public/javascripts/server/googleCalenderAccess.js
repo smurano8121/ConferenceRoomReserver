@@ -20,7 +20,7 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
 exports.insertEvents = function(auth, registData) {
     var calendar = google.calendar('v3');
     var event = {
-        'summary': 'APIからの予定登録テスト',
+        'summary': registData.summary,
         'start': {
             'dateTime': registData.year+"-"+registData.month+"-"+registData.date+"T"+registData.startHours+":"+registData.startMinutes+":"+registData.startSeconds,
             'timeZone': 'Asia/Tokyo',

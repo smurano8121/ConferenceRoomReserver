@@ -28,6 +28,7 @@ let slot = {
 }
 
 let registData = {
+    summary: null,
     year: null,
     month: null,
     date: null,
@@ -103,11 +104,6 @@ router.post('/webhook', function (req, res, next) {
         if(!req.body.queryResult.allRequiredParamsPresent){
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
         }else{
-            let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
-            let startTimeRegExr = req.body.queryResult.parameters.startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-            let finishTimeRegExr = req.body.queryResult.parameters.time_hour.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-            // console.log(startTimeRiegExr);
-
             let nowDate = new Date();
             let dateMilsec = new Date(req.body.queryResult.parameters.date).getTime() - 1000 * 60 * 60 * 12;
             let startDateMilsec = new Date(req.body.queryResult.parameters.startTime).getTime();
@@ -116,14 +112,10 @@ router.post('/webhook', function (req, res, next) {
             let dateDiff = dateMilsec - nowDate.getTime();
             let finishDateMilsec = startDateMilsec + timeDiff;
 
-            console.log(new Date(startDateMilsec))
-            console.log(new Date(finishDateMilsec + 1000 * 60))
             slot.date = req.body.queryResult.parameters.date;
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
             attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
-
-            // console.log(attendees)
 
             let eventDate = new Date(slot.date);
             registData.year = eventDate.getFullYear();
@@ -131,14 +123,12 @@ router.post('/webhook', function (req, res, next) {
             registData.date = eventDate.getDate();
 
             let startTime = new Date(startDateMilsec);
-            console.log(startTime);
             registData.startDateTime = new Date(dateDiff + startDateMilsec);
             registData.startHours = startTime.getHours() + 9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
             registData.startMinutes = startTime.getMinutes();
             registData.startSeconds = startTime.getSeconds();
 
             let finishTime = new Date(finishDateMilsec + 1000 * 60);
-            console.log(finishTime);
             registData.finishDateTime = new Date(dateDiff + finishDateMilsec + 1000 * 60);
             registData.finishHours = finishTime.getHours() + 9; //修正必須
             registData.finishMinutes = finishTime.getMinutes();
@@ -146,8 +136,6 @@ router.post('/webhook', function (req, res, next) {
 
             registData.room = req.body.queryResult.parameters.confernceRoom;
             registData.attendees = attendees;
-
-            console.log(registData);
 
             console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
             console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
@@ -169,6 +157,7 @@ router.post('/webhook', function (req, res, next) {
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
         }else{
             let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
+            registData.summary = "ミーティング" + "【" + req.body.queryResult.parameters.userName + "】";
             var responseName = '';
             let counter = 0;
             attendees = [];
