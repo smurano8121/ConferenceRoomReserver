@@ -63,7 +63,7 @@ router.post('/webhook', function (req, res, next) {
             slot.date = req.body.queryResult.parameters.date;
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
-            attendees.push({'id': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
             
             let eventDate = new Date(slot.date);
             registData.year = eventDate.getFullYear();
@@ -115,7 +115,7 @@ router.post('/webhook', function (req, res, next) {
             slot.date = req.body.queryResult.parameters.date;
             slot.room = req.body.queryResult.parameters.confernceRoom;
 
-            attendees.push({'id': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
 
             let eventDate = new Date(slot.date);
             registData.year = eventDate.getFullYear();
@@ -166,7 +166,7 @@ router.post('/webhook', function (req, res, next) {
                     counter += 1;
                     responseName += result[0].name+"さん";
                     console.log(responseName);
-                    var addData = { 'id' : attendeeMail };
+                    var addData = { 'email' : attendeeMail };
                     attendees.push(addData) ;
                     if(counter == attendeesListFromDialogFlow.length){
                         registData.summary = "ミーティング" + "【" + result[0].name+ "】";
@@ -188,18 +188,18 @@ router.post('/webhook', function (req, res, next) {
         var calendar = google.calendar('v3');
         var test = {test:[
             {id : registData.room},
-            {id : registData.attendees[0].id},
-            {id : registData.attendees[1].id}
+            {id : registData.attendees[0].email},
+            {id : registData.attendees[1].email}
         ]}
         console.log(registData.room);
-        console.log(registData.attendees[0].id);
+        console.log(registData.attendees[0].email);
         console.log(registData.startDateTime);
         console.log(registData.finishDateTime);
         calendar.freebusy.query({
             auth: auth,
             headers: { "content-type" : "application/json" },
             resource: {
-                items: attendees, 
+                items: test.test, 
                 timeMin: registData.startDateTime,
                 timeMax: registData.finishDateTime,
                 "timeZone": 'Asia/Tokyo'
@@ -213,10 +213,10 @@ router.post('/webhook', function (req, res, next) {
             // var events = response.data.calendars[registData.attendees[0].email].busy;
 
             for(var attendeeId = 0; attendeeId < registData.attendees.length; attendeeId++){
-                var events = response.data.calendars[registData.attendees[attendeeId].id].busy;
+                var events = response.data.calendars[registData.attendees[attendeeId].email].busy;
                 if (events.length == 0) {
                     console.log('free in here...');
-                    if(registData.attendees[attendeeId].id != slot.room) continue;
+                    if(registData.attendees[attendeeId].email != slot.room) continue;
                     Room.find({ "address": slot.room }, function (err, result) {
                         // if (err) ;
                         res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
