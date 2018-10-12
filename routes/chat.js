@@ -208,7 +208,8 @@ router.post('/webhook', function (req, res, next) {
                     console.log('There was an error contacting the Calendar service: ' + err);
                     return;
             }   
-            var events = response.data.calendars[registData.attendees[0].email].busy;
+            // var events = response.data.calendars[registData.attendees[0].email].busy;
+            var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
                 console.log('free in here...');
                 Room.find({ "address": slot.room }, function (err, result) {
