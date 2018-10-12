@@ -217,7 +217,9 @@ router.post('/webhook', function (req, res, next) {
                 if (events.length == 0) {
                     console.log('free in here...');
                     Room.find({ "address": slot.room }, function (err, result) {
-                        if (err) continue;
+                        if (err) {
+                            continue;
+                        }
                         res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
                     });
                 } else {
