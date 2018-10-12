@@ -186,6 +186,10 @@ router.post('/webhook', function (req, res, next) {
     
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
+        var test = {test:[
+            {id : registData.room},
+            {id : registData.attendees[0].email}
+        ]}
         console.log(registData.room);
         console.log(registData.attendees[0].email);
         console.log(registData.startDateTime);
@@ -194,10 +198,7 @@ router.post('/webhook', function (req, res, next) {
             auth: auth,
             headers: { "content-type" : "application/json" },
             resource: {
-                items: [
-                    {id : registData.room},
-                    {id : registData.attendees[0].email}
-                ], 
+                items: test.test, 
                 timeMin: registData.startDateTime,
                 timeMax: registData.finishDateTime,
                 "timeZone": 'Asia/Tokyo'
