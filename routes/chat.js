@@ -187,6 +187,7 @@ router.post('/webhook', function (req, res, next) {
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
         console.log(registData.room);
+        console.log(registData.attendees[0].email);
         console.log(registData.startDateTime);
         console.log(registData.finishDateTime);
         calendar.freebusy.query({
@@ -195,7 +196,7 @@ router.post('/webhook', function (req, res, next) {
             resource: {
                 items: [
                     {id : registData.room},
-                    {"id" : "ytakaya@mikilab.doshisha.ac.jp"},
+                    {id : registData.attendees[0].email},
                     {"id" : "rtomioka@mikilab.doshisha.ac.jp"}
                 ], 
                 timeMin: registData.startDateTime,
