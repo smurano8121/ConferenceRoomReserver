@@ -195,8 +195,8 @@ router.post('/webhook', function (req, res, next) {
             resource: {
                 items: [
                     {id : registData.room},
-                    {id : "ytakaya@mikilab.doshisha.ac.jp"},
-                    {id : "rtomioka@mikilab.doshisha.ac.jp"}
+                    {"id" : "ytakaya@mikilab.doshisha.ac.jp"},
+                    {"id" : "rtomioka@mikilab.doshisha.ac.jp"}
                 ], 
                 timeMin: registData.startDateTime,
                 timeMax: registData.finishDateTime,
