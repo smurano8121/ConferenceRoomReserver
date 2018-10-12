@@ -20,7 +20,7 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
 exports.insertEvents = function(auth, registData) {
     var calendar = google.calendar('v3');
     var event = {
-        'summary': 'APIからの予定登録テスト',
+        'summary': registData.summary,
         'start': {
             'dateTime': registData.year+"-"+registData.month+"-"+registData.date+"T"+registData.startHours+":"+registData.startMinutes+":"+registData.startSeconds,
             'timeZone': 'Asia/Tokyo',
@@ -37,7 +37,9 @@ exports.insertEvents = function(auth, registData) {
         headers: { "content-type" : "application/json" },
         resource: {
             items: [
-                {id : registData.room}
+                {id : registData.room},
+                {id : "reservation@mikilab.doshisha.ac.jp"},
+                {id : "rtomioka@mikilab.doshisha.ac.jp"}
             ], 
             timeMin: registData.startDateTime,
             timeMax: registData.finishDateTime,
