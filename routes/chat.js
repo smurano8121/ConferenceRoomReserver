@@ -140,7 +140,7 @@ router.post('/webhook', function (req, res, next) {
 
             registData.room = req.body.queryResult.parameters.confernceRoom;
             registData.attendees = attendees;
-            console.log("テストだよ〜"：attendeesCalendarId);
+            console.log("テストだよ〜"+attendeesCalendarId);
             registData.attendeesCalendarId = attendeesCalendarId;
 
             console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
