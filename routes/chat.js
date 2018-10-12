@@ -210,6 +210,10 @@ router.post('/webhook', function (req, res, next) {
                     return;
             }   
             // var events = response.data.calendars[registData.attendees[0].email].busy;
+            registData.attendees.forEach(attendee =>{
+                console.log(attendee.email);
+                // response.data.calendars[attendee.email].busy;
+            });
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
                 console.log('free in here...');
