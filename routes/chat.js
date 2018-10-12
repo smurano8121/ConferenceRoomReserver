@@ -46,6 +46,7 @@ let registData = {
 }
 
 var attendees; //会議参加者格納Object
+var attendeesCalendarId;
 
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
@@ -163,6 +164,7 @@ router.post('/webhook', function (req, res, next) {
             var responseName = '';
             let counter = 0;
             attendees = [];
+            attendeesCalendarId = [];
             
             attendeesListFromDialogFlow.forEach(attendeeMail => {
                 User.find({"email": attendeeMail},function(err,result){
