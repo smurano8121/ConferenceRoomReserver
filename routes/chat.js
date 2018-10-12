@@ -195,9 +195,8 @@ router.post('/webhook', function (req, res, next) {
             headers: { "content-type" : "application/json" },
             resource: {
                 items: [
-                    // {id : registData.room},
+                    {id : registData.room},
                     {id : registData.attendees[0].email}
-                    // {"id" : "rtomioka@mikilab.doshisha.ac.jp"}
                 ], 
                 timeMin: registData.startDateTime,
                 timeMax: registData.finishDateTime,
