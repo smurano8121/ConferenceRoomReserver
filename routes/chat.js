@@ -211,21 +211,37 @@ router.post('/webhook', function (req, res, next) {
                     return;
             }   
             // var events = response.data.calendars[registData.attendees[0].email].busy;
-            registData.attendees.forEach(attendee =>{
-                console.log(attendee.email);
-                var events = response.data.calendars[attendee.email].busy;
+
+            for(var attendeeId = 0; attendeeId < registData.attendees.length; attendeeId++){
+                var events = response.data.calendars[registData.attendees[attendeeId].email].busy;
                 if (events.length == 0) {
                     console.log('free in here...');
                     Room.find({ "address": slot.room }, function (err, result) {
-                        if (err) return;
+                        if (err) continue;
                         res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
                     });
                 } else {
                     console.log('busy in here...');
                     res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
-                    // break;
-                }   
-            });
+                    break;
+                } 
+            }
+
+            // registData.attendees.forEach(attendee =>{
+            //     console.log(attendee.email);
+            //     var events = response.data.calendars[attendee.email].busy;
+            //     if (events.length == 0) {
+            //         console.log('free in here...');
+            //         Room.find({ "address": slot.room }, function (err, result) {
+            //             if (err) return;
+            //             res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分まで"+result[0].name+"でよろしいですか？" });
+            //         });
+            //     } else {
+            //         console.log('busy in here...');
+            //         res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
+            //         // break;
+            //     }   
+            // });
             // var events = response.data.calendars[registData.room].busy;
             // if (events.length == 0) {
             //     console.log('free in here...');
