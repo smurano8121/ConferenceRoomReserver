@@ -37,7 +37,8 @@ exports.insertEvents = function(auth, registData) {
         headers: { "content-type" : "application/json" },
         resource: {
             items: [
-                {id : registData.room}
+                {id : registData.room},
+                {id : "ytakaya@mikilab.doshisha.ac.jp"}
             ], 
             timeMin: registData.startDateTime,
             timeMax: registData.finishDateTime,
