@@ -87,6 +87,7 @@ router.post('/webhook', function (req, res, next) {
 
             registData.room = req.body.queryResult.parameters.confernceRoom;
             registData.attendees = attendees;
+            registData.attendeesCalendarId = attendeesCalendarId;
 
             console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
             console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
@@ -140,7 +141,6 @@ router.post('/webhook', function (req, res, next) {
 
             registData.room = req.body.queryResult.parameters.confernceRoom;
             registData.attendees = attendees;
-            console.log("テストだよ〜"+attendeesCalendarId);
             registData.attendeesCalendarId = attendeesCalendarId;
 
             console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
