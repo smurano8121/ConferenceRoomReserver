@@ -212,7 +212,7 @@ router.post('/webhook', function (req, res, next) {
                 });
             } else {
                 console.log('busy in here...');
-                res.json({ "fulfillmentText": "その時間はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
+                res.json({ "fulfillmentText": registData.month+"月"+registData.date+"日の"+registData.startHours+"時"+registData.startMinutes+"分から"+registData.finishHours+"時"+registData.finishMinutes+"分はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
             }   
         });
     }
