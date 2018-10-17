@@ -113,6 +113,9 @@ router.post('/webhook', function (req, res, next) {
             dDate.setHours(startTime.getHours() + 9); //to JST
 
             //利用時間
+            let useTimeAmount = req.body.queryResult.parameters.duration.amount;
+            let useTimeUnit   = req.body.queryResult.parameters.duration.unit;
+            let useTime = useTimeAmount + useTimeUnit;
             console.log(req.body.queryResult.parameters.duration);
 
             //予約終了時間
@@ -131,6 +134,10 @@ router.post('/webhook', function (req, res, next) {
             }
 
             let eventEndTime = new Date(endTime.setHours(endTime.getHours() - 9));
+
+            console.log("予約日："+dDate);
+            console.log("開始時間："+eventStartTime);
+            console.log("終了時間："+eventEndTime);
 
             // let nowDate = new Date();
             // let dateMilsec = new Date(req.body.queryResult.parameters.date).getTime() - 1000 * 60 * 60 * 12;
