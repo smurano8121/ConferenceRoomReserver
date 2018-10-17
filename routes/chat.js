@@ -195,6 +195,7 @@ router.post('/webhook', function (req, res, next) {
     
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
+        console.log(registData.room)
         calendar.freebusy.query({
             auth: auth,
             headers: { "content-type" : "application/json" },
@@ -212,6 +213,7 @@ router.post('/webhook', function (req, res, next) {
                     console.log('There was an error contacting the Calendar service: ' + err);
                     return;
             }   
+            console.log(response.data.calendars[registData.room])
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
                 console.log('free in here...');
