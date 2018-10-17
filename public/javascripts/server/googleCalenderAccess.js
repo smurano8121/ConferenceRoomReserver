@@ -33,11 +33,11 @@ exports.insertEvents = function(auth, registData) {
         'summary': registData.summary,
         'start': {
             'dateTime': startTimeJP,
-            'timeZone': 'Asia/Tokyo',
+            // 'timeZone': 'Asia/Tokyo',
         },
         'end': {
             'dateTime': endTimeJP,
-            'timeZone': 'Asia/Tokyo',
+            // 'timeZone': 'Asia/Tokyo',
         },
         'attendees': registData.attendees
     };
@@ -53,7 +53,7 @@ exports.insertEvents = function(auth, registData) {
             ], 
             timeMin: startTimeJP,
             timeMax: endTimeJP,
-            "timeZone": 'Asia/Tokyo'
+            // "timeZone": 'Asia/Tokyo'
         } 
     },function(err,response){
         if (err) {
