@@ -22,11 +22,11 @@ exports.insertEvents = function(auth, registData) {
     var event = {
         'summary': registData.summary,
         'start': {
-            'dateTime': registData.year+"-"+registData.month+"-"+registData.date+"T"+registData.startHours+":"+registData.startMinutes+":"+registData.startSeconds,
+            'dateTime': registData.startTime,
             'timeZone': 'Asia/Tokyo',
         },
         'end': {
-            'dateTime': registData.year+"-"+registData.month+"-"+registData.date+"T"+registData.finishHours+":"+registData.finishMinutes+":"+registData.finishSeconds,
+            'dateTime': registData.endTime,
             'timeZone': 'Asia/Tokyo',
         },
         'attendees': registData.attendees
