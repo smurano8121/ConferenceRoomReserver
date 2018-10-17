@@ -97,6 +97,7 @@ router.post('/webhook', function (req, res, next) {
         if(!req.body.queryResult.allRequiredParamsPresent){
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
         }else{
+            registData.room = req.body.queryResult.parameters.conferenceRoom;
             //予約日
             let dDate = new Date(req.body.queryResult.parameters.date);
             date = dDate;
@@ -133,7 +134,7 @@ router.post('/webhook', function (req, res, next) {
             }
             let reserveEndTime = endTime.toFormat('HH24時MI分');
             registData.endTime = new Date(endTime.setHours(endTime.getHours() - 9));
-            registData.room = req.body.queryResult.parameters.confernceRoom;
+            
 
             console.log("予約日："+reserveDate);
             console.log("開始時間："+reserveStartTime);
@@ -196,7 +197,7 @@ router.post('/webhook', function (req, res, next) {
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
         console.log(registData.room)
-        console.log(registData.startTime)
+        console.log(registData.startTime)//これは入ってそう
         calendar.freebusy.query({
             auth: auth,
             headers: { "content-type" : "application/json" },
