@@ -28,11 +28,11 @@ exports.insertEvents = function(auth, registData) {
     var event = {
         'summary': registData.summary,
         'start': {
-            'dateTime': startTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
+            'dateTime': registData.startTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
             'timeZone': 'Asia/Tokyo',
         },
         'end': {
-            'dateTime': endTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
+            'dateTime': registData.startTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
             'timeZone': 'Asia/Tokyo',
         },
         'attendees': registData.attendees
@@ -47,8 +47,8 @@ exports.insertEvents = function(auth, registData) {
                 {id : "reservation@mikilab.doshisha.ac.jp"},
                 {id : "rtomioka@mikilab.doshisha.ac.jp"}
             ], 
-            timeMin: startTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
-            timeMax: endTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
+            timeMin: registData.startTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
+            timeMax: registData.startTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,response){
