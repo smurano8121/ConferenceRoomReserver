@@ -196,6 +196,7 @@ router.post('/webhook', function (req, res, next) {
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
         console.log(registData.room)
+        console.log(registData.startTime)
         calendar.freebusy.query({
             auth: auth,
             headers: { "content-type" : "application/json" },
