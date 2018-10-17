@@ -10,6 +10,7 @@ const fs = require('fs');
 const readline = require('readline');
 
 const { google } = require('googleapis');
+require('date-utils');
 
 //データモデル
 const User = require('../models/user');
@@ -106,11 +107,14 @@ router.post('/webhook', function (req, res, next) {
         }else{
             //予約日
             let dDate = new Date(req.body.queryResult.parameters.date);
+            let reserveDate = dDate.toFormat('YYYY年MM月DD日');
+
 
             //予約開始時間
             let startTime = new Date(req.body.queryResult.parameters.startTime);
             let eventStartTime = new Date(dDate.setHours(startTime.getHours()));
             dDate.setHours(startTime.getHours() + 9); //to JST
+            let reserveBeginTime = dDate.toFormat('HH24時MI分');
 
             //利用時間
             let useTimeAmount = req.body.queryResult.parameters.duration.amount;
@@ -132,12 +136,12 @@ router.post('/webhook', function (req, res, next) {
                   endTime.setHours(dDate.getHours() + Number(useTimeAmount));
                   break;
             }
-
+            let reserveEndTime = endTime.toFormat('HH24時MI分');
             let eventEndTime = new Date(endTime.setHours(endTime.getHours() - 9));
 
-            console.log("予約日："+dDate);
-            console.log("開始時間："+eventStartTime);
-            console.log("終了時間："+eventEndTime);
+            console.log("予約日："+reserveDate);
+            console.log("開始時間："+reserveStartTime);
+            console.log("終了時間："+reserveEndTime);
 
             // let nowDate = new Date();
             // let dateMilsec = new Date(req.body.queryResult.parameters.date).getTime() - 1000 * 60 * 60 * 12;
