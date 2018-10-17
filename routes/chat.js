@@ -114,7 +114,7 @@ router.post('/webhook', function (req, res, next) {
             let startTime = new Date(req.body.queryResult.parameters.startTime);
             let eventStartTime = new Date(dDate.setHours(startTime.getHours()));
             dDate.setHours(startTime.getHours() + 9); //to JST
-            let reserveBeginTime = dDate.toFormat('HH24時MI分');
+            let reserveStartTime = dDate.toFormat('HH24時MI分');
 
             //利用時間
             let useTimeAmount = req.body.queryResult.parameters.duration.amount;
