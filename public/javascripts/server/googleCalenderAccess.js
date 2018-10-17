@@ -47,7 +47,7 @@ exports.insertEvents = function(auth, registData) {
         } 
     },function(err,response){
         if (err) {
-                console.log("エラー");
+                console.log("エラーーーー");
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
