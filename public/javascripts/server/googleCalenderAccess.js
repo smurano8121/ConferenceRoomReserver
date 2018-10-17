@@ -22,8 +22,8 @@ exports.insertEvents = function(auth, registData) {
     var calendar = google.calendar('v3');
     var startTimeJP = registData.startTime;
     var endTimeJP = registData.endTime;
-    startTimeJP.setHours(registData.startTime.getHours()+9);
-    endTimeJP.setHours(registData.endTime.getHours()+9)
+    startTimeJP.setHours(registData.startTime.getHours()-9);
+    endTimeJP.setHours(registData.endTime.getHours()-9)
     console.log("registData.startTime"+registData.startTime)
     console.log("startTimeJP"+startTimeJP)
     console.log("registData.endTime"+registData.endTime)
@@ -33,11 +33,11 @@ exports.insertEvents = function(auth, registData) {
         'summary': registData.summary,
         'start': {
             'dateTime': startTimeJP,
-            // 'timeZone': 'Asia/Tokyo',
+            'timeZone': 'Asia/Tokyo',
         },
         'end': {
             'dateTime': endTimeJP,
-            // 'timeZone': 'Asia/Tokyo',
+            'timeZone': 'Asia/Tokyo',
         },
         'attendees': registData.attendees
     };
@@ -53,7 +53,7 @@ exports.insertEvents = function(auth, registData) {
             ], 
             timeMin: startTimeJP,
             timeMax: endTimeJP,
-            // "timeZone": 'Asia/Tokyo'
+            "timeZone": 'Asia/Tokyo'
         } 
     },function(err,response){
         if (err) {
