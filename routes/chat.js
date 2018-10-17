@@ -113,7 +113,7 @@ router.post('/webhook', function (req, res, next) {
             dDate.setHours(startTime.getHours() + 9); //to JST
 
             //利用時間
-            console.log(req.body.queryResult.parameters.startTime.duration);
+            console.log(req.body.queryResult.parameters.duration);
 
             //予約終了時間
             let endTime = dDate;
