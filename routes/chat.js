@@ -112,7 +112,9 @@ router.post('/webhook', function (req, res, next) {
 
             //予約開始時間
             let startTime = new Date(req.body.queryResult.parameters.startTime);
-            let eventStartTime = new Date(dDate.setHours(startTime.getHours()));
+            dDate.setHours(startTime.getHours());
+            dDate.setMinutes(startTime.getMinutes());
+            let eventStartTime = new Date(dDate);
             dDate.setHours(startTime.getHours() + 9); //to JST
             let reserveStartTime = dDate.toFormat('HH24時MI分');
 
