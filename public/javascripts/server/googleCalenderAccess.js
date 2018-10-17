@@ -20,14 +20,19 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
 
 exports.insertEvents = function(auth, registData) {
     var calendar = google.calendar('v3');
+    var startTimeJP = registData.startTime;
+    var endTimeJP = registData.endTime;
+    startTimeJP.setHours(registData.startTime.getHours()+9);
+    endTimeJP.setHours(registData.endTime.getHours()+9)
+
     var event = {
         'summary': registData.summary,
         'start': {
-            'dateTime': registData.startTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
+            'dateTime': registData.startTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
             'timeZone': 'Asia/Tokyo',
         },
         'end': {
-            'dateTime': registData.endTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
+            'dateTime': registData.endTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
             'timeZone': 'Asia/Tokyo',
         },
         'attendees': registData.attendees
