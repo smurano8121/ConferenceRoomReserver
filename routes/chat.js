@@ -221,7 +221,7 @@ router.post('/webhook', function (req, res, next) {
         var endTimeJP = registData.endTime;
         startTimeJP.setHours(registData.startTime.getHours()+9);
         endTimeJP.setHours(registData.endTime.getHours()+9)
-        console.log(registData.startTimeJP);
+        console.log(startTimeJP);
         
 
         calendar.freebusy.query({
@@ -231,8 +231,8 @@ router.post('/webhook', function (req, res, next) {
                 items: [
                     {id : registData.room}
                 ], 
-                timeMin: registData.startTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
-                timeMax: registData.endTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
+                timeMin: startTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
+                timeMax: endTimeJP.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
                 "timeZone": 'Asia/Tokyo'
             } 
         },function(err,response){
@@ -247,11 +247,11 @@ router.post('/webhook', function (req, res, next) {
                 console.log('free in here...');
                 Room.find({ "address": registData.room }, function (err, result) {
                     if (err) throw err;
-                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+registData.startTime.toFormat('HH24時MI分')+"から"+registData.endTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
+                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+startTimeJP.toFormat('HH24時MI分')+"から"+endTimeJP.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
                 });
             } else {
                 console.log('busy in here...');
-                res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+registData.startTime.toFormat('HH24時MI分')+"から"+registData.endTime.toFormat('HH24時MI分')+"分はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
+                res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+startTimeJP.toFormat('HH24時MI分')+"から"+endTimeJP.toFormat('HH24時MI分')+"分はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
             }   
         });
     }
