@@ -150,6 +150,24 @@ router.post('/webhook', function (req, res, next) {
             // console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
             // console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
 
+            let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
+            var responseName = '';
+            let counter = 0;
+            attendees = [];
+            
+            attendeesListFromDialogFlow.forEach(attendeeMail => {
+                User.find({"email": attendeeMail},function(err,result){
+                    counter += 1;
+                    responseName += result[0].name+"さん";
+                    console.log(responseName);
+                    var addData = { 'email' : attendeeMail };
+                    attendees.push(addData) ;
+                    if(counter == attendeesListFromDialogFlow.length){
+                        registData.summary = "ミーティング" + "【" + result[0].name+ "】";
+                    }
+                });
+            });
+
 
             fs.readFile('client_secret.json', (err, content) => {
                 if (err) return console.log('Error loading client secret file:', err);
@@ -219,7 +237,7 @@ router.post('/webhook', function (req, res, next) {
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
                 console.log('free in here...');
-                Room.find({ "address": slot.room }, function (err, result) {
+                Room.find({ "address": registData.room }, function (err, result) {
                     if (err) throw err;
                     res.json({ "fulfillmentText": date+"の"+registData.startTime+"から"+registData.endTime+"まで"+result[0].name+"でよろしいですか？" });
                 });
