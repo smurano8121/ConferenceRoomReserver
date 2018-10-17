@@ -32,7 +32,7 @@ exports.insertEvents = function(auth, registData) {
             'timeZone': 'Asia/Tokyo',
         },
         'end': {
-            'dateTime': registData.startTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
+            'dateTime': registData.endTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456Z"),
             'timeZone': 'Asia/Tokyo',
         },
         'attendees': registData.attendees
@@ -48,7 +48,7 @@ exports.insertEvents = function(auth, registData) {
                 {id : "rtomioka@mikilab.doshisha.ac.jp"}
             ], 
             timeMin: registData.startTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
-            timeMax: registData.startTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
+            timeMax: registData.endTime.toFormat("YYYY-MM-DDTHH24:MI:SS.123456+09:00"),
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,response){
