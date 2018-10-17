@@ -99,11 +99,39 @@ router.post('/webhook', function (req, res, next) {
             });
         }
     }
-    else if (req.body.queryResult.intent.displayName == "ReserveFromStartOnly") {
+    else if (req.body.queryResult.intent.displayName == "ReserveFromAllParameter") {
         console.log(req.body.queryResult.intent.displayName);
         if(!req.body.queryResult.allRequiredParamsPresent){
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
         }else{
+            //予約日
+            let dDate = new Date(req.body.queryResult.parameters.date);
+
+            //予約開始時間
+            let startTime = new Date(req.body.queryResult.parameters.startTime);
+            let eventStartTime = new Date(dDate.setHours(startTime.getHours()));
+            dDate.setHours(startTime.getHours() + 9); //to JST
+
+            //利用時間
+            console.log(req.body.queryResult.parameters.startTime.duration);
+
+            //予約終了時間
+            let endTime = dDate;
+
+            switch (useTimeUnit) { //@sys.durationのunitに応じて処理をわける。日は無視して時と分のみだけの対応にしておく
+                case '時':
+                  endTime.setHours(dDate.getHours() + Number(useTimeAmount));
+                  break;
+                case '分':
+                  endTime.setMinutes(dDate.getMinutes() + Number(useTimeAmount));
+                  break;
+                default:  
+                  endTime.setHours(dDate.getHours() + Number(useTimeAmount));
+                  break;
+            }
+
+            let eventEndTime = new Date(endTime.setHours(endTime.getHours() - 9));
+
             let nowDate = new Date();
             let dateMilsec = new Date(req.body.queryResult.parameters.date).getTime() - 1000 * 60 * 60 * 12;
             let startDateMilsec = new Date(req.body.queryResult.parameters.startTime).getTime();
