@@ -238,6 +238,7 @@ router.post('/webhook', function (req, res, next) {
             }
             console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + registData.endTime) 
+            console.log(JSON.stringify(response.data.calendars[registData.room]))
             console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy[0])
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
