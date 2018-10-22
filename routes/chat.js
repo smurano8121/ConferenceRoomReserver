@@ -207,8 +207,16 @@ router.post('/webhook', function (req, res, next) {
     
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
-        var responseStartTime = registData.startTim
-        var responseEndTime = registData.endTime
+
+        var startTime = registData.startTime;
+        var endTime = registData.endTime;
+        var responseStartTime = startTime
+        var responseEndTime = endTime
+        // responseStartTime.setHours(startTime.getHours()+9);
+        // responseEndTime.setHours(endTime.getHours()+9);
+        // startTimeJP.setHours(registData.startTime.getHours()+9);
+        // endTimeJP.setHours(registData.endTime.getHours()+9);
+        
         
 
         calendar.freebusy.query({
@@ -230,7 +238,7 @@ router.post('/webhook', function (req, res, next) {
             }
             console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + registData.endTime) 
-            console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy.end)
+            console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy)
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
                 console.log('free in here...');
