@@ -227,8 +227,8 @@ router.post('/webhook', function (req, res, next) {
         var responseEndTime = registData.endTime
         // responseStartTime.setHours(registData.startTime.getHours()+9);
         // responseEndTime.setHours(registData.endTime.getHours()+9);
-        startTimeJP.setHours(registData.startTime.getHours());
-        endTimeJP.setHours(registData.endTime.getHours());
+        startTimeJP.setHours(registData.startTime.getHours()+9);
+        endTimeJP.setHours(registData.endTime.getHours()+9);
         
         
         console.log(startTimeJP);
@@ -251,8 +251,8 @@ router.post('/webhook', function (req, res, next) {
                     console.log('There was an error contacting the Calendar service: ' + err);
                     return;
             }
-            console.log("timeMin: " + startTimeJP)
-            console.log("timeMax: " + endTimeJP) 
+            console.log("timeMin: " + registData.startTime)
+            console.log("timeMax: " + registData.endTime) 
             console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy)
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
