@@ -241,8 +241,8 @@ router.post('/webhook', function (req, res, next) {
                 items: [
                     {id : registData.room}
                 ], 
-                timeMin: startTimeJP,
-                timeMax: endTimeJP,
+                timeMin: registData.startTime,
+                timeMax: registData.endTime,
                 "timeZone": 'Asia/Tokyo'
             } 
         },function(err,response){
