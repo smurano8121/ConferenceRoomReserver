@@ -138,6 +138,7 @@ router.post('/webhook', function (req, res, next) {
             //会議場所の登録
             attendees = [];
             attendees.push({'email': req.body.queryResult.parameters.confernceRoom });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            
         
 
             console.log("予約日："+reserveDate);
@@ -168,6 +169,7 @@ router.post('/webhook', function (req, res, next) {
                     attendees.push(addData) ;
                     if(counter == attendeesListFromDialogFlow.length){
                         registData.summary = "ミーティング" + "【" + result[0].name+ "】";
+                        registData.attendees = attendees;
                     }
                 });
             });
