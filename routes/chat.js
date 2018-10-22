@@ -137,7 +137,7 @@ router.post('/webhook', function (req, res, next) {
 
             //会議場所の登録
             attendees = [];
-            attendees.push({'email': registData.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            attendees.push({'email': registData.room });
             registData.attendees = attendees
         
             console.log("予約日："+reserveDate);
@@ -238,7 +238,7 @@ router.post('/webhook', function (req, res, next) {
             }
             console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + registData.endTime) 
-            console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy.end)
+            console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy[0].end)
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
                 console.log('free in here...');
