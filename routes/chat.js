@@ -169,10 +169,11 @@ router.post('/webhook', function (req, res, next) {
                     attendees.push(addData) ;
                     if(counter == attendeesListFromDialogFlow.length){
                         registData.summary = "ミーティング" + "【" + result[0].name+ "】";
-                        registData.attendees = attendees;
                     }
                 });
             });
+            registData.attendees = attendees;
+            
 
 
             fs.readFile('client_secret.json', (err, content) => {
