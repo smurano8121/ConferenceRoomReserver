@@ -244,7 +244,9 @@ router.post('/webhook', function (req, res, next) {
                     console.log("エラー");
                     console.log('There was an error contacting the Calendar service: ' + err);
                     return;
-            }   
+            }
+            console.log("timeMin: " + startTimeJP)
+            console.log("timeMax: " + endTimeJP) 
             console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy)
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
