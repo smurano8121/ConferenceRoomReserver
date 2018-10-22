@@ -134,7 +134,11 @@ router.post('/webhook', function (req, res, next) {
             }
             let reserveEndTime = endTime.toFormat('HH24時MI分');
             registData.endTime = new Date(endTime.setHours(endTime.getHours() - 9));
-            
+
+            //会議場所の登録
+            attendees = [];
+            attendees.push({'email': req.body.queryResult.parameters.confernceRoom });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            registData.room = req.body.queryResult.parameters.confernceRoom
 
             console.log("予約日："+reserveDate);
             console.log("開始時間："+reserveStartTime);
@@ -153,7 +157,7 @@ router.post('/webhook', function (req, res, next) {
             let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
             var responseName = '';
             let counter = 0;
-            attendees = [];
+            
             
             attendeesListFromDialogFlow.forEach(attendeeMail => {
                 User.find({"email": attendeeMail},function(err,result){
