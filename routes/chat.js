@@ -137,7 +137,7 @@ router.post('/webhook', function (req, res, next) {
 
             //会議場所の登録
             attendees = [];
-            attendees.push({'email': req.body.queryResult.parameters.confernceRoom });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            attendees.push({'email': registData.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
             registData.attendees = attendees
             console.log(registData.attendees)
         
