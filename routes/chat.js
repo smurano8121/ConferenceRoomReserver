@@ -259,11 +259,11 @@ router.post('/webhook', function (req, res, next) {
                 console.log('free in here...');
                 Room.find({ "address": registData.room }, function (err, result) {
                     if (err) throw err;
-                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
+                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.setHours(registData.startTime.getHours()+9).toFormat('HH24時MI分')+"から"+responseEndTime.setHours(registData.endTime.getHours()+9).toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
                 });
             } else {
                 console.log('busy in here...');
-                res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
+                res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.setHours(registData.startTime.getHours()+9).toFormat('HH24時MI分')+"から"+responseEndTime.setHours(registData.endTime.getHours()+9).toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
             }   
         });
     }
