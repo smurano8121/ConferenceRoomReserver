@@ -231,7 +231,7 @@ router.post('/webhook', function (req, res, next) {
         // endTimeJP.setHours(registData.endTime.getHours()+9);
         
         
-        console.log(startTimeJP);
+        console.log(startTime);
         
 
         calendar.freebusy.query({
