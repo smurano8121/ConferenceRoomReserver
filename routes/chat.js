@@ -238,7 +238,7 @@ router.post('/webhook', function (req, res, next) {
             }
             console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + registData.endTime) 
-            console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy[0])
+            console.log("部屋の状況だよ：" + response.data.calendars[registData.room])
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
                 console.log('free in here...');
