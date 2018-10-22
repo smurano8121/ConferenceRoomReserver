@@ -139,22 +139,10 @@ router.post('/webhook', function (req, res, next) {
             attendees = [];
             attendees.push({'email': registData.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
             registData.attendees = attendees
-            console.log(registData.attendees)
         
-
             console.log("予約日："+reserveDate);
             console.log("開始時間："+reserveStartTime);
             console.log("終了時間："+reserveEndTime);
-
-        
-            // attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
-
-            
-            // registData.attendees = attendees;
-
-            // console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
-            // console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
-            // console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
 
             let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
             var responseName = '';
@@ -173,10 +161,6 @@ router.post('/webhook', function (req, res, next) {
                     }
                 });
             });
-            // registData.attendees = attendees;
-
-
-
 
             fs.readFile('client_secret.json', (err, content) => {
                 if (err) return console.log('Error loading client secret file:', err);
@@ -223,20 +207,8 @@ router.post('/webhook', function (req, res, next) {
     
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
-        console.log(registData.room)
-        console.log(registData.startTime)//これは入ってそう
-
-        var startTime = registData.startTime;
-        var endTime = registData.endTime;
-        var responseStartTime = startTime
-        var responseEndTime = endTime
-        // responseStartTime.setHours(startTime.getHours()+9);
-        // responseEndTime.setHours(endTime.getHours()+9);
-        // startTimeJP.setHours(registData.startTime.getHours()+9);
-        // endTimeJP.setHours(registData.endTime.getHours()+9);
-        
-        
-        console.log(startTime);
+        var responseStartTime = registData.startTim
+        var responseEndTime = registData.endTime
         
 
         calendar.freebusy.query({
