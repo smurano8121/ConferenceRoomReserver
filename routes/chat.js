@@ -243,7 +243,7 @@ router.post('/webhook', function (req, res, next) {
                 if (item.end != null) return true;
               });
             console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy[0].end)
-            console.log("endの中身だよ"+busy.end)
+            console.log("endの中身だよ"+busy[0].end)
             var events = response.data.calendars[registData.room].busy;
             if (events.length == 0) {
                 console.log('free in here...');
@@ -253,7 +253,9 @@ router.post('/webhook', function (req, res, next) {
                 });
             } else {
                 console.log('busy in here...');
-                res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
+                var busyStartTime = response.data.calendars[registData.room].busy[0].start;
+                var busyEndTime = response.data.calendars[registData.room].busy[0].end;
+                res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+busyStartTime.toFormat('HH24時MI分')+"から"+busyEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
             }   
         });
     }
