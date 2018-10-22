@@ -28,6 +28,7 @@ exports.insertEvents = function(auth, registData) {
     console.log("startTimeJP"+startTimeJP)
     console.log("registData.endTime"+registData.endTime)
     console.log("endTimeJP"+endTimeJP)
+    console.log(registData.attendees)
 
     var event = {
         'summary': registData.summary,
