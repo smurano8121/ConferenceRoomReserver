@@ -22,8 +22,8 @@ exports.insertEvents = function(auth, registData) {
     var calendar = google.calendar('v3');
     var startTimeJP = registData.startTime;
     var endTimeJP = registData.endTime;
-    startTimeJP.setHours(registData.startTime.getHours()-9);
-    endTimeJP.setHours(registData.endTime.getHours()-9)
+    startTimeJP.setHours(registData.startTime.getHours());
+    endTimeJP.setHours(registData.endTime.getHours())
     console.log("registData.startTime"+registData.startTime)
     console.log("startTimeJP"+startTimeJP)
     console.log("registData.endTime"+registData.endTime)
