@@ -223,8 +223,8 @@ router.post('/webhook', function (req, res, next) {
 
         var startTimeJP = registData.startTime;
         var endTimeJP = registData.endTime;
-        startTimeJP.setHours(registData.startTime.getHours());
-        endTimeJP.setHours(registData.endTime.getHours());
+        startTimeJP.setHours(registData.startTime.getHours()+9);
+        endTimeJP.setHours(registData.endTime.getHours()+9);
         console.log(startTimeJP);
         
 
@@ -235,8 +235,8 @@ router.post('/webhook', function (req, res, next) {
                 items: [
                     {id : registData.room}
                 ], 
-                timeMin: startTimeJP,
-                timeMax: endTimeJP,
+                timeMin: registData.startTime,
+                timeMax: registData.endTime,
                 "timeZone": 'Asia/Tokyo'
             } 
         },function(err,response){
