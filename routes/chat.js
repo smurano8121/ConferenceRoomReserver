@@ -33,7 +33,7 @@ let registData = {
     date: null,
     startTime: null,
     endTime: null,
-    attendees: null,
+    attendees=[],
     room: null
 }
 
@@ -137,8 +137,8 @@ router.post('/webhook', function (req, res, next) {
 
             //会議場所の登録
             attendees = [];
-            attendees.push({'email': req.body.queryResult.parameters.confernceRoom });//会議参加者としてリソースである会議室のリソースアドレスを格納
-            
+            registData.attendees.push({'email': req.body.queryResult.parameters.confernceRoom });//会議参加者としてリソースである会議室のリソースアドレスを格納
+            console.log(registData.attendees)
         
 
             console.log("予約日："+reserveDate);

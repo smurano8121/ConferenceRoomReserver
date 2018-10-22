@@ -49,8 +49,7 @@ exports.insertEvents = function(auth, registData) {
         resource: {
             items: [
                 {id : registData.room},
-                {id : "reservation@mikilab.doshisha.ac.jp"},
-                {id : "rtomioka@mikilab.doshisha.ac.jp"}
+                {id : "reservation@mikilab.doshisha.ac.jp"}
             ], 
             timeMin: startTimeJP,
             timeMax: endTimeJP,
