@@ -225,8 +225,8 @@ router.post('/webhook', function (req, res, next) {
         var endTime = registData.endTime;
         var responseStartTime = registData.startTime
         var responseEndTime = registData.endTime
-        responseStartTime.setHours(startTime.getHours()+9);
-        responseEndTime.setHours(endTime.getHours()+9);
+        // responseStartTime.setHours(startTime.getHours()+9);
+        // responseEndTime.setHours(endTime.getHours()+9);
         // startTimeJP.setHours(registData.startTime.getHours()+9);
         // endTimeJP.setHours(registData.endTime.getHours()+9);
         
