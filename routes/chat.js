@@ -221,7 +221,7 @@ router.post('/webhook', function (req, res, next) {
                 items: [
                     {id : registData.room}
                 ], 
-                timeMin: registData.startTime,
+                timeMin: startTime,
                 timeMax: searchFreeBusyLimit,
                 "timeZone": 'Asia/Tokyo'
             } 
@@ -231,7 +231,7 @@ router.post('/webhook', function (req, res, next) {
                     console.log('There was an error contacting the Calendar service: ' + err);
                     return;
             }
-            console.log("timeMin: " + registData.startTime)
+            console.log("timeMin: " + startTime)
             console.log("timeMax: " + searchFreeBusyLimit)
             // console.log("timeMax: " + end) 
             console.log(JSON.stringify(response.data.calendars[registData.room].busy[0].end))
@@ -254,7 +254,7 @@ router.post('/webhook', function (req, res, next) {
             } else {
                 console.log('busy in here...');
                 var resEnd = new Date(busy[0].end);
-                // responseEndTime.setHours(resEnd.getHours()+9)
+                responseEndTime.setHours(resEnd.getHours()+9)
                 res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
             }   
         });
