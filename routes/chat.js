@@ -19,7 +19,7 @@ const Room = require('../models/room');
 //外部ファイルからカレンダAPIアクセス用の関数を取得
 const googleCalenderEventControler = require('../public/javascripts/server/googleCalenderAccess');
 
-let dDate;
+let dDate = new Date();
 
 let registData = {
     summary: null,
