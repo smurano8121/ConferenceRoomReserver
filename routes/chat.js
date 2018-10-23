@@ -197,7 +197,8 @@ router.post('/webhook', function (req, res, next) {
                     res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+canReserveTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます．予約しますか？" });
                     registData.startTime = resEnd;
 
-                    let timeAmount = req.body.queryResult.parameters.duration.amount
+                    let timeAmount = req.body.queryResult.parameters.duration.amount;
+                    let timeUnit = req.body.queryResult.parameters.duration.unit;
                     switch (timeUnit) { //@sys.durationのunitに応じて処理をわける。日は無視して時と分のみだけの対応にしておく
                         case '時':
                         registData.endTime.setHours(resEnd.getHours() + Number(timeAmount));
