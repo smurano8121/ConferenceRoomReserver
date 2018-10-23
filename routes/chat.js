@@ -99,13 +99,15 @@ router.post('/webhook', function (req, res, next) {
 
 
             //予約開始時間
-            let startTime = new Date(req.body.queryResult.parameters.startTime.toString());
+            // let startTime = new Date(req.body.queryResult.parameters.startTime);
+            let startTime = new Date("2018-10-24T09:00:00+09:00");
+            console.log("レスポンスのstartTime："+req.body.queryResult.parameters.startTime)
             console.log(startTime);
             dDate.setHours(startTime.getHours());
             dDate.setMinutes(startTime.getMinutes());
             
             registData.startTime = new Date(dDate);
-            console.log(req.body.queryResult.parameters.startTime)
+            
             console.log(startTime);
             console.log(registData.startTime);
             dDate.setHours(startTime.getHours() + 9); //to JST
