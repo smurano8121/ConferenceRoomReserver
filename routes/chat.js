@@ -210,6 +210,8 @@ router.post('/webhook', function (req, res, next) {
 
         var startTime = registData.startTime;
         var endTime = registData.endTime;
+        var end = new Date();
+        end = registData.endTime.setHours(21,00,00)
         var responseStartTime = startTime
         var responseEndTime = endTime
         // responseStartTime.setHours(startTime.getHours()+9);
@@ -238,7 +240,7 @@ router.post('/webhook', function (req, res, next) {
             }
             console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + registData.endTime)
-            console.log("timeMax: " + registData.endTime.setHours(21)) 
+            console.log("timeMax: " + end) 
             console.log(JSON.stringify(response.data.calendars[registData.room].busy[0].end))
             var busy = response.data.calendars[registData.room].busy.filter(function(item, index){
                 if (item.end != null) return true;
