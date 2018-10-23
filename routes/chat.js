@@ -254,7 +254,8 @@ router.post('/webhook', function (req, res, next) {
             responseStartTime.setHours(registData.startTime.getHours()+9);
             responseEndTime.setHours(endTime.getHours()+9);
             
-
+            var resStart = new Date(busy[0].start);
+            var resEnd = new Date(busy[0].end);
             if (events.length == 0) {
                 console.log('free in here...');
                 Room.find({ "address": registData.room }, function (err, result) {
@@ -262,8 +263,17 @@ router.post('/webhook', function (req, res, next) {
                     res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
                 });
             } else {
+                console.log("resStart > registData.startTime = " + (resStart > registData.startTime));
+                console.log("resEnd > registData.endTime = " + (resEnd > registData.endTime));
+                if(resStart > registData.startTime && resEnd > registData.endTime){
+                    console.log('free in here...');
+                    Room.find({ "address": registData.room }, function (err, result) {
+                        if (err) throw err;
+                        res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
+                    });
+                }
                 console.log('busy in here...');
-                var resEnd = new Date(busy[0].end);
+                
                 responseEndTime.setHours(resEnd.getHours()+9)
                 res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
             }   
