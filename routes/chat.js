@@ -253,7 +253,7 @@ router.post('/webhook', function (req, res, next) {
             
             var resStart = new Date(response.data.calendars[registData.room].busy[0].start)
             var resEnd = new Date(busy[0].end);
-            if (registData.startTime > resEnd || registData.endTime > resStart) {
+            if (events.length == 0) {
                 console.log('free in here...');
                 Room.find({ "address": registData.room }, function (err, result) {
                     if (err) throw err;
