@@ -102,6 +102,7 @@ router.post('/webhook', function (req, res, next) {
             dDate.setHours(startTime.getHours());
             dDate.setMinutes(startTime.getMinutes());
             registData.startTime = new Date(dDate);
+            console.log(req.body.queryResult.parameters.startTime)
             console.log(startTime);
             console.log(registData.startTime);
             dDate.setHours(startTime.getHours() + 9); //to JST
