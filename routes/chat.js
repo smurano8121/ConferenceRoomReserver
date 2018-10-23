@@ -205,6 +205,7 @@ router.post('/webhook', function (req, res, next) {
                         registData.endTime.setMinutes(resEnd.getMinutes());
                           break;
                         case '分':
+                        registData.endTime.setHours(resEnd.getHours());
                         registData.endTime.setMinutes(resEnd.getMinutes() + Number(timeAmount));
                           break;
                         default:  
