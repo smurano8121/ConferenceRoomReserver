@@ -238,7 +238,7 @@ router.post('/webhook', function (req, res, next) {
             }
             console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + registData.endTime)
-            console.log("timeMax: " + end) 
+            // console.log("timeMax: " + end) 
             console.log(JSON.stringify(response.data.calendars[registData.room].busy[0].end))
             var busy = response.data.calendars[registData.room].busy.filter(function(item, index){
                 if (item.end != null) return true;
