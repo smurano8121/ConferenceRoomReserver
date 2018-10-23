@@ -189,11 +189,12 @@ router.post('/webhook', function (req, res, next) {
                     });
                 }else if(registData.startTime < resStart){
                     var canReserveTime = new Date(resStart)
-                    res.json({ "fulfillmentText": canReserveTime.toFormat('HH24時MI分')+"までであれば予約可能です" });
+                    res.json({ "fulfillmentText": canReserveTime.toFormat('HH24時MI分')+"までであれば予約可能です．この時間までを予約しますか？" });
+                    registData.endTime = resStart;
                 }else {
                     console.log('busy in here...');
                     var canReserveTime = new Date(resEnd)
-                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます" });
+                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます．予約しますか？" });
                 }
             }   
         });
