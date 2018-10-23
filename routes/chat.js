@@ -264,16 +264,18 @@ router.post('/webhook', function (req, res, next) {
             } else {
                 var resStart = new Date(busy[0].start);
                 resStart.setHours(resStart.getHours()+9)
-                var resEnd = new Date(response.data.calendars[registData.room].busy[0].end);
+                console.log(busy[0].end)
+                var resEnd = new Date(busy[0].end);
                 resEnd.setHours(resEnd.getHours()+9)
 
                 console.log("\nresStart："+resStart);
                 console.log("registData.startTime："+registData.startTime);
-                console.log("\nresEnd："+resStart);
+                console.log("\nresEnd："+resEnd);
                 console.log("registData.endTime："+registData.endTime);
 
                 console.log("\nresStart > registData.startTime = " + (resStart > registData.startTime));
                 console.log("resEnd > registData.endTime = " + (resEnd > registData.endTime));
+
                 if(resStart > registData.startTime && resEnd > registData.endTime){
                     console.log('free in here...');
                     Room.find({ "address": registData.room }, function (err, result) {
