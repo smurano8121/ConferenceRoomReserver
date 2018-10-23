@@ -198,7 +198,7 @@ router.post('/webhook', function (req, res, next) {
                     var canReserveTime = new Date(resEnd)
                     Room.find({ "address": registData.room }, function (err, result) {
                         if (err) throw err;
-                        res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+result[0].name+"は"+resStart.toFormat('HH24時MI分')+"から"+canReserveTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます．予約しますか？" });
+                        res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+result[0].name+"は"+resStart.toFormat('HH24時MI分')+"から"+canReserveTime.toFormat('HH24時MI分')+"まですでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます．予約しますか？" });
                         
                     });
                     registData.startTime = resEnd;
