@@ -99,7 +99,7 @@ router.post('/webhook', function (req, res, next) {
 
 
             //予約開始時間
-            let startTime = new Date(req.body.queryResult.parameters.startTime);
+            let startTime = new Date(req.body.queryResult.parameters.startTime.toString());
             console.log(startTime);
             dDate.setHours(startTime.getHours());
             dDate.setMinutes(startTime.getMinutes());
