@@ -198,6 +198,7 @@ router.post('/webhook', function (req, res, next) {
                     registData.startTime = resEnd;
 
                     let timeAmount = req.body.queryResult.parameters.duration.amount;
+                    console.log(timeAmount)
                     let timeUnit = req.body.queryResult.parameters.duration.unit;
                     switch (timeUnit) { //@sys.durationのunitに応じて処理をわける。日は無視して時と分のみだけの対応にしておく
                         case '時':
