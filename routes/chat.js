@@ -200,9 +200,7 @@ router.post('/webhook', function (req, res, next) {
     
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
-
-        var startTime = registData.startTime;
-        var endTime = registData.endTime;
+        
         var searchFreeBusyLimit = new Date(dDate);
         searchFreeBusyLimit.setHours(21,0,0)
         var responseStartTime = registData.startTime
