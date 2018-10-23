@@ -254,8 +254,7 @@ router.post('/webhook', function (req, res, next) {
             responseStartTime.setHours(registData.startTime.getHours()+9);
             responseEndTime.setHours(endTime.getHours()+9);
             
-            var resStart = new Date(busy[0].start);
-            var resEnd = new Date(busy[0].end);
+            
             if (events.length == 0) {
                 console.log('free in here...');
                 Room.find({ "address": registData.room }, function (err, result) {
@@ -263,6 +262,11 @@ router.post('/webhook', function (req, res, next) {
                     res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
                 });
             } else {
+                var resStart = new Date(busy[0].start);
+                resStart.setHours(resStart.getHours()+9)
+                var resEnd = new Date(response.data.calendars[registData.room].busy[0].end);
+                resEns.setHours(resEnd.getHours()+9)
+
                 console.log("\nresStart："+resStart);
                 console.log("registData.startTime："+registData.startTime);
                 console.log("\nresEnd："+resStart);
