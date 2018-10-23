@@ -35,88 +35,31 @@ var attendees; //会議参加者格納Object
 /* POST home page. */
 router.post('/webhook', function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
-    if (req.body.queryResult.intent.displayName == "ReserveFromStartEnd") {
-        // console.log(req.body.queryResult.intent.displayName);
-        // if(!req.body.queryResult.allRequiredParamsPresent){
-        //     res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
-        // }else{
-        //     let date = req.body.queryResult.parameters.date.match(/\d{4}-\d{2}-\d{2}T/);    //「2018-07-18T17:00:00+09:00」の「2018-07-18T」部分の正規表現
-        //     let startTimeRegExr = req.body.queryResult.parameters['time-period'].startTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/);  //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-        //     let finishTimeRegExr = req.body.queryResult.parameters['time-period'].endTime.match(/\d{2}:\d{2}:\d{2}\W\d{2}:\d{2}/); //「2018-07-18T17:00:00+09:00」の「17:00:00+09:00」部分の正規表現
-
-        //     slot.startDateTime = date + startTimeRegExr;
-        //     slot.finishDateTime = date + finishTimeRegExr;
-        //     slot.date = req.body.queryResult.parameters.date;
-        //     slot.room = req.body.queryResult.parameters.confernceRoom;
-
-        //     attendees.push({'email': slot.room });//会議参加者としてリソースである会議室のリソースアドレスを格納
-            
-        //     let eventDate = new Date(slot.date);
-        //     registData.year = eventDate.getFullYear();
-        //     registData.month = eventDate.getMonth()+1;
-        //     registData.date = eventDate.getDate();
-
-        //     let startTime = new Date(slot.startDateTime);
-        //     registData.startDateTime = slot.startDateTime;
-        //     registData.startHours = startTime.getHours() + 9; //修正必須（new Dateすると絶対にUTC標準時刻になってしまう）
-        //     registData.startMinutes = startTime.getMinutes();
-        //     registData.startSeconds = startTime.getSeconds();
-
-        //     let finishTime = new Date(slot.finishDateTime);
-        //     registData.finishDateTime = slot.finishDateTime;
-        //     registData.finishHours = finishTime.getHours() + 9; //修正必須
-        //     registData.finishMinutes = finishTime.getMinutes();
-        //     registData.finishSeconds = finishTime.getSeconds();
-
-        //     registData.room = req.body.queryResult.parameters.confernceRoom;
-        //     registData.attendees = attendees;
-
-        //     console.log("予約日: " + registData.year + "年" + registData.month + "月" + registData.date + "日");
-        //     console.log("開始時刻: " + registData.startHours + "時" + registData.startMinutes + "分");
-        //     console.log("終了時刻: " + registData.finishHours + "時" + registData.finishMinutes + "分");
-
-        //     fs.readFile('client_secret.json', (err, content) => {
-        //         if (err) return console.log('Error loading client secret file:', err);
-        //         googleCalenderEventControler.authorizeInsertEvents(
-        //             JSON.parse(content), 
-        //             registData, 
-        //             checkFreeBusy
-        //         );
-        //     });
-        // }
-    }
-    else if (req.body.queryResult.intent.displayName == "ReserveFromAllParameter") {
+    if (req.body.queryResult.intent.displayName == "ReserveFromAllParameter") {
         console.log(req.body.queryResult.intent.displayName);
         if(!req.body.queryResult.allRequiredParamsPresent){
             res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
         }else{
-            registData.room = req.body.queryResult.parameters.conferenceRoom;
+            registData.room = req.body.queryResult.parameters.conferenceRoom; //予約する会議室のリソースIDを登録用データに格納
+
             //予約日
             let dDate = new Date(req.body.queryResult.parameters.date);
-            gDate = new Date(req.body.queryResult.parameters.date);
+            gDate = new Date(req.body.queryResult.parameters.date); //グローバル変数として用いるdate変数
             date = dDate;
             let reserveDate = dDate.toFormat('YYYY年MM月DD日');
 
 
             //予約開始時間
             let startTime = new Date(req.body.queryResult.parameters.startTime);
-            console.log("レスポンスのstartTime："+req.body.queryResult.parameters.startTime)
-            console.log(startTime);
             dDate.setHours(startTime.getHours());
             dDate.setMinutes(startTime.getMinutes());
-            
-            registData.startTime = new Date(dDate);
-            
-            console.log(startTime);
-            console.log(registData.startTime);
+            registData.startTime = new Date(dDate); //予定登録に使用するのはUTC
             dDate.setHours(startTime.getHours() + 9); //to JST
             let reserveStartTime = dDate.toFormat('HH24時MI分');
 
             //利用時間
             let useTimeAmount = req.body.queryResult.parameters.duration.amount;
             let useTimeUnit   = req.body.queryResult.parameters.duration.unit;
-            let useTime = useTimeAmount + useTimeUnit;
-            console.log(req.body.queryResult.parameters.duration);
 
             //予約終了時間
             let endTime = dDate;
@@ -137,8 +80,8 @@ router.post('/webhook', function (req, res, next) {
 
             //会議場所の登録
             attendees = [];
-            attendees.push({'email': registData.room });
-            registData.attendees = attendees
+            attendees.push({'email': registData.room }); //会議室もゲスト招待するのでattendeesに追加
+            registData.attendees = attendees //登録用データにattendeesを格納
         
             console.log("予約日："+reserveDate);
             console.log("開始時間："+reserveStartTime);
@@ -149,6 +92,7 @@ router.post('/webhook', function (req, res, next) {
             let counter = 0;
             
             
+            // DialogFlowから送られてくるのはユーザのメールアドレスなので，メールアドレスをキーにDBからユーザ名を掘りだす
             attendeesListFromDialogFlow.forEach(attendeeMail => {
                 User.find({"email": attendeeMail},function(err,result){
                     counter += 1;
@@ -172,31 +116,7 @@ router.post('/webhook', function (req, res, next) {
             });
         }
     }
-    else if (req.body.queryResult.intent.displayName == "Atendee") {
-        console.log("参加者");
-        if(!req.body.queryResult.allRequiredParamsPresent){
-            res.json({ "fulfillmentText": req.body.queryResult.fulfillmentText });
-        }else{
-            let attendeesListFromDialogFlow = req.body.queryResult.parameters.userName;
-            var responseName = '';
-            let counter = 0;
-            attendees = [];
-            
-            attendeesListFromDialogFlow.forEach(attendeeMail => {
-                User.find({"email": attendeeMail},function(err,result){
-                    counter += 1;
-                    responseName += result[0].name+"さん";
-                    console.log(responseName);
-                    var addData = { 'email' : attendeeMail };
-                    attendees.push(addData) ;
-                    if(counter == attendeesListFromDialogFlow.length){
-                        registData.summary = "ミーティング" + "【" + result[0].name+ "】";
-                        res.json({ "fulfillmentText": "参加者は"+responseName+"ですね？合っていれば予約日時と場所を教えてください．間違っていればもう一度お願いします"});
-                    }
-                });
-            });
-        }   
-    }
+   
     else if (req.body.queryResult.intent.displayName == "Final_Confirm") {
         fs.readFile('client_secret.json', (err, content) => {
             if (err) return console.log('Error loading client secret file:', err);
@@ -214,13 +134,7 @@ router.post('/webhook', function (req, res, next) {
         searchFreeBusyLimit.setHours(21,0,0)
         var responseStartTime = start
         var responseEndTime = endTime
-        // responseStartTime.setHours(startTime.getHours()+9);
-        // responseEndTime.setHours(endTime.getHours()+9);
-        // startTimeJP.setHours(registData.startTime.getHours()+9);
-        // endTimeJP.setHours(registData.endTime.getHours()+9);
         
-        
-
         calendar.freebusy.query({
             auth: auth,
             headers: { "content-type" : "application/json" },
@@ -244,8 +158,6 @@ router.post('/webhook', function (req, res, next) {
             var busy = response.data.calendars[registData.room].busy.filter(function(item, index){
                 if (item.end != null) {
                     console.log(JSON.stringify(item));
-                    console.log("busy.startの中身だよ：" + item.start)
-                    console.log("busy.endの中身だよ：" + item.end)
                     return true;
                 }
               });
@@ -268,23 +180,17 @@ router.post('/webhook', function (req, res, next) {
                 var resEnd = new Date(busy[0].end);
                 resEnd.setHours(resEnd.getHours()+9)
 
-                console.log("\nresStart："+resStart);
-                console.log("registData.startTime："+registData.startTime);
-                console.log("\nresEnd："+resEnd);
-                console.log("registData.endTime："+registData.endTime);
-
-                console.log("\nresStart > registData.startTime = " + (resStart > registData.startTime));
-                console.log("resEnd > registData.endTime = " + (resEnd > registData.endTime));
-
-                if(resStart > registData.startTime && resEnd < registData.endTime){
+            
+                if(resStart > registData.startTime && resEnd > registData.endTime){
                     console.log('free in here...');
                     Room.find({ "address": registData.room }, function (err, result) {
                         if (err) throw err;
                         res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
                     });
+                }else if(registData.startTime < resStart){
+                    res.json({ "fulfillmentText": resStart+"までであれば予約可能です" });
                 }else {
                     console.log('busy in here...');
-                    // responseEndTime.setHours(resEnd.getHours()+9)
                     var canReserveTime = new Date(resEnd)
                     res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます" });
                 }
