@@ -210,8 +210,6 @@ router.post('/webhook', function (req, res, next) {
 
         var startTime = registData.startTime;
         var endTime = registData.endTime;
-        var end = new Date();
-        end = registData.endTime.setHours(21,00,00)
         var responseStartTime = startTime
         var responseEndTime = endTime
         // responseStartTime.setHours(startTime.getHours()+9);
@@ -248,6 +246,8 @@ router.post('/webhook', function (req, res, next) {
             console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy[0].end)
             console.log("endの中身だよ"+busy[0].end)
             var events = response.data.calendars[registData.room].busy;
+            responseStartTime.setHours(startTime.getHours()+9);
+            responseEndTime.setHours(endTime.getHours()+9);
             if (events.length == 0) {
                 console.log('free in here...');
                 Room.find({ "address": registData.room }, function (err, result) {
