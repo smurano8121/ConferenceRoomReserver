@@ -195,6 +195,19 @@ router.post('/webhook', function (req, res, next) {
                     console.log('busy in here...');
                     var canReserveTime = new Date(resEnd)
                     res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます．予約しますか？" });
+                    registData.startTime = resEnd;
+
+                    switch (useTimeUnit) { //@sys.durationのunitに応じて処理をわける。日は無視して時と分のみだけの対応にしておく
+                        case '時':
+                        registData.endTime.setHours(resEnd.getHours() + Number(useTimeAmount));
+                          break;
+                        case '分':
+                        registData.endTime.setMinutes(resEnd.getMinutes() + Number(useTimeAmount));
+                          break;
+                        default:  
+                        registData.endTime.setHours(resEnd.getHours() + Number(useTimeAmount));
+                          break;
+                    }
                 }
             }   
         });
