@@ -102,6 +102,8 @@ router.post('/webhook', function (req, res, next) {
             dDate.setHours(startTime.getHours());
             dDate.setMinutes(startTime.getMinutes());
             registData.startTime = new Date(dDate);
+            console.log(startTime);
+            console.log(registData.startTime);
             dDate.setHours(startTime.getHours() + 9); //to JST
             let reserveStartTime = dDate.toFormat('HH24時MI分');
 
@@ -221,7 +223,7 @@ router.post('/webhook', function (req, res, next) {
                 items: [
                     {id : registData.room}
                 ], 
-                timeMin: startTime,
+                timeMin: registData.startTime,
                 timeMax: searchFreeBusyLimit,
                 "timeZone": 'Asia/Tokyo'
             } 
@@ -231,7 +233,7 @@ router.post('/webhook', function (req, res, next) {
                     console.log('There was an error contacting the Calendar service: ' + err);
                     return;
             }
-            console.log("timeMin: " + startTime)
+            console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + searchFreeBusyLimit)
             // console.log("timeMax: " + end) 
             console.log(JSON.stringify(response.data.calendars[registData.room].busy[0].end))
@@ -241,7 +243,7 @@ router.post('/webhook', function (req, res, next) {
             console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy[0].end)
             console.log("endの中身だよ"+busy[0].end)
             var events = response.data.calendars[registData.room].busy;
-            responseStartTime.setHours(startTime.getHours()+9);
+            responseStartTime.setHours(registData.startTime.getHours()+9);
             responseEndTime.setHours(endTime.getHours()+9);
             
 
