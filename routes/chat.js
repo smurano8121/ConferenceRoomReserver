@@ -265,7 +265,7 @@ router.post('/webhook', function (req, res, next) {
                 var resStart = new Date(busy[0].start);
                 resStart.setHours(resStart.getHours()+9)
                 var resEnd = new Date(response.data.calendars[registData.room].busy[0].end);
-                resEns.setHours(resEnd.getHours()+9)
+                resEnd.setHours(resEnd.getHours()+9)
 
                 console.log("\nresStart："+resStart);
                 console.log("registData.startTime："+registData.startTime);
