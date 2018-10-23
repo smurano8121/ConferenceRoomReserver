@@ -283,7 +283,8 @@ router.post('/webhook', function (req, res, next) {
                 }else {
                     console.log('busy in here...');
                     // responseEndTime.setHours(resEnd.getHours()+9)
-                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
+                    var canReserveTime = new Date(resEnd)
+                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます" });
                 }
             }   
         });
