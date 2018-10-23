@@ -205,9 +205,11 @@ router.post('/webhook', function (req, res, next) {
         var endTime = registData.endTime;
         var searchFreeBusyLimit = new Date(dDate);
         searchFreeBusyLimit.setHours(21,0,0)
-        var responseStartTime = registData.startTime
-        var responseEndTime = registData.endTime     
+        var responseStartTime = startTime
+        var responseEndTime = endTime
         
+        
+
         calendar.freebusy.query({
             auth: auth,
             headers: { "content-type" : "application/json" },
@@ -227,9 +229,12 @@ router.post('/webhook', function (req, res, next) {
             }
             console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + searchFreeBusyLimit)
+            // console.log("timeMax: " + end) 
+            console.log(JSON.stringify(response.data.calendars[registData.room].busy[0].end))
             var busy = response.data.calendars[registData.room].busy.filter(function(item, index){
                 if (item.end != null) return true;
               });
+            console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy[0].end)
             console.log("endの中身だよ"+busy[0].end)
             var events = response.data.calendars[registData.room].busy;
             responseStartTime.setHours(startTime.getHours()+9);
