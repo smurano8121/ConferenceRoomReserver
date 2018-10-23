@@ -203,9 +203,11 @@ router.post('/webhook', function (req, res, next) {
                     console.log(timeUnit)
                     switch (timeUnit) { //@sys.durationのunitに応じて処理をわける。日は無視して時と分のみだけの対応にしておく
                         case '時':
+                        console.log("durationは時");
                         registData.endTime.setHours(resEnd.getHours() + Number(timeAmount));
                           break;
                         case '分':
+                        console.log("durationは分");
                         registData.endTime.setMinutes(resEnd.getMinutes() + Number(timeAmount));
                           break;
                         default:  
