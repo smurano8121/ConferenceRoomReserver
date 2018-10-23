@@ -209,7 +209,7 @@ router.post('/webhook', function (req, res, next) {
         var calendar = google.calendar('v3');
 
         var startTime = registData.startTime;
-        var endTime = registData.endTime.setHours(21);
+        var endTime = registData.endTime;
         var responseStartTime = startTime
         var responseEndTime = endTime
         // responseStartTime.setHours(startTime.getHours()+9);
@@ -227,7 +227,7 @@ router.post('/webhook', function (req, res, next) {
                     {id : registData.room}
                 ], 
                 timeMin: registData.startTime,
-                timeMax: endTime,
+                timeMax: registData.endTime,
                 "timeZone": 'Asia/Tokyo'
             } 
         },function(err,response){
@@ -237,7 +237,8 @@ router.post('/webhook', function (req, res, next) {
                     return;
             }
             console.log("timeMin: " + registData.startTime)
-            console.log("timeMax: " + registData.endTime) 
+            console.log("timeMax: " + registData.endTime)
+            console.log("timeMax: " + registData.endTime.setHours(21)) 
             console.log(JSON.stringify(response.data.calendars[registData.room].busy[0].end))
             var busy = response.data.calendars[registData.room].busy.filter(function(item, index){
                 if (item.end != null) return true;
