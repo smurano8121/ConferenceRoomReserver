@@ -240,13 +240,16 @@ router.post('/webhook', function (req, res, next) {
             }
             console.log("timeMin: " + registData.startTime)
             console.log("timeMax: " + searchFreeBusyLimit)
-            // console.log("timeMax: " + end) 
-            console.log(JSON.stringify(response.data.calendars[registData.room]))
-            // var busy = response.data.calendars[registData.room].busy.filter(function(item, index){
-            //     if (item.end != null) return true;
-            //   });
-            console.log("busy.startの中身だよ：" + response.data.calendars[registData.room].busy[0].start)
-            console.log("busy.endの中身だよ："+response.data.calendars[registData.room].busy[0].end)
+            
+            var busy = response.data.calendars[registData.room].busy.filter(function(item, index){
+                if (item.end != null) {
+                    console.log(JSON.stringify(item));
+                    console.log("busy.startの中身だよ：" + item.start)
+                    console.log("busy.endの中身だよ：" + item.end)
+                    return true;
+                }
+              });
+            
             var events = response.data.calendars[registData.room].busy;
             responseStartTime.setHours(registData.startTime.getHours()+9);
             responseEndTime.setHours(endTime.getHours()+9);
@@ -260,7 +263,7 @@ router.post('/webhook', function (req, res, next) {
                 });
             } else {
                 console.log('busy in here...');
-                var resEnd = new Date(response.data.calendars[registData.room].busy[0].end);
+                var resEnd = new Date(busy[0].end);
                 responseEndTime.setHours(resEnd.getHours()+9)
                 res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
             }   
