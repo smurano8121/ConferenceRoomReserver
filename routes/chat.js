@@ -205,7 +205,6 @@ router.post('/webhook', function (req, res, next) {
         var endTime = registData.endTime;
         var searchFreeBusyLimit = new Date(dDate);
         searchFreeBusyLimit.setHours(21,0,0)
-        console.log(searchFreeBusyLimit)
         var responseStartTime = startTime
         var responseEndTime = endTime
         // responseStartTime.setHours(startTime.getHours()+9);
@@ -223,7 +222,7 @@ router.post('/webhook', function (req, res, next) {
                     {id : registData.room}
                 ], 
                 timeMin: registData.startTime,
-                timeMax: registData.endTime,
+                timeMax: searchFreeBusyLimit,
                 "timeZone": 'Asia/Tokyo'
             } 
         },function(err,response){
