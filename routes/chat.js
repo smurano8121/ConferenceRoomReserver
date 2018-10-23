@@ -188,7 +188,8 @@ router.post('/webhook', function (req, res, next) {
                         res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
                     });
                 }else if(registData.startTime < resStart){
-                    res.json({ "fulfillmentText": resStart+"までであれば予約可能です" });
+                    var canReserveTime = new Date(resStart)
+                    res.json({ "fulfillmentText": canReserveTime.toFormat('HH24時MI分')+"までであれば予約可能です" });
                 }else {
                     console.log('busy in here...');
                     var canReserveTime = new Date(resEnd)
