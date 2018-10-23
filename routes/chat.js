@@ -280,11 +280,11 @@ router.post('/webhook', function (req, res, next) {
                         if (err) throw err;
                         res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
                     });
+                }else {
+                    console.log('busy in here...');
+                    responseEndTime.setHours(resEnd.getHours()+9)
+                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
                 }
-                console.log('busy in here...');
-                
-                responseEndTime.setHours(resEnd.getHours()+9)
-                res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"はすでに予約されています．別の時間帯もしくは別の会議室を予約してください" });
             }   
         });
     }
