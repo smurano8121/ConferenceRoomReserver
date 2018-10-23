@@ -19,7 +19,7 @@ const Room = require('../models/room');
 //外部ファイルからカレンダAPIアクセス用の関数を取得
 const googleCalenderEventControler = require('../public/javascripts/server/googleCalenderAccess');
 
-// let dDate;
+let gDate;
 
 let registData = {
     summary: null,
@@ -93,6 +93,7 @@ router.post('/webhook', function (req, res, next) {
             registData.room = req.body.queryResult.parameters.conferenceRoom;
             //予約日
             let dDate = new Date(req.body.queryResult.parameters.date);
+            gDate = new Date(req.body.queryResult.parameters.date);
             date = dDate;
             let reserveDate = dDate.toFormat('YYYY年MM月DD日');
 
@@ -206,7 +207,7 @@ router.post('/webhook', function (req, res, next) {
 
         var startTime = registData.startTime;
         var endTime = registData.endTime;
-        var searchFreeBusyLimit = new Date(dDate);
+        var searchFreeBusyLimit = new Date(gDate);
         searchFreeBusyLimit.setHours(21,0,0)
         var responseStartTime = startTime
         var responseEndTime = endTime
