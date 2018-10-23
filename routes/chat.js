@@ -263,12 +263,12 @@ router.post('/webhook', function (req, res, next) {
                     res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+responseEndTime.toFormat('HH24時MI分')+"まで"+result[0].name+"でよろしいですか？" });
                 });
             } else {
-                console.log("resStart："+resStart);
+                console.log("\nresStart："+resStart);
                 console.log("registData.startTime："+registData.startTime);
-                console.log("resEnd："+resStart);
+                console.log("\nresEnd："+resStart);
                 console.log("registData.endTime："+registData.endTime);
-                
-                console.log("resStart > registData.startTime = " + (resStart > registData.startTime));
+
+                console.log("\nresStart > registData.startTime = " + (resStart > registData.startTime));
                 console.log("resEnd > registData.endTime = " + (resEnd > registData.endTime));
                 if(resStart > registData.startTime && resEnd > registData.endTime){
                     console.log('free in here...');
