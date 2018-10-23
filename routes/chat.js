@@ -207,6 +207,10 @@ router.post('/webhook', function (req, res, next) {
         searchFreeBusyLimit.setHours(21,0,0)
         var responseStartTime = startTime
         var responseEndTime = endTime
+        // responseStartTime.setHours(startTime.getHours()+9);
+        // responseEndTime.setHours(endTime.getHours()+9);
+        // startTimeJP.setHours(registData.startTime.getHours()+9);
+        // endTimeJP.setHours(registData.endTime.getHours()+9);
         
         
 
