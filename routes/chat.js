@@ -245,8 +245,8 @@ router.post('/webhook', function (req, res, next) {
             var busy = response.data.calendars[registData.room].busy.filter(function(item, index){
                 if (item.end != null) return true;
               });
-            console.log("部屋の状況だよ：" + response.data.calendars[registData.room].busy[0].end)
-            console.log("endの中身だよ"+busy[0].end)
+            console.log("busy.startの中身だよ：" + response.data.calendars[registData.room].busy[0].start)
+            console.log("busy.endの中身だよ："+busy[0].end)
             var events = response.data.calendars[registData.room].busy;
             responseStartTime.setHours(registData.startTime.getHours()+9);
             responseEndTime.setHours(endTime.getHours()+9);
