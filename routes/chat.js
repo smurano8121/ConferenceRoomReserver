@@ -209,7 +209,7 @@ router.post('/webhook', function (req, res, next) {
         var calendar = google.calendar('v3');
 
         var startTime = registData.startTime;
-        var endTime = registData.endTime;
+        var endTime = registData.endTime.setHours(21);
         var responseStartTime = startTime
         var responseEndTime = endTime
         // responseStartTime.setHours(startTime.getHours()+9);
@@ -227,7 +227,7 @@ router.post('/webhook', function (req, res, next) {
                     {id : registData.room}
                 ], 
                 timeMin: registData.startTime,
-                timeMax: registData.endTime.setHours(21),
+                timeMax: endTime,
                 "timeZone": 'Asia/Tokyo'
             } 
         },function(err,response){
