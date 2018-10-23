@@ -196,7 +196,7 @@ router.post('/webhook', function (req, res, next) {
                 }else { //開始時間にすでに会議室が予約されている場合
                     console.log('busy in here...');
                     var canReserveTime = new Date(resEnd)
-                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+responseStartTime.toFormat('HH24時MI分')+"から"+canReserveTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます．予約しますか？" });
+                    res.json({ "fulfillmentText": date.toFormat('YYYY年MM月DD日')+"の"+result[0].name+"は"+resStart.toFormat('HH24時MI分')+"から"+canReserveTime.toFormat('HH24時MI分')+"はすでに予約されています．"+canReserveTime.toFormat('HH24時MI分')+"からであれば予約できます．予約しますか？" });
                     registData.startTime = resEnd;
 
                     let timeAmount = req.body.queryResult.parameters.duration.amount;
