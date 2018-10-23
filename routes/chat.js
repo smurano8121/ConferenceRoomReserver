@@ -210,6 +210,9 @@ router.post('/webhook', function (req, res, next) {
 
         var startTime = registData.startTime;
         var endTime = registData.endTime;
+        var searchFreeBusyLimit = new Date(dDate);
+        searchFreeBusyLimit.setHours(21,0,0)
+        console.log(searchFreeBusyLimit)
         var responseStartTime = startTime
         var responseEndTime = endTime
         // responseStartTime.setHours(startTime.getHours()+9);
@@ -248,7 +251,7 @@ router.post('/webhook', function (req, res, next) {
             var events = response.data.calendars[registData.room].busy;
             responseStartTime.setHours(startTime.getHours()+9);
             responseEndTime.setHours(endTime.getHours()+9);
-            console.log(responseEndTime)
+            
 
             if (events.length == 0) {
                 console.log('free in here...');
