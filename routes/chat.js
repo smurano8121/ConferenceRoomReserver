@@ -181,7 +181,7 @@ router.post('/webhook', function (req, res, next) {
                 resEnd.setHours(resEnd.getHours()+9)
 
             
-                if(resStart > registData.startTime && resEnd > registData.endTime){
+                if(resStart > registData.startTime && resEnd < registData.endTime){
                     console.log('free in here...');
                     Room.find({ "address": registData.room }, function (err, result) {
                         if (err) throw err;
