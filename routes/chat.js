@@ -252,13 +252,8 @@ router.post('/webhook', function (req, res, next) {
             responseEndTime.setHours(endTime.getHours()+9);
             
             var resStart = new Date(response.data.calendars[registData.room].busy[0].start)
-            var resEnd = new Date(response.data.calendars[registData.room].busy[0].end);
-
-
-            console.log("registData.startTime > resEnd = " + (registData.startTime > resEnd));
-            console.log("registData.endTime < resStart = " + (registData.endTime < resStart));
-
-            if (registData.startTime > resEnd || registData.endTime < resStart) {
+            var resEnd = new Date(busy[0].end);
+            if (events.length == 0) {
                 console.log('free in here...');
                 Room.find({ "address": registData.room }, function (err, result) {
                     if (err) throw err;
