@@ -99,8 +99,7 @@ router.post('/webhook', function (req, res, next) {
 
 
             //予約開始時間
-            // let startTime = new Date(req.body.queryResult.parameters.startTime);
-            let startTime = new Date("2018-10-24T09:00:00+09:00");
+            let startTime = new Date(req.body.queryResult.parameters.startTime);
             console.log("レスポンスのstartTime："+req.body.queryResult.parameters.startTime)
             console.log(startTime);
             dDate.setHours(startTime.getHours());
@@ -209,11 +208,11 @@ router.post('/webhook', function (req, res, next) {
     function checkFreeBusy(auth,registData){
         var calendar = google.calendar('v3');
 
-        var startTime = registData.startTime;
+        var start = registData.startTime;
         var endTime = registData.endTime;
         var searchFreeBusyLimit = new Date(gDate);
         searchFreeBusyLimit.setHours(21,0,0)
-        var responseStartTime = startTime
+        var responseStartTime = start
         var responseEndTime = endTime
         // responseStartTime.setHours(startTime.getHours()+9);
         // responseEndTime.setHours(endTime.getHours()+9);
