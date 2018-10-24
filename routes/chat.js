@@ -190,8 +190,25 @@ router.post('/webhook', function (req, res, next) {
 
                 }else if(registData.startTime < resStart){ //開始時間には会議室は予約されていないが，終了時間までに予約がある場合
                     var canReserveTime = new Date(resStart)
-                    res.json({ "fulfillmentText": canReserveTime.toFormat('HH24時MI分')+"までであれば予約可能です．この時間までを予約しますか？" });
+                    let timeAmount = req.body.queryResult.parameters.duration.amount;
+                    let timeUnit = req.body.queryResult.parameters.duration.unit;
+                    switch (timeUnit) { //@sys.durationのunitに応じて処理をわける。日は無視して時と分のみだけの対応にしておく
+                        case '時':
+                        registData.startTime.setHours(resStart.getHours() - Number(timeAmount));
+                        registData.startTime.setMinutes(resStart.getMinutes());
+                          break;
+                        case '分':
+                        registData.startTime.setHours(resStart.getHours());
+                        registData.startTime.setMinutes(resStart.getMinutes() - Number(timeAmount));
+                          break;
+                        default:  
+                        registData.startTime.setHours(resStart.getHours() - Number(timeAmount));
+                          break;
+                    }
                     registData.endTime = resStart;
+
+                    res.json({ "fulfillmentText": registData.startTime.toFormat('HH24時MI分')+"から"+canReserveTime.toFormat('HH24時MI分')+"までであれば予約可能です．この時間までを予約しますか？" });
+                    
 
                 }else { //開始時間にすでに会議室が予約されている場合
                     console.log('busy in here...');
