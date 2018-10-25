@@ -2,6 +2,7 @@ const { google } = require('googleapis');
 const OAuth2Client = google.auth.OAuth2;
 const TOKEN_PATH = 'credentials.json';
 const fs = require('fs');
+require('date-utils');
 
 exports.authorizeInsertEvents = function (credentials, registData, callback) {
     const { client_secret, client_id, redirect_uris } = credentials.web;
@@ -19,14 +20,24 @@ exports.authorizeInsertEvents = function (credentials, registData, callback) {
 
 exports.insertEvents = function(auth, registData) {
     var calendar = google.calendar('v3');
+    var startTimeJP = registData.startTime;
+    var endTimeJP = registData.endTime;
+    startTimeJP.setHours(registData.startTime.getHours()-9);
+    endTimeJP.setHours(registData.endTime.getHours()-9)
+    console.log("registData.startTime"+registData.startTime)
+    console.log("startTimeJP"+startTimeJP)
+    console.log("registData.endTime"+registData.endTime)
+    console.log("endTimeJP"+endTimeJP)
+    console.log(registData.attendees)
+
     var event = {
         'summary': registData.summary,
         'start': {
-            'dateTime': registData.year+"-"+registData.month+"-"+registData.date+"T"+registData.startHours+":"+registData.startMinutes+":"+registData.startSeconds,
+            'dateTime': startTimeJP,
             'timeZone': 'Asia/Tokyo',
         },
         'end': {
-            'dateTime': registData.year+"-"+registData.month+"-"+registData.date+"T"+registData.finishHours+":"+registData.finishMinutes+":"+registData.finishSeconds,
+            'dateTime': endTimeJP,
             'timeZone': 'Asia/Tokyo',
         },
         'attendees': registData.attendees
@@ -38,16 +49,15 @@ exports.insertEvents = function(auth, registData) {
         resource: {
             items: [
                 {id : registData.room},
-                {id : "reservation@mikilab.doshisha.ac.jp"},
-                {id : "rtomioka@mikilab.doshisha.ac.jp"}
+                {id : "reservation@mikilab.doshisha.ac.jp"}
             ], 
-            timeMin: registData.startDateTime,
-            timeMax: registData.finishDateTime,
+            timeMin: startTimeJP,
+            timeMax: endTimeJP,
             "timeZone": 'Asia/Tokyo'
         } 
     },function(err,response){
         if (err) {
-                console.log("エラー");
+                console.log("エラーーーー");
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
         }   
