@@ -61,7 +61,8 @@ var attendeesForFreeBusy; //freebusyで予定が入ってるかチェックす�
 
 /* POST home page. */
 router.post("/webhook", function(req, res, next) {
-    res.setHeader("Content-Type", "application/json");
+    res.header("Content-Type", "application/json; charset=utf-8");
+    // res.setHeader("Content-Type", "application/json", "charset=UTF-8");
     if (req.body.queryResult.intent.displayName == "ReserveFromAllParameter") {
         console.log(req.body.queryResult.intent.displayName);
         if (!req.body.queryResult.allRequiredParamsPresent) {

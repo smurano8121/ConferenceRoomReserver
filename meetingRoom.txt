@@ -1,0 +1,8 @@
+{"address" : "mikilab.doshisha.ac.jp_3739313235333736353437@resource.calendar.google.com", "name" : "KC101"}
+{"address" : "mikilab.doshisha.ac.jp_3739373635393936383533@resource.calendar.google.com", "name" : "KC104"}
+{"address" : "mikilab.doshisha.ac.jp_3235333239333534343633@resource.calendar.google.com", "name" : "KC111"}
+{"address" : "mikilab.doshisha.ac.jp_38363338373137302d343939@resource.calendar.google.com", "name" : "KC116"}
+{"address" : "mikilab.doshisha.ac.jp_38363935323038372d393739@resource.calendar.google.com", "name" : "KC119"}
+{"address" : "mikilab.doshisha.ac.jp_33353234353936362d333132@resource.calendar.google.com", "name" : "コモンスペース"}
+{ "address" : "mikilab.doshisha.ac.jp_2d31343532333537333734@resource.calendar.google.com", "name" : "KC308"}
+{"address" : "mikilab.doshisha.ac.jp_2d3837393537303637353132@resource.calendar.google.com", "name" : "MC-lab"}
