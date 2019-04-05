@@ -287,7 +287,7 @@ router.post("/webhook", function(req, res, next) {
         calendar.freebusy.query(
             {
                 auth: auth,
-                headers: { "content-type": "application/json" },
+                headers: { "content-type": "application/json; charset=utf-8" },
                 resource: {
                     items: [
                         {
@@ -372,7 +372,7 @@ router.post("/webhook", function(req, res, next) {
         calendar.freebusy.query(
             {
                 auth: auth,
-                headers: { "content-type": "application/json" },
+                headers: { "content-type": "application/json; charset=utf-8" },
                 resource: {
                     items: registData.attendeesForFreeBusy,
                     timeMin: registData.startTime,
@@ -560,7 +560,7 @@ router.post("/webhook", function(req, res, next) {
         calendar.freebusy.query(
             {
                 auth: auth,
-                headers: { "content-type": "application/json" },
+                headers: { "content-type": "application/json; charset=utf-8" },
                 resource: {
                     items: registData.attendeesForFreeBusy,
                     timeMin: registData.startTime,
