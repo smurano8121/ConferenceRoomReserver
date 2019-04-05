@@ -17,7 +17,7 @@ const users = require('./routes/users');
 const app = express();
 
 mongoose.Promise = global.Promise;
-const mongodbUri = 'mongodb://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com/meetingRoomReserver';
+const mongodbUri = 'mongodb://ec2-13-115-229-145.ap-northeast-1.compute.amazonaws.com/meetingRoomReserver';
 const mongOptions = {
   socketTimeoutMS: 0,
   keepAlive: true,
@@ -29,7 +29,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // ポート設定
-app.set('httpport', process.env.PORT || 3000);
+app.set('httpport', process.env.PORT || 4000);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

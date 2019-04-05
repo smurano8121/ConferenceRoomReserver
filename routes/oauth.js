@@ -33,7 +33,7 @@ router.get('/token', function (req, res, next) {
             }
         );
     });
-    res.redirect('http://ec2-13-115-41-122.ap-northeast-1.compute.amazonaws.com:3000');
+    res.redirect('http://ec2-13-115-229-145.ap-northeast-1.compute.amazonaws.com:3000');
 });
 
 router.get('/', function (req, res, next) {
