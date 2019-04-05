@@ -412,7 +412,7 @@ router.post("/webhook", function(req, res, next) {
                         result
                     ) {
                         if (err) throw err;
-                        cosole.log(result);
+                        console.log(result);
                         res.json({
                             fulfillmentText:
                                 date.toFormat("YYYY年MM月DD日") +
