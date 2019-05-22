@@ -167,11 +167,28 @@ router.post("/webhook", function(req, res, next) {
         var endDateTimeBuff = new Date(
             req.body.queryResult.parameters.datePeriod.endDate
         );
+
         startDateTimeBuff.setHours(startDateTimeBuff.getHours() + 9 - 3); //JSTに変えてから12時を9時にするために-3時間
         endDateTimeBuff.setHours(endDateTimeBuff.getHours() + 9 + 8); //JSTに変えてから12時を20時にするために+8時間
-        registData.startTime = startDateTimeBuff;
+
+        //add smurano//
+        //startDateTimeBuffが現在よりも前の時間だった場合startDateBuffを現在の時間にする
+        var startDateTime = startDateTimeBuff.toFormat("YYYYMMDDHH24MISS");
+        var date = new Date();
+        var currentTime = date.toFormat("YYYYMMDDHH24MISS");
+        if(startDateTime < currentTime){
+            var tomorrowDate = Date.tomorrow();
+            tomorrowDate.setHours(tomorrowDate.getHours() - 3); //JSTに変えてから0時を9時にするために+9時間
+            registData.startTime = tomorrowDate;
+        }else{
+            registData.startTime = startDateTimeBuff;
+        }
+
         registData.endTime = endDateTimeBuff;
-        console.log("スタート：" + startDateTimeBuff);
+
+        console.log("スタート編集後：" + startDateTime);
+        console.log("現在時刻：" + tomorrowDate);
+        console.log("スタート：" + registData.startTime);
         console.log("エンド：" + endDateTimeBuff);
 
         //参加者の登録
@@ -372,7 +389,7 @@ router.post("/webhook", function(req, res, next) {
         calendar.freebusy.query(
             {
                 auth: auth,
-                headers: { "content-type": "application/json; charset=utf-8" },
+                headers: { "content-type": "application/json; charset=UTF-8" },
                 resource: {
                     items: registData.attendeesForFreeBusy,
                     timeMin: registData.startTime,
@@ -579,9 +596,7 @@ router.post("/webhook", function(req, res, next) {
                 }
                 console.log("timeMin: " + registData.startTime);
                 console.log("timeMax: " + registData.endTime);
-                const calendarIds =
-                    response.data.groups[registData.attendeesForFreeBusy[0].id]
-                        .calendars;
+                const calendarIds = response.data.groups[registData.attendeesForFreeBusy[0].id].calendars;
                 const calendars = response.data.calendars;
 
                 switch (
@@ -606,13 +621,13 @@ router.post("/webhook", function(req, res, next) {
             }
         );
     }
-
+    //alpha=会議時間，calendarIds=会議参加者，
     function makeUserBusyList(alpha, calendarIds, calendars, callback) {
         var userBusyList = [];
         console.log(alpha);
         calendarIds.forEach(calendarId => {
             console.log("Calendar ID：" + calendarId);
-            const busyList = calendars[calendarId].busy;
+            const busyList = calendars[calendarId].busy; //各参加者のbusyリストを作成
             let counter = 0;
             let buffer = [];
             busyList.forEach(busy => {
@@ -625,7 +640,7 @@ router.post("/webhook", function(req, res, next) {
                             new moment(buffer[counter - 1].end).unix()
                     );
                     if (milTimeDiff < alpha) {
-                        //差が1時間（3600000 msec）の場合は結合する
+                        //差が1時間（3600000 msec）の場合＝会議希望時間より短い場合は結合する
                         buffer[counter - 1].end = busy.end;
                     } else {
                         //結合しない場合はそのままbufferにpush
@@ -639,15 +654,21 @@ router.post("/webhook", function(req, res, next) {
         callback(userBusyList, alpha, responseCommonFreeTime);
     }
 
+    //全員の予定から全体のbusyListを作成している
     function searchAllMemberFreeTime(userBusyList, alpha, callback) {
+        console.log(userBusyList);
         console.log(userBusyList); //ここにObject配列の形式で各人の予定が格納されている
         console.log(alpha); //結合するかを判断する時間（ms）
         let baseBusyList;
 
         userBusyList.forEach(function(comparisonBusyList, index) {
             if (index == 0) {
-                baseBusyList = comparisonBusyList; //一人目の予定はbaseBusyListに格納
+                baseBusyList = comparisonBusyList;
+                //一人目の予定はbaseBusyListに格納（2個予定があった場合ができてない）
+                console.log(baseBusyList);
+                console.log(index);
             } else {
+                console.log(index);
                 baseBusyList.forEach(function(baseBusy, index_baseBusyList) {
                     baseBusyStart = moment(baseBusy.start);
                     baseBusyEnd = moment(baseBusy.end);
@@ -663,10 +684,10 @@ router.post("/webhook", function(req, res, next) {
                         comparisonBusyStart.utcOffset("+0900");
                         comparisonBusyEnd.utcOffset("+0900");
 
-                        console.log("comparisonStart：" + comparisonBusy.start);
-                        console.log("comparisonEnd  ：" + comparisonBusy.end);
                         console.log("baseStart      ：" + baseBusy.start);
                         console.log("baseEnd        ：" + baseBusy.end);
+                        console.log("comparisonStart：" + comparisonBusy.start);
+                        console.log("comparisonEnd  ：" + comparisonBusy.end);
 
                         if (
                             comparisonBusyStart.date() == baseBusyStart.date()
@@ -784,6 +805,7 @@ router.post("/webhook", function(req, res, next) {
     }
 
     function responseCommonFreeTime(busyTimeList) {
+        console.log("busyTimeListだよ");
         console.log(busyTimeList);
         let commonFreeTimeList = [];
 
