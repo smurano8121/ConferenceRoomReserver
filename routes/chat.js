@@ -656,7 +656,6 @@ router.post("/webhook", function(req, res, next) {
 
     //全員の予定から全体のbusyListを作成している
     function searchAllMemberFreeTime(userBusyList, alpha, callback) {
-        console.log(userBusyList);
         console.log(userBusyList); //ここにObject配列の形式で各人の予定が格納されている
         console.log(alpha); //結合するかを判断する時間（ms）
         let baseBusyList;
@@ -668,7 +667,6 @@ router.post("/webhook", function(req, res, next) {
                 console.log(baseBusyList);
                 console.log(index);
             } else {
-                console.log(index);
                 baseBusyList.forEach(function(baseBusy, index_baseBusyList) {
                     baseBusyStart = moment(baseBusy.start);
                     baseBusyEnd = moment(baseBusy.end);
