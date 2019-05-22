@@ -661,11 +661,11 @@ router.post("/webhook", function(req, res, next) {
         let baseBusyList;
 
         userBusyList.forEach(function(comparisonBusyList, index) {
+            console.log(index);
             if (index == 0) {
                 baseBusyList = comparisonBusyList;
                 //一人目の予定はbaseBusyListに格納（2個予定があった場合ができてない）
                 console.log(baseBusyList);
-                console.log(index);
             } else {
                 baseBusyList.forEach(function(baseBusy, index_baseBusyList) {
                     baseBusyStart = moment(baseBusy.start);
