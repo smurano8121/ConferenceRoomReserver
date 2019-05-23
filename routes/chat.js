@@ -700,6 +700,7 @@ router.post("/webhook", function(req, res, next) {
                                 index_comparisonBusyList
                             );
                             console.log("splice後");
+                            console.log(index_comparisonBusyList);
                             console.log(comparisonBusyList);
                             if (
                                 baseBusyStart >= comparisonBusyEnd ||
