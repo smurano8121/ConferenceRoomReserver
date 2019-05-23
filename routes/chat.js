@@ -811,6 +811,8 @@ router.post("/webhook", function(req, res, next) {
                 }
             }
         });
+        console.log("resultList");
+        console.log(resultList);
         callback(resultList);
     }
 
@@ -880,10 +882,6 @@ router.post("/webhook", function(req, res, next) {
                     "時" +
                     responseStart.minutes +
                     "分から" +
-                    responseEnd.month +
-                    "月" +
-                    responseEnd.date+
-                    "日の" +
                     responseEnd.hour +
                     "時" +
                     responseEnd.minutes +
