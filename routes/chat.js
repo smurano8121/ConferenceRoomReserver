@@ -818,6 +818,7 @@ router.post("/webhook", function(req, res, next) {
     }
 
     function responseCommonFreeTime(busyTimeList) {
+        console.log("lastbusyTimeList");
         console.log(busyTimeList);
         let commonFreeTimeList = [];
 
