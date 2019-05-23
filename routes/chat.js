@@ -676,7 +676,8 @@ router.post("/webhook", function(req, res, next) {
                     baseBusyStart.utcOffset("+0900");
                     baseBusyEnd.utcOffset("+0900");
 
-                    comparisonBusyList.some(function(
+                    //comparisonBusyList.some
+                    comparisonBusyList.forEach(function(
                         comparisonBusy,
                         index_comparisonBusyList
                     ) {
