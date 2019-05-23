@@ -814,10 +814,10 @@ router.post("/webhook", function(req, res, next) {
         });
         console.log("resultList");
         console.log(resultList);
-        callback(resultList);
+        callback(resultList,alpha);
     }
 
-    function responseCommonFreeTime(busyTimeList) {
+    function responseCommonFreeTime(busyTimeList,alpha) {
         console.log("lastbusyTimeList");
         console.log(busyTimeList);
         let commonFreeTimeList = [];
@@ -839,7 +839,7 @@ router.post("/webhook", function(req, res, next) {
                     moment(busyTime.start).diff(
                         moment(busyTimeList[index - 1].end),
                         "hour"
-                    ) < 12
+                    ) >= alpha
                 ) {
                     let freeTimeJsonObjct = {
                         start: busyTimeList[index - 1].end,
