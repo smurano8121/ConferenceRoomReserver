@@ -828,15 +828,16 @@ router.post("/webhook", function(req, res, next) {
                 console.log();
                 console.log(busyTimeList[index - 1]);
                 console.log(busyTime);
+                //busyTimeList[index - 1].start→endに変更
                 console.log(
                     moment(busyTime.start).diff(
-                        moment(busyTimeList[index - 1].start),
+                        moment(busyTimeList[index - 1].end),
                         "hour"
                     )
                 );
                 if (
                     moment(busyTime.start).diff(
-                        moment(busyTimeList[index - 1].start),
+                        moment(busyTimeList[index - 1].end),
                         "hour"
                     ) < 12
                 ) {
