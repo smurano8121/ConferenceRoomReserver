@@ -696,10 +696,10 @@ router.post("/webhook", function(req, res, next) {
                             //日付が同じ場合
                             console.log("同じ日だよ");
                             console.log(comparisonBusyList);
-                            comparisonBusyList.splice(
+                            console.log(comparisonBusyList.splice(
                                 0,
                                 index_comparisonBusyList
-                            );
+                            ));
                             console.log("splice後");
                             console.log(index_comparisonBusyList);
                             console.log(comparisonBusyList);
