@@ -810,13 +810,14 @@ router.post("/webhook", function(req, res, next) {
                     counter = counter + 1;
                 }
             }
-        });
-         console.log("resultList");
-         console.log(resultList);
-         callback(resultList,alpha);
-    }
+       );
+       cc console.log("resultList");
+	onsole.log(resultList);
 
+	callback(resultList,alpha);
+}
     function responseCommonFreeTime(busyTimeList,alpha) {
+
         console.log("lastbusyTimeList");
         console.log(busyTimeList);
         let commonFreeTimeList = [];
