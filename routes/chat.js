@@ -668,8 +668,8 @@ router.post("/webhook", function(req, res, next) {
                 console.log(baseBusyList);
             } else {
                 baseBusyList.forEach(function(baseBusy, index_baseBusyList) {
-                    console.log("baseBusyですよー");
-                    console.log(baseBusy);
+                    // console.log("baseBusyですよー");
+                    // console.log(baseBusy);
                     baseBusyStart = moment(baseBusy.start);
                     baseBusyEnd = moment(baseBusy.end);
                     baseBusyStart.utcOffset("+0900");
@@ -695,10 +695,10 @@ router.post("/webhook", function(req, res, next) {
                             //日付が同じ場合
                             console.log("同じ日だよ");
                             console.log(comparisonBusyList);
-                            console.log(comparisonBusyList.splice(
+                            comparisonBusyList.splice(
                                 0,
                                 index_comparisonBusyList
-                            ));
+                            );
 
                             console.log("splice後");
                             console.log(index_comparisonBusyList);
@@ -708,6 +708,8 @@ router.post("/webhook", function(req, res, next) {
                                 baseBusyStart >= comparisonBusyEnd ||
                                 baseBusyEnd <= comparisonBusyStart
                             ) {
+                                console.log(new moment(baseBusyStart).unix() -
+                                  new moment(comparisonBusyEnd).unix());
                                 if (
                                     new moment(baseBusyStart).unix() -
                                         new moment(comparisonBusyEnd).unix() <
@@ -716,8 +718,6 @@ router.post("/webhook", function(req, res, next) {
                                         new moment(baseBusyStart).unix() -
                                             new moment(comparisonBusyEnd).unix()
                                 ) {
-                                    console.log(new moment(baseBusyStart).unix() -
-                                        new moment(comparisonBusyEnd).unix());
                                     console.log("パターン2,3");
                                     baseBusy.start = comparisonBusy.start;
                                 } else if (
@@ -777,6 +777,8 @@ router.post("/webhook", function(req, res, next) {
                 return 1;
             return 0;
         });
+        console.log("昇順ソート後");
+        console.log(baseBusyList);
 
         //startの日時が重複している要素を1つだけ残して削除する
         var arrObj = {};
