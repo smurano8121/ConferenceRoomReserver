@@ -186,7 +186,7 @@ router.post("/webhook", function(req, res, next) {
         registData.endTime = endDateTimeBuff;
 
         console.log("スタート編集後：" + startDateTime);
-        console.log("現在時刻：" + tomorrowDate);
+        console.log("現在時刻：" + date);
         console.log("スタート：" + registData.startTime);
         console.log("エンド：" + endDateTimeBuff);
 
@@ -655,7 +655,6 @@ router.post("/webhook", function(req, res, next) {
 
     //全員の予定から全体のbusyListを作成している
     function searchAllMemberFreeTime(userBusyList, alpha, callback) {
-        console.log("各人の予定まとめ");
 	console.log(userBusyList); //ここにObject配列の形式で各人の予定が格納されている
         console.log(alpha); //結合するかを判断する時間（ms）
         let baseBusyList;
@@ -664,10 +663,13 @@ router.post("/webhook", function(req, res, next) {
             console.log(index);
             if (index == 0) {
                 baseBusyList = comparisonBusyList;
-                //一人目の予定はbaseBusyListに格納（2個予定があった場合ができてない）
+                //一人目の予定はbaseBusyListに格納
+                console.log("一人目の予定ですよー")
                 console.log(baseBusyList);
             } else {
                 baseBusyList.forEach(function(baseBusy, index_baseBusyList) {
+                    console.log("baseBusyですよー");
+                    console.log(baseBusy);
                     baseBusyStart = moment(baseBusy.start);
                     baseBusyEnd = moment(baseBusy.end);
                     baseBusyStart.utcOffset("+0900");
@@ -802,9 +804,8 @@ router.post("/webhook", function(req, res, next) {
         callback(resultList);
     }
 
-    function responseCommonFreeTime(busyTimeList) {
-        console.log("busyTimeListだよ");
-	console.log(busyTimeList);
+    function responseCommonFreeTime(busyTimeList){
+        console.log(busyTimeList);
         let commonFreeTimeList = [];
 
         busyTimeList.forEach(function(busyTime, index) {
