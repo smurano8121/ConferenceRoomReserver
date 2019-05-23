@@ -703,6 +703,7 @@ router.post("/webhook", function(req, res, next) {
                             console.log("splice後");
                             console.log(index_comparisonBusyList);
                             console.log(comparisonBusyList);
+                            //baseBusyとcomparisonBUsyが被ってない時
                             if (
                                 baseBusyStart >= comparisonBusyEnd ||
                                 baseBusyEnd <= comparisonBusyStart
@@ -715,6 +716,8 @@ router.post("/webhook", function(req, res, next) {
                                         new moment(baseBusyStart).unix() -
                                             new moment(comparisonBusyEnd).unix()
                                 ) {
+                                    console.log(new moment(baseBusyStart).unix() -
+                                        new moment(comparisonBusyEnd).unix());
                                     console.log("パターン2,3");
                                     baseBusy.start = comparisonBusy.start;
                                 } else if (
