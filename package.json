@@ -8,11 +8,16 @@
   "dependencies": {
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
+    "date-utils": "^1.2.21",
     "debug": "~2.6.3",
     "ejs": "~2.5.6",
     "express": "~4.15.2",
+    "forever": "^1.0.0",
     "google-auth-library": "^0.12.0",
     "googleapis": "^27.0.0",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.24.0",
+    "mongoose": "^5.4.22",
     "morgan": "~1.8.1",
     "serve-favicon": "~2.4.2"
   }
