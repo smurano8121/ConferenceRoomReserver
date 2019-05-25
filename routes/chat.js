@@ -659,9 +659,9 @@ router.post("/webhook", function(req, res, next) {
         console.log(userBusyList); //ここにObject配列の形式で各人の予定が格納されている
         console.log(alpha); //結合するかを判断する時間（ms）
         let baseBusyList;
+        let lastbaseBusyList;
 
         userBusyList.forEach(function(comparisonBusyList, index) {
-            console.log(index);
             if (index == 0) {
                 baseBusyList = comparisonBusyList;
                 //一人目の予定はbaseBusyListに格納
@@ -669,17 +669,15 @@ router.post("/webhook", function(req, res, next) {
                 console.log(baseBusyList);
             } else {
                 baseBusyList.forEach(function(baseBusy, index_baseBusyList) {
-                    // console.log("baseBusyですよー");
-                    // console.log(baseBusy);
+                    console.log("baseBusyですよー");
+                    console.log("index_baseBusyList");
+                    console.log(baseBusyList);
                     baseBusyStart = moment(baseBusy.start);
                     baseBusyEnd = moment(baseBusy.end);
                     baseBusyStart.utcOffset("+0900");
                     baseBusyEnd.utcOffset("+0900");
 
-                    comparisonBusyList.some(function(
-                        comparisonBusy,
-                        index_comparisonBusyList
-                    ) {
+                    comparisonBusyList.some(function(comparisonBusy, index_comparisonBusyList) {
                         comparisonBusyStart = moment(comparisonBusy.start);
                         comparisonBusyEnd = moment(comparisonBusy.end);
                         comparisonBusyStart.utcOffset("+0900");
@@ -695,15 +693,12 @@ router.post("/webhook", function(req, res, next) {
                         ) {
                             //日付が同じ場合
                             console.log("同じ日だよ");
-                            console.log(comparisonBusyList);
-                            comparisonBusyList.splice(
-                                0,
-                                index_comparisonBusyList
-                            );
+                            //ここがおかしい
+                            // comparisonBusyList.splice(
+                            //     0,
+                            //     index_comparisonBusyList
+                            // );
 
-                            console.log("splice後");
-                            console.log(index_comparisonBusyList);
-                            console.log(comparisonBusyList);
                             //baseBusyとcomparisonBUsyが被ってない時
                             if (
                                 baseBusyStart >= comparisonBusyEnd ||
@@ -767,6 +762,7 @@ router.post("/webhook", function(req, res, next) {
                         }
                     });
                 });
+                console.log(baseBusyList);
             }
         });
 
@@ -814,14 +810,110 @@ router.post("/webhook", function(req, res, next) {
         });
         console.log("resultList");
         console.log(resultList);
+
+        //smurano変更部分
+        let lastbaseBusyList = [];
+        resultList.forEach(function(result, index_result) {
+          if(index_result == 0){
+            lastbaseBusyList.push(result);
+             console.log("初回lastbaseBusyListですよ");
+             console.log(index_result);
+             console.log(lastbaseBusyList);
+           } else{
+             console.log(index_result);
+             lastbaseBusyListStart = moment(lastbaseBusyList[index_result-1].start);
+             lastbaseBusyListEnd = moment(lastbaseBusyList[index_result-1].end);
+             lastbaseBusyListStart.utcOffset("+0900");
+             lastbaseBusyListEnd.utcOffset("+0900");
+             resultStart = moment(result.start);
+             resultEnd = moment(result.end);
+             resultStart.utcOffset("+0900");
+             resultEnd.utcOffset("+0900");
+             if(
+                lastbaseBusyListStart.date() == resultStart.date()
+             ){
+              if(
+                result.start >= lastbaseBusyList[index_result-1].end ||
+                result.end <= lastbaseBusyList[index_result-1].start
+              ){
+                if(
+                  new moment(result.start).unix() -
+                      new moment(lastbaseBusyList[index_result-1].end).unix()
+                  < alpha &&
+                  0 <=
+                  new moment(result.start).unix() -
+                      new moment(lastbaseBusyList[index_result-1].end).unix()
+                ){
+                  console.log("パターン2,3");
+                  result.start = lastbaseBusyList[index_result-1].start;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                } else if(
+                  new moment(lastbaseBusyList[index_result-1].start).unix() -
+                      new moment(result.end).unix()
+                  < alpha &&
+                  0 <=
+                  new moment(lastbaseBusyList[index_result-1].start).unix() -
+                      new moment(result.end).unix()
+                ){
+                  console.log("パターン9,10");
+                  result.end = lastbaseBusyList[index_result-1].end;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                } else {
+                  console.log("パターン1,11");
+                  lastbaseBusyList.push(result);
+                }
+              } else if(result.start >= lastbaseBusyList[index_result-1].start){
+                if(result.end > lastbaseBusyList[index_result-1].end){
+                  console.log("パターン4,5");
+                  result.start = lastbaseBusyList[index_result-1].start;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                } else{
+                  console.log("パターン12,13,14");
+                  result.start = lastbaseBusyList[index_result-1].start;
+                  result.end = lastbaseBusyList[index_result-1].end;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                }
+              } else if(result.start < lastbaseBusyList[index_result-1].start){
+                if(result.end >= lastbaseBusyList[index_result-1].end){
+                  console.log("パターン6,7");
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                } else{
+                  console.log("パターン8");
+                  result.end = lastbaseBusyList[index_result-1].end;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                }
+              } else{
+                console.log("どのパターンにも当てはまらない");
+                lastbaseBusyList.push(result);
+              }
+            } else{
+                console.log("同じ日じゃないよー");
+                lastbaseBusyList.push(result);
+            }
+             console.log("lastbaseBusyListですよ");
+             console.log(lastbaseBusyList);
+
+          }
+        });
+
+        //undefinedの要素削除
+        let lastbaseBusyFilterList = lastbaseBusyList.filter(v => v);
+        console.log(lastbaseBusyFilterList);
         callback(resultList,alpha);
     }
 
     function responseCommonFreeTime(busyTimeList,alpha) {
         console.log("lastbusyTimeList");
         console.log(busyTimeList);
-        let commonFreeTimeList = [];
+        let commonFreeTimeList = []; //free時間の格納
 
+        //ここを変えたらいけそう
         busyTimeList.forEach(function(busyTime, index) {
             if (index == 0) {
             } else {
