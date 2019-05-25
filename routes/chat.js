@@ -659,7 +659,6 @@ router.post("/webhook", function(req, res, next) {
         console.log(userBusyList); //ここにObject配列の形式で各人の予定が格納されている
         console.log(alpha); //結合するかを判断する時間（ms）
         let baseBusyList;
-        let lastbaseBusyList;
 
         userBusyList.forEach(function(comparisonBusyList, index) {
             if (index == 0) {
@@ -667,8 +666,9 @@ router.post("/webhook", function(req, res, next) {
                 //一人目の予定はbaseBusyListに格納
                 console.log("一人目の予定ですよー");
                 console.log(baseBusyList);
-            } else if(baseBusy.length == 0){
-                baseBusyList = comparisonBusyList;
+            } else if(baseBusyList.length == 0){
+                console.log("一人目予定なかったですよ");
+	        baseBusyList = comparisonBusyList;
                 console.log("一人目予定なかったですよ");
                 console.log(baseBusyList);
             } else {
@@ -697,11 +697,11 @@ router.post("/webhook", function(req, res, next) {
                         ) {
                             //日付が同じ場合
                             console.log("同じ日だよ");
-                            //ここがおかしい
-                            // comparisonBusyList.splice(
-                            //     0,
-                            //     index_comparisonBusyList
-                            // );
+                            
+			    comparisonBusyList.splice(
+                                 index_comparisonBusyList,
+                                 1
+                            );
 
                             //baseBusyとcomparisonBUsyが被ってない時
                             if (
@@ -749,10 +749,6 @@ router.post("/webhook", function(req, res, next) {
                                 } else {
                                     console.log("パターン8");
                                     baseBusy.end = comparisonBusy.end;
-                                    comparisonBusyList.splice(
-                                        index_comparisonBusyList,
-                                        1
-                                    );
                                 }
                             } else {
                                 console.log("どのパターンにも当てはまらない");
@@ -914,7 +910,7 @@ router.post("/webhook", function(req, res, next) {
     }
 
     function responseCommonFreeTime(busyTimeList,alpha) {
-        console.log("lastbusyTimeList");
+        console.log("lastbaseBusyFilterList");
         console.log(busyTimeList);
         let commonFreeTimeList = []; //free時間の格納
 
@@ -936,7 +932,7 @@ router.post("/webhook", function(req, res, next) {
                     moment(busyTime.start).diff(
                         moment(busyTimeList[index - 1].end),
                         "hour"
-                    ) >= alpha
+                    ) >= alpha/60/60
                 ) {
                     let freeTimeJsonObjct = {
                         start: busyTimeList[index - 1].end,
