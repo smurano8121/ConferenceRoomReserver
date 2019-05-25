@@ -694,16 +694,14 @@ router.post("/webhook", function(req, res, next) {
                         ) {
                             //日付が同じ場合
                             console.log("同じ日だよ");
-                            console.log(comparisonBusyList);
-                            comparisonBusyList.splice(
-                                0,
-                                index_comparisonBusyList
-                            );
-
-                            console.log("splice後");
-                            console.log(index_comparisonBusyList);
-                            console.log(comparisonBusyList);
-                            //baseBusyとcomparisonBUsyが被ってない時
+			    console.log(comparisonBusyList);
+			    console.log(index_comparisonBusyList);
+			    comparisonBusyList.splice(
+                                        index_comparisonBusyList,
+                                        1
+                                    );
+			　　console.log(comparisonBusyList);
+                       	    //baseBusyとcomparisonBUsyが被ってない時
                             if (
                                 baseBusyStart >= comparisonBusyEnd ||
                                 baseBusyEnd <= comparisonBusyStart
@@ -749,10 +747,6 @@ router.post("/webhook", function(req, res, next) {
                                 } else {
                                     console.log("パターン8");
                                     baseBusy.end = comparisonBusy.end;
-                                    comparisonBusyList.splice(
-                                        index_comparisonBusyList,
-                                        1
-                                    );
                                 }
                             } else {
                                 console.log("どのパターンにも当てはまらない");
@@ -813,15 +807,112 @@ router.post("/webhook", function(req, res, next) {
         });
          console.log("resultList");
          console.log(resultList);
-         callback(resultList,alpha);
+        
+	 //smurano変更部分
+	 //smurano変更部分
+        let lastbaseBusyList = [];
+        resultList.forEach(function(result, index_result) {
+          if(index_result == 0){
+            lastbaseBusyList.push(result);
+             console.log("初回lastbaseBusyListですよ");
+             console.log(index_result);
+             console.log(lastbaseBusyList);
+           } else{
+	     console.log(index_result);
+             lastbaseBusyListStart = moment(lastbaseBusyList[index_result-1].start);
+             lastbaseBusyListEnd = moment(lastbaseBusyList[index_result-1].end);
+             lastbaseBusyListStart.utcOffset("+0900");
+             lastbaseBusyListEnd.utcOffset("+0900");
+             resultStart = moment(result.start);
+             resultEnd = moment(result.end);
+             resultStart.utcOffset("+0900");
+             resultEnd.utcOffset("+0900");
+             if(
+                lastbaseBusyListStart.date() == resultStart.date()
+             ){
+              if(
+                result.start >= lastbaseBusyList[index_result-1].end ||
+                result.end <= lastbaseBusyList[index_result-1].start
+              ){
+                if(
+                  new moment(result.start).unix() -
+                      new moment(lastbaseBusyList[index_result-1].end).unix()
+                  < alpha &&
+                  0 <=
+                  new moment(result.start).unix() -
+                      new moment(lastbaseBusyList[index_result-1].end).unix()
+                ){
+                  console.log("パターン2,3");
+                  result.start = lastbaseBusyList[index_result-1].start;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                } else if(
+                  new moment(lastbaseBusyList[index_result-1].start).unix() -
+                      new moment(result.end).unix()
+                  < alpha &&
+                  0 <=
+                  new moment(lastbaseBusyList[index_result-1].start).unix() -
+                      new moment(result.end).unix()
+                ){
+                  console.log("パターン9,10");
+                  result.end = lastbaseBusyList[index_result-1].end;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                } else {
+                  console.log("パターン1,11");
+                  lastbaseBusyList.push(result);
+                }
+              } else if(result.start >= lastbaseBusyList[index_result-1].start){
+                if(result.end > lastbaseBusyList[index_result-1].end){
+                  console.log("パターン4,5");
+                  result.start = lastbaseBusyList[index_result-1].start;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                } else{
+                  console.log("パターン12,13,14");
+                  result.start = lastbaseBusyList[index_result-1].start;
+                  result.end = lastbaseBusyList[index_result-1].end;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                }
+              } else if(result.start < lastbaseBusyList[index_result-1].start){
+                if(result.end >= lastbaseBusyList[index_result-1].end){
+                  console.log("パターン6,7");
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                } else{
+                  console.log("パターン8");
+                  result.end = lastbaseBusyList[index_result-1].end;
+                  lastbaseBusyList.push(result);
+                  lastbaseBusyList[index_result-1] = void 0;
+                }
+              } else{
+                console.log("どのパターンにも当てはまらない");
+                lastbaseBusyList.push(result);
+              }
+            } else{
+                console.log("同じ日じゃないよー");
+                lastbaseBusyList.push(result);
+            }
+             console.log("lastbaseBusyListですよ");
+             console.log(lastbaseBusyList);
+
+          }
+        });
+	//undefinedの要素削除
+        let lastbaseBusyFilterList = lastbaseBusyList.filter(v => v);
+	console.log("lastbaseBusyFilterListですよ");
+        console.log(lastbaseBusyFilterList);
+	callback(lastbaseBusyFilterList,alpha);
     }
 
     function responseCommonFreeTime(busyTimeList,alpha) {
         console.log("lastbusyTimeList");
         console.log(busyTimeList);
-        let commonFreeTimeList = [];
-
-        busyTimeList.forEach(function(busyTime, index) {
+	let commonFreeTimeList = [];
+	console.log(alpha);
+        let time_hour = alpha/3600;
+	busyTimeList.forEach(function(busyTime, index) {
             if (index == 0) {
             } else {
                 console.log();
@@ -838,7 +929,7 @@ router.post("/webhook", function(req, res, next) {
                     moment(busyTime.start).diff(
                         moment(busyTimeList[index - 1].end),
                         "hour"
-                    ) >= alpha
+                    ) >= time_hour
                 ) {
                     let freeTimeJsonObjct = {
                         start: busyTimeList[index - 1].end,
