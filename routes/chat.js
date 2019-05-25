@@ -665,7 +665,11 @@ router.post("/webhook", function(req, res, next) {
             if (index == 0) {
                 baseBusyList = comparisonBusyList;
                 //一人目の予定はbaseBusyListに格納
-                console.log("一人目の予定ですよー")
+                console.log("一人目の予定ですよー");
+                console.log(baseBusyList);
+            } else if(baseBusy.length == 0){
+                baseBusyList = comparisonBusyList;
+                console.log("一人目予定なかったですよ");
                 console.log(baseBusyList);
             } else {
                 baseBusyList.forEach(function(baseBusy, index_baseBusyList) {
